@@ -6,39 +6,48 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Model.AccountModel;
 import datdocantin.Model.KhachHangModel;
 
-@WebServlet("/Signup")
-public class SignUpController extends HttpServlet {
+@WebServlet("/ChangeInfo")
+public class ChangeInfoController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public SignUpController() {
+    public ChangeInfoController() {
         super();
         // TODO Auto-generated constructor stub
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	request.setAttribute("display_form__signup", "flex");
-    	request.getRequestDispatcher("view/homepage.jsp").forward(request, response);
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
+		HttpSession session = request.getSession(true);
         try {
+        	String id = request.getParameter("id_user");
         	String hoten = request.getParameter("txtHoten");
+        	String ngaysinh = request.getParameter("txtNgaysinh");
+        	String gioitinh = request.getParameter("txtGioitinh");
+        	String chieucao = request.getParameter("txtChieucao");
+        	String cannang = request.getParameter("txtCannang");
         	String sdt = request.getParameter("txtSdt");
-            String password = request.getParameter("txtPassword");
-            String typeUser = request.getParameter("typeUser");
-            if (AccountDAO.CheckAccountNotExist(sdt)) {
-            	String id = String.valueOf(AccountDAO.getLastId()+1);
-            	AccountModel acc = new AccountModel(id, sdt, password, typeUser);
-            	AccountDAO.addAccount(acc);
-            	KhachHangModel newKH = new KhachHangModel(id,hoten,null,"","","",sdt,"","","",""); 
-            	KhachhangDAO.addKhachhang(newKH);
+        	String email = request.getParameter("txtEmail");
+            String IDcantin = request.getParameter("txtIDCantin");
+            String Monyeuthich = request.getParameter("txtMonyeuthich");
+            System.out.println(id+hoten+ngaysinh+gioitinh+chieucao+cannang+sdt+email+IDcantin+Monyeuthich);
+            if (id!=null) {
+            	KhachHangModel khanhhang = new KhachHangModel(id,hoten,ngaysinh,gioitinh,chieucao,cannang,sdt,email,IDcantin,Monyeuthich,"");
+            	KhachhangDAO.updateInfo(khanhhang);
+            	KhachHangModel khachhang = KhachhangDAO.getKhachhangInfo(id);
+            	session.setAttribute("khachhang", khachhang);
             	response.sendRedirect(request.getContextPath());
             }
             else {
@@ -50,7 +59,6 @@ public class SignUpController extends HttpServlet {
         } catch (Exception e) {
             log("error at login servlet: " + e.toString());
         } 
-	
 	}
 
 }

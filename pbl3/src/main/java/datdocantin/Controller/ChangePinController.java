@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import datdocantin.Dao.AccountDAO;
+import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Model.AccountModel;
 
 @WebServlet("/ChangePin")
@@ -30,12 +31,12 @@ public class ChangePinController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
         try {
-        	String user = request.getParameter("user");
-            String oldPass = request.getParameter("txtOldPass");
+        	String id = request.getParameter("id_user");
+            String Pass = request.getParameter("txtPass");
             String pin = request.getParameter("txtNewPin");
-            AccountModel acc = AccountDAO.getAccountInfo(user, oldPass);
+            AccountModel acc = AccountDAO.getAccountInfo(id, Pass);
             if (acc!=null) {
-//            	AccountDAO.ChangePin(user, pin);
+            	KhachhangDAO.ChangePin(id, pin);
             	request.setAttribute("display_form__changepin", "flex");
             	request.setAttribute("notiSuccessNewPin", "flex");
             	request.setAttribute("notiErrorOldPass", "none");

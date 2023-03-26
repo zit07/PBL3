@@ -3,13 +3,13 @@ package datdocantin.Model;
 import java.sql.Date;
 
 public class KhachHangModel {
-	private String IDKH, Hoten, Ngaysinh, Gioitinh, Chieucao, Cannang, Sodienthoai, Email, IDCantin, PIN;
+	private String IDKH, Hoten, Ngaysinh, Gioitinh, Chieucao, Cannang, Sodienthoai, Email, IDCantin, Monyeuthich, PIN;
 
 	public KhachHangModel() {
 		// TODO Auto-generated constructor stub
 	}
     
-    public KhachHangModel(String IDKH, String Hoten, String Ngaysinh, String Gioitinh, String Chieucao, String Cannang, String Sodienthoai, String Email, String IDCantin, String PIN) {
+    public KhachHangModel(String IDKH, String Hoten, String Ngaysinh, String Gioitinh, String Chieucao, String Cannang, String Sodienthoai, String Email, String IDCantin, String Monyeuthich,String PIN) {
     	this.IDKH = IDKH;
     	this.Hoten = Hoten;
     	this.Ngaysinh = Ngaysinh;
@@ -19,6 +19,7 @@ public class KhachHangModel {
     	this.Sodienthoai = Sodienthoai;
     	this.Email = Email;
     	this.IDCantin = IDCantin;
+    	this.Monyeuthich = Monyeuthich;
     	this.PIN = PIN;
     }
     
@@ -94,7 +95,15 @@ public class KhachHangModel {
 		this.IDCantin = IDCantin;
 	}
 	
-    public String getPIN() {
+    public String getMonyeuthich() {
+		return Monyeuthich;
+	}
+
+	public void setMonyeuthich(String monyeuthich) {
+		Monyeuthich = monyeuthich;
+	}
+
+	public String getPIN() {
 		return PIN;
 	}
 

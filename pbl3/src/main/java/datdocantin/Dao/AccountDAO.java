@@ -15,14 +15,14 @@ public class AccountDAO {
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
     
-    public static AccountModel getAccountInfo(String sdt, String pass) throws SQLException, Exception {
+    public static AccountModel getAccountInfo(String id, String pass) throws SQLException, Exception {
     	AccountModel result = null;
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT idAccount, sdt, pass, typeUser FROM account WHERE sdt = ? AND pass = ?;";
+            	String sql = "SELECT idAccount, sdt, pass, typeUser FROM account WHERE idAccount = ? AND pass = ?;";
             	stm = conn.prepareStatement(sql);
-            	stm.setString(1, sdt);
+            	stm.setString(1, id);
             	stm.setString(2, pass);
             	rs = stm.executeQuery();
                 if (rs.next()) {
@@ -32,6 +32,26 @@ public class AccountDAO {
         } catch (Exception e) {
         } finally {
         	connectDB.closeConnection(conn, stm, rs);
+        }
+        return result;
+    }
+    
+    public static String getIDbySdt(String sdt) throws SQLException, Exception {
+        String result = null;
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+                String sql = "SELECT idAccount FROM account WHERE sdt = ?;";
+                stm = conn.prepareStatement(sql);
+                stm.setString(1, sdt);
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    result = rs.getString("idAccount");
+                }
+            }
+        } catch (Exception e) {
+        } finally {
+            connectDB.closeConnection(conn, stm, rs);
         }
         return result;
     }
@@ -77,7 +97,7 @@ public class AccountDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "UPDATE account SET pass=? WHERE sdt=?";
+                String sql = "UPDATE account SET pass=? WHERE idAccount=?";
                 stm = conn.prepareStatement(sql);
                 stm.setString(1, pass);
                 stm.setString(2, id);
@@ -107,22 +127,6 @@ public class AccountDAO {
         }
         return result;
     }
-
-    public static void ChangePin(String sdt, String pin) throws SQLException, Exception {
-        try {
-            conn = connectDB.getConnection();
-            if (conn != null) {
-                String sql = "UPDATE account SET pin=? WHERE sdt=?";
-                stm = conn.prepareStatement(sql);
-                stm.setString(1, pin);
-                stm.setString(2, sdt);
-                stm.executeUpdate();
-            }
-        } catch (Exception e) {
-        } finally {
-        	connectDB.closeConnection(conn, stm, rs);
-        }
-    }
     
     
     
@@ -131,7 +135,7 @@ public class AccountDAO {
 //			Test function in here
 			
 			AccountModel acc = new AccountModel("1002", "333", "333", "admin");
-			AccountDAO.addAccount(acc);
+			System.out.print(AccountDAO.getIDbySdt("123"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

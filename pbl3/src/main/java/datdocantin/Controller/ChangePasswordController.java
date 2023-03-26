@@ -31,7 +31,7 @@ public class ChangePasswordController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
         try {
-        	String id = request.getParameter("id"); System.out.print(id);
+        	String id = request.getParameter("id_user"); System.out.print(id);
             String oldPass = request.getParameter("txtOldPass");
             String newPass = request.getParameter("txtNewPass");
             AccountModel acc = AccountDAO.getAccountInfo(id, oldPass);

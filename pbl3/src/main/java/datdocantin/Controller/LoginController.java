@@ -37,9 +37,8 @@ public class LoginController extends HttpServlet {
         try {
             String sdt = request.getParameter("txtSdt");
             String password = request.getParameter("txtPassword"); 
-            AccountModel acc = AccountDAO.getAccountInfo(sdt, password);
+            AccountModel acc = AccountDAO.getAccountInfo(AccountDAO.getIDbySdt(sdt), password);
             if (acc != null) {
-            	String id = acc.getID_Account();
             	String type = acc.getType_User();
                 session.setAttribute("role", type);
                 if (type.equals("admin")) {
@@ -49,9 +48,8 @@ public class LoginController extends HttpServlet {
               	    url = "view/cantin-homepage.jsp";
                 }
                 else {
-                	KhachHangModel khachhang = KhachhangDAO.getKhachhangInfo(id);
-                	session.setAttribute("sdt", sdt);
-                	session.setAttribute("user", acc);
+                	KhachHangModel khachhang = KhachhangDAO.getKhachhangInfo(acc.getID_Account());
+                	session.setAttribute("khachhang", khachhang);
                 	session.setAttribute("display_user", "flex");
                 	session.setAttribute("display_category", "block");
                 	session.setAttribute("display_ls", "none");

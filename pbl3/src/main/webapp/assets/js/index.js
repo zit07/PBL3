@@ -1,4 +1,5 @@
 // Link Click To Show
+
 const Signuplink = document.getElementById("signup-link");
 const Signuplink2 = document.getElementById("signup-link2");
 const Loginlink = document.getElementById("login-link");
@@ -17,66 +18,72 @@ const ChangePINform = document.getElementById("form-changepin");
 const Infoform = document.getElementById("form-info");
 
 // Function to show form
-const showForm = (form, event) => {
-    event.preventDefault(); 
-    Signupform.style.display = "none";
-    Loginform.style.display = "none"; 
-    ChangePassform.style.display = "none";
-    ChangePINform.style.display = "none";
-    Infoform.style.display = "none";
-    form.style.display = "flex";
+if  (Signuplink!==null){
+	const showForm = (form, event) => {
+	    event.preventDefault(); 
+	    Signupform.style.display = "none";
+	    Loginform.style.display = "none"; 
+	    form.style.display = "flex";
+	}
+	Signuplink.addEventListener("click", (event) => showForm(Signupform, event));
+	Loginlink.addEventListener("click", (event) => showForm(Loginform, event));
+	Signuplink2.addEventListener("click", (event) => {
+	    showForm(Signupform, event);
+	    Loginform.style.display = "none";
+	});
+	Loginlink2.addEventListener("click", (event) => {
+	    Signupform.style.display = "none";
+	    showForm(Loginform, event);
+	});
+} else {
+	const showForm = (form, event) => {
+	    event.preventDefault();
+	    ChangePassform.style.display = "none";
+	    ChangePINform.style.display = "none";
+	    Infoform.style.display = "none";
+	    form.style.display = "flex";
+	}
+	ChangePasslink.addEventListener("click", (event) => showForm(ChangePassform, event));
+	ChangePINlink.addEventListener("click", (event) => showForm(ChangePINform, event));
+	ChangePasslink2.addEventListener("click", (event) => {
+	    showForm(ChangePassform, event);
+	    ChangePINform.style.display = "none";
+	});
+	ChangePINlink2.addEventListener("click", (event) => {
+	    ChangePassform.style.display = "none";
+	    showForm(ChangePINform, event);
+	});
+	Infolink.addEventListener("click", (event) => showForm(Infoform, event));
 }
 
-Signuplink.addEventListener("click", (event) => showForm(Signupform, event));
-Loginlink.addEventListener("click", (event) => showForm(Loginform, event));
-Signuplink2.addEventListener("click", (event) => {
-    showForm(Signupform, event);
-    Loginform.style.display = "none";
-});
-Loginlink2.addEventListener("click", (event) => {
-    Signupform.style.display = "none";
-    showForm(Loginform, event);
-});
-ChangePasslink.addEventListener("click", (event) => showForm(ChangePassform, event));
-ChangePINlink.addEventListener("click", (event) => showForm(ChangePINform, event));
-ChangePasslink2.addEventListener("click", (event) => {
-    showForm(ChangePassform, event);
-    ChangePINform.style.display = "none";
-});
-ChangePINlink2.addEventListener("click", (event) => {
-    ChangePassform.style.display = "none";
-    showForm(ChangePINform, event);
-});
-Infolink.addEventListener("click", (event) => showForm(Infoform, event));
-
 // Show noti
-
-const shownotisdt = document.getElementById('notiSignupsdt');
-const shownotiSignupConfirm = document.getElementById('notiSignupConfirmPass');
-var formSignup = document.querySelector('.formSignup');
-formSignup.addEventListener('submit', function(event) {
-  var password = formSignup.querySelector('input[name="txtPassword"]');
-  var confirmPassword = formSignup.querySelector('input[name="txtConfirmPassword"]');
-  if (password.value !==  confirmPassword.value) {
-    shownotiSignupConfirm.style.display = "flex";
-    shownotisdt.style.display = "none";
-    event.preventDefault();
-  }
-});
-
-const shownotiChangePassConfirm = document.getElementById('notiChangePassConfirm');
-const notiErrorOldPass = document.getElementById('notiErrorOldPass');
-var formChangePass = document.querySelector('.formChangePass');
-formChangePass.addEventListener('submit', function(event) {
-  var newpassword = formChangePass.querySelector('input[name="txtNewPass"]');
-  var newconfirmPassword = formChangePass.querySelector('input[name="txtConfirmNewPass"]');
-  if (newpassword.value !==  newconfirmPassword.value) {
-    shownotiChangePassConfirm.style.display = "flex";
-    notiErrorOldPass.style.display = "none";
-    event.preventDefault(); 
-  }
-});
-
+if  (Signuplink!==null){
+	const shownotisdt = document.getElementById('notiSignupsdt');
+	const shownotiSignupConfirm = document.getElementById('notiSignupConfirmPass');
+	var formSignup = document.querySelector('.formSignup');
+	formSignup.addEventListener('submit', function(event) {
+	  var password = formSignup.querySelector('input[name="txtPassword"]');
+	  var confirmPassword = formSignup.querySelector('input[name="txtConfirmPassword"]');
+	  if (password.value !==  confirmPassword.value) {
+	    shownotiSignupConfirm.style.display = "flex";
+	    shownotisdt.style.display = "none";
+	    event.preventDefault();
+	  }
+	});
+} else {
+	const shownotiChangePassConfirm = document.getElementById('notiChangePassConfirm');
+	const notiErrorOldPass = document.getElementById('notiErrorOldPass');
+	var formChangePass = document.querySelector('.formChangePass');
+	formChangePass.addEventListener('submit', function(event) {
+	  var newpassword = formChangePass.querySelector('input[name="txtNewPass"]');
+	  var newconfirmPassword = formChangePass.querySelector('input[name="txtConfirmNewPass"]');
+	  if (newpassword.value !==  newconfirmPassword.value) {
+	    shownotiChangePassConfirm.style.display = "flex";
+	    notiErrorOldPass.style.display = "none";
+	    event.preventDefault(); 
+	  }
+	});
+}
 
 $(function () {
   apiProvince=(prodvince)=>{
@@ -111,6 +118,6 @@ $(function () {
           })       
       });
   }
-  prodvince = JSON.parse(data);
+  prodvince = JSON.parse(address);
    apiProvince(prodvince);
 })
