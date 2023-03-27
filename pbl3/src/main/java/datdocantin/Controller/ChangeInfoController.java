@@ -42,10 +42,11 @@ public class ChangeInfoController extends HttpServlet {
         	String email = request.getParameter("txtEmail");
             String IDcantin = request.getParameter("txtIDCantin");
             String Monyeuthich = request.getParameter("txtMonyeuthich");
-            System.out.println(id+hoten+ngaysinh+gioitinh+chieucao+cannang+sdt+email+IDcantin+Monyeuthich);
+//            System.out.println(id+hoten+ngaysinh+gioitinh+chieucao+cannang+sdt+email+IDcantin+Monyeuthich);
             if (id!=null) {
             	KhachHangModel khanhhang = new KhachHangModel(id,hoten,ngaysinh,gioitinh,chieucao,cannang,sdt,email,IDcantin,Monyeuthich,"");
             	KhachhangDAO.updateInfo(khanhhang);
+            	AccountDAO.ChangeSdt(id, sdt);
             	KhachHangModel khachhang = KhachhangDAO.getKhachhangInfo(id);
             	session.setAttribute("khachhang", khachhang);
             	response.sendRedirect(request.getContextPath());

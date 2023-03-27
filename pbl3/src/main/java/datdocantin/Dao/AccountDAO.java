@@ -109,6 +109,22 @@ public class AccountDAO {
         }
     }
     
+    public static void ChangeSdt(String id, String sdt) throws SQLException, Exception {
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+                String sql = "UPDATE account SET sdt=? WHERE idAccount=?";
+                stm = conn.prepareStatement(sql);
+                stm.setString(1, sdt);
+                stm.setString(2, id);
+                stm.executeUpdate();
+            }
+        } catch (Exception e) {
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+    }
+    
     public static int getLastId() throws SQLException, Exception {
     	int result = -1;
         try {
