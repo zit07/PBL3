@@ -32,9 +32,9 @@ public class ChangePinController extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
         try {
         	String id = request.getParameter("id_user");
-            String Pass = request.getParameter("txtPass");
+            String pass = request.getParameter("txtPass");
             String pin = request.getParameter("txtNewPin");
-            AccountModel acc = AccountDAO.getAccountInfo(id, Pass);
+            AccountModel acc = AccountDAO.getAccountInfo(id, pass);
             if (acc!=null) {
             	KhachhangDAO.ChangePin(id, pin);
             	request.setAttribute("display_form__changepin", "flex");

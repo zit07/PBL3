@@ -1,7 +1,6 @@
 package datdocantin.Controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,8 +13,6 @@ import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Dao.SearchHistoryDAO;
 import datdocantin.Model.AccountModel;
-import datdocantin.Model.KhachHangModel;
-import datdocantin.Util.PasswordEncoder;
 
 @WebServlet("/Login")
 public class LoginController extends HttpServlet {
@@ -39,30 +36,22 @@ public class LoginController extends HttpServlet {
         String url = "view/homepage.jsp";
         try {
         	String sdt = request.getParameter("txtSdt");
+        	String password = request.getParameter("txtPassword"); 
             String id = AccountDAO.getIDbySdt(sdt);
-            String password = PasswordEncoder.encode(request.getParameter("txtPassword")); 
             AccountModel acc = AccountDAO.getAccountInfo(id, password);
-            if (acc != null) {
-            	String type = acc.getType_User();
-                session.setAttribute("role", type);
-                if (type.equals("admin")) {
+            if (acc!=null) {
+            	String role = acc.getType_User();
+                if (role.equals("admin")) {
             	    url = "view/admin-homepage.jsp";
                 }
-                else if (type.equals("cantin")) {
+                else if (role.equals("cantin")) {
               	    url = "view/cantin-homepage.jsp";
                 }
                 else {
-                	KhachHangModel khachhang = KhachhangDAO.getKhachhangInfo(acc.getID_Account());
-        	        List<String> searchHistory = SearchHistoryDAO.getSearchHistory(acc.getID_Account());
-                	session.setAttribute("khachhang", khachhang);
-                	session.setAttribute("searchHistory", searchHistory);
-                	session.setAttribute("display_user", "flex");
-                	session.setAttribute("display_category", "block");
-                	session.setAttribute("display_ls", "none");
-                	session.setAttribute("display_search_cantin", "none");
+                	session.setAttribute("khachhang", KhachhangDAO.getKhachhangInfo(id));
+                	session.setAttribute("searchHistory", SearchHistoryDAO.getSearchHistory(id));
                 	response.sendRedirect(request.getContextPath());
-                }
-                
+                } 
 			}
             else {
             	if (AccountDAO.CheckAccountNotExist(sdt)) {

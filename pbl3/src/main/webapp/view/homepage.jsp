@@ -32,7 +32,7 @@
         <header class="header">
             <div class="grid wide">
                 <!-- navbar -->
-                <nav class="header__navbar hide-on-mobile-tablet"> 
+                <nav class="header__navbar"> 
                     <ul class="header__nav-list">
                         <li class="header__nav-item header__show-note">
                             <a href="#" class="header__nav-item-link">
@@ -124,14 +124,14 @@
                         </li>
                         <c:if test="${khachhang==null}">				        
 									<li class="header__nav-item header__nav-item--bold header__nav-item--separate">
-			                            <a href="#" id="signup-link" class="header__nav-item-link" style="display: flex}">Đăng ký</a>
+			                            <a href="#" id="signup-link" class="header__nav-item-link" >Đăng ký</a>
 			                        </li>
 			                        <li class="header__nav-item header__nav-item--bold">
-			                            <a href="#" id="login-link" class="header__nav-item-link" style="display: flex">Đăng nhập</a>
+			                            <a href="#" id="login-link" class="header__nav-item-link" >Đăng nhập</a>
 	                       			</li>
 						</c:if>
 						<c:if test="${khachhang!=null}">
-						        <li class="header__nav-item header__nav-user" style="display: flex">
+						        <li class="header__nav-item header__nav-user" >
 		                            <img src="./assets/img/user.png" class="header__nav-user-avt">
 		                            <a href="#" class="header__nav-item-link header__nav-item--bold">${khachhang.getHoten()}</a>
 		                            <ul class="header__nav-user-menu">
@@ -158,9 +158,6 @@
                 </nav>
                 <!-- search -->
                 <div class="header__contain">
-                    <label for="mobile-search" class="header__mobile-search">
-                        <i class="header__mobile-search-icon fas fa-search"></i>
-                    </label>
                     <div class="header__logo">
                         <a href="#" class="header__logo-link">
                             <img src="./assets/img/logo/logo.png" class="header__logo-img">
@@ -340,178 +337,181 @@
                 <div class="row sm-gutter">
                     <div class="col l-2 m-0 c-0">
                         <!-- Search Cantin -->
-                        <nav class="search-cantin" id="search-cantin" style="display: ${display_search_cantin}">
-                            <form action="">
-                                <h3 class="search-heading">
-                                    <i class="search-heading-icon fas fa-search"></i>
-                                    Tìm kiếm Cantin 
+						<c:if test="${khachhang==null}">
+							<nav class="search-cantin" id="search-cantin">
+								<form action="">
+									<h3 class="search-heading">
+										<i class="search-heading-icon fas fa-search"></i> Tìm kiếm
+										Cantin
+									</h3>
+									<div class="search-group">
+										<div class="search-group-title">Nhập tên hoặc mã Cantin</div>
+										<input class="search-group-input" type="search">
+									</div>
+									<div class="search-group">
+										<div class="search-group-title">Chọn địa chỉ</div>
+										<select name="" class="search-group-item" id="province">
+											<option value="-1">Chọn tỉnh thành</option>
+										</select> <select name="" class="search-group-item" id="district">
+											<option value="-1">Chọn quận/huyện</option>
+										</select> <select name="" class="search-group-item" id="town">
+											<option value="-1">Chọn phường/xã</option>
+										</select>
+									</div>
+									<button
+										class="btn btn--primary category-group-filter-btn category-group--margin"
+										type="submit">Tìm kiếm</button>
+								</form>
+							</nav>
+						</c:if>
+						<c:if test="${khachhang!=null}">
+                            <!-- category -->
+                            <nav class="category" id="category">
+                                <h3 class="category-heading">
+                                    <i class="category-heading-icon fas fa-list-ul"></i>
+                                    Bộ lọc tìm kiếm
                                 </h3>
-                                <div class="search-group">
-                                    <div class="search-group-title">Nhập tên hoặc mã Cantin</div>
-                                    <input class="search-group-input" type="search" >
+                                <div class="category-group">
+                                    <div class="category-group-title">Loại thức ăn</div>
+                                    <ul class="category-group-list">
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Món thịt
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Món hải sản 
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Món nước
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Món khô
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Món chiên
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Món xào
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Món chay
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div class="search-group">
-                                    <div class="search-group-title">Chọn địa chỉ</div>
-                                    <select name="" class="search-group-item" id="province">
-                                        <option value="-1">Chọn tỉnh thành</option>
-                                    </select>
-                                    <select name="" class="search-group-item" id="district">
-                                        <option value="-1">Chọn quận/huyện</option>
-                                    </select>
-                                    <select name="" class="search-group-item" id="town">
-                                        <option value="-1">Chọn phường/xã</option>
-                                    </select>
+                                <div class="category-group">
+                                    <div class="category-group-title">Thành phần chính</div>
+                                    <ul class="category-group-list">
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Thịt gà
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Thịt heo
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Thịt bò 
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Hải sản
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Rau củ
+                                        </li>
+                                    </ul>
                                 </div>
-                                <button class="btn btn--primary category-group-filter-btn category-group--margin" type="submit">Tìm kiếm</button>
-                            </form>
-                        </nav>
-                         <!-- category -->
-                        <nav class="category" id="category" style="display: ${display_category}">
-                            <h3 class="category-heading">
-                                <i class="category-heading-icon fas fa-list-ul"></i>
-                                Bộ lọc tìm kiếm
-                            </h3>
-                            <div class="category-group">
-                                <div class="category-group-title">Loại thức ăn</div>
-                                <ul class="category-group-list">
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Món thịt
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Món hải sản 
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Món nước
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Món khô
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Món chiên
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Món xào
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Món chay
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="category-group">
-                                <div class="category-group-title">Thành phần chính</div>
-                                <ul class="category-group-list">
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Thịt gà
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Thịt heo
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Thịt bò 
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Hải sản
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Rau củ
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="category-group">
-                                <div class="category-group-title">Hương vị</div>
-                                <ul class="category-group-list">
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Chua 
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Cay
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Mặn
-                                    </li>
-                                    <li class="category-group-item">
-                                        <input type="checkbox" class="category-group-item-check">
-                                        Ngọt
-                                    </li>
-                                </ul>
-                            </div>
-                          
-                            <div class="category-group">
-                                <div class="category-group-title">Khoảng Giá</div>
-                                <div class="category-group-filter">
-                                    <input type="number" placeholder="đ TỪ" class="category-group-filter-input">
-                                    <i class="fas fa-arrow-right"></i>
-                                    <input type="number" placeholder="đ ĐẾN" class="category-group-filter-input">
+                                <div class="category-group">
+                                    <div class="category-group-title">Hương vị</div>
+                                    <ul class="category-group-list">
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Chua 
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Cay
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Mặn
+                                        </li>
+                                        <li class="category-group-item">
+                                            <input type="checkbox" class="category-group-item-check">
+                                            Ngọt
+                                        </li>
+                                    </ul>
                                 </div>
-                                <!-- <button class="btn btn--primary category-group-filter-btn">Tìm kiếm</button> -->
-                            </div>
-                        
-                            <div class="category-group">
-                                <div class="category-group-title">Đánh Giá</div>
-                                <div class="rating-star">
-                                    <input type="checkbox" class="category-group-item-check">
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-checked far fa-star"></i>
+                            
+                                <div class="category-group">
+                                    <div class="category-group-title">Khoảng Giá</div>
+                                    <div class="category-group-filter">
+                                        <input type="number" placeholder="đ TỪ" class="category-group-filter-input">
+                                        <i class="fas fa-arrow-right"></i>
+                                        <input type="number" placeholder="đ ĐẾN" class="category-group-filter-input">
+                                    </div>
+                                    <!-- <button class="btn btn--primary category-group-filter-btn">Tìm kiếm</button> -->
                                 </div>
-                                <div class="rating-star">
-                                    <input type="checkbox" class="category-group-item-check">
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-uncheck far fa-star"></i>
+                            
+                                <div class="category-group">
+                                    <div class="category-group-title">Đánh Giá</div>
+                                    <div class="rating-star">
+                                        <input type="checkbox" class="category-group-item-check">
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                    </div>
+                                    <div class="rating-star">
+                                        <input type="checkbox" class="category-group-item-check">
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                    </div>
+                                    <div class="rating-star">
+                                        <input type="checkbox" class="category-group-item-check">
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                    </div>
+                                    <div class="rating-star">
+                                        <input type="checkbox" class="category-group-item-check">
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                    </div>
+                                    <div class="rating-star">
+                                        <input type="checkbox" class="category-group-item-check">
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                    </div>
                                 </div>
-                                <div class="rating-star">
-                                    <input type="checkbox" class="category-group-item-check">
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-uncheck far fa-star"></i>
-                                    <i class="star-uncheck far fa-star"></i>
-                                </div>
-                                <div class="rating-star">
-                                    <input type="checkbox" class="category-group-item-check">
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-uncheck far fa-star"></i>
-                                    <i class="star-uncheck far fa-star"></i>
-                                    <i class="star-uncheck far fa-star"></i>
-                                </div>
-                                <div class="rating-star">
-                                    <input type="checkbox" class="category-group-item-check">
-                                    <i class="star-checked far fa-star"></i>
-                                    <i class="star-uncheck far fa-star"></i>
-                                    <i class="star-uncheck far fa-star"></i>
-                                    <i class="star-uncheck far fa-star"></i>
-                                    <i class="star-uncheck far fa-star"></i>
-                                </div>
-                            </div>
 
-                            <button class="btn btn--primary category-group-filter-btn category-group--margin">LÀM MỚI</button>
-                        </nav>
+                                <button class="btn btn--primary category-group-filter-btn category-group--margin">LÀM MỚI</button>
+                            </nav>
+                        </c:if>
                     </div>
-
                     <div class="col l-10 m-12 c-12">
                         <!-- home filter -->
-                        <div class="home-filter hide-on-mobile-tablet">
+                        <div class="home-filter">
                             <div class="home-filter-control">
                                 <p class="home-filter-title">Sắp xếp theo:</p>
                                 <button class="btn btn--primary home-filter-btn">Mới nhất</button>

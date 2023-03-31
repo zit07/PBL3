@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.KhachhangDAO;
-import datdocantin.Model.AccountModel;
 import datdocantin.Model.KhachHangModel;
 
 @WebServlet("/ChangeInfo")
@@ -48,8 +47,7 @@ public class ChangeInfoController extends HttpServlet {
             	KhachHangModel khanhhang = new KhachHangModel(id,hoten,ngaysinh,gioitinh,chieucao,cannang,sdt,email,IDcantin,Monyeuthich,"");
             	KhachhangDAO.updateInfo(khanhhang);
             	AccountDAO.ChangeSdt(id, sdt);
-            	KhachHangModel khachhang = KhachhangDAO.getKhachhangInfo(id);
-            	session.setAttribute("khachhang", khachhang);
+            	session.setAttribute("khachhang", KhachhangDAO.getKhachhangInfo(id));
             	response.sendRedirect(request.getContextPath());
             }
             else {

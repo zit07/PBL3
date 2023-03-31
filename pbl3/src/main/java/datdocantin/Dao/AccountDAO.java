@@ -4,10 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import com.mysql.cj.util.TestUtils;
-
 import datdocantin.Model.AccountModel;
+import datdocantin.Util.PasswordEncoder;
 import datdocantin.Util.connectDB;
 
 public class AccountDAO {
@@ -23,7 +21,7 @@ public class AccountDAO {
             	String sql = "SELECT idAccount, sdt, pass, typeUser FROM account WHERE idAccount = ? AND pass = ?;";
             	stm = conn.prepareStatement(sql);
             	stm.setString(1, id);
-            	stm.setString(2, pass);
+            	stm.setString(2, PasswordEncoder.encode(pass));
             	rs = stm.executeQuery();
                 if (rs.next()) {
                     result = new AccountModel(rs.getString("idAccount"), rs.getString("sdt"), rs.getString("pass"), rs.getString("typeUser"));
@@ -55,7 +53,7 @@ public class AccountDAO {
         }
         return result;
     }
-    
+	
     public static boolean CheckAccountNotExist(String sdt) throws SQLException, Exception {
         try {
             conn = connectDB.getConnection();
@@ -99,7 +97,7 @@ public class AccountDAO {
             if (conn != null) {
                 String sql = "UPDATE account SET pass=? WHERE idAccount=?";
                 stm = conn.prepareStatement(sql);
-                stm.setString(1, pass);
+                stm.setString(1, PasswordEncoder.encode(pass));
                 stm.setString(2, id);
                 stm.executeUpdate();
             }

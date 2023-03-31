@@ -1,7 +1,6 @@
 package datdocantin.Controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -36,8 +35,7 @@ public class SearchController extends HttpServlet {
         	String noidung = request.getParameter("txtSearch");
             if (idkh!=null) { 
             	SearchHistoryDAO.addSearchHistory(String.valueOf(SearchHistoryDAO.getLastId()+1),idkh, noidung);
-            	List<String> searchHistory = SearchHistoryDAO.getSearchHistory(idkh);
-            	session.setAttribute("searchHistory", searchHistory);
+            	session.setAttribute("searchHistory", SearchHistoryDAO.getSearchHistory(idkh));
             	response.sendRedirect(request.getContextPath());
             }
             else {
