@@ -1,6 +1,8 @@
 package datdocantin.Controller;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,12 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.tomcat.util.http.parser.ContentRange;
-
 import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.KhachhangDAO;
+import datdocantin.Dao.SearchHistoryDAO;
 import datdocantin.Model.AccountModel;
 import datdocantin.Model.KhachHangModel;
+import datdocantin.Util.PasswordEncoder;
 
 @WebServlet("/Login")
 public class LoginController extends HttpServlet {
@@ -33,11 +35,13 @@ public class LoginController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
         HttpSession session = request.getSession(true);
+        session.setMaxInactiveInterval(-1);
         String url = "view/homepage.jsp";
         try {
-            String sdt = request.getParameter("txtSdt");
-            String password = request.getParameter("txtPassword"); 
-            AccountModel acc = AccountDAO.getAccountInfo(AccountDAO.getIDbySdt(sdt), password);
+        	String sdt = request.getParameter("txtSdt");
+            String id = AccountDAO.getIDbySdt(sdt);
+            String password = PasswordEncoder.encode(request.getParameter("txtPassword")); 
+            AccountModel acc = AccountDAO.getAccountInfo(id, password);
             if (acc != null) {
             	String type = acc.getType_User();
                 session.setAttribute("role", type);
@@ -49,7 +53,9 @@ public class LoginController extends HttpServlet {
                 }
                 else {
                 	KhachHangModel khachhang = KhachhangDAO.getKhachhangInfo(acc.getID_Account());
+        	        List<String> searchHistory = SearchHistoryDAO.getSearchHistory(acc.getID_Account());
                 	session.setAttribute("khachhang", khachhang);
+                	session.setAttribute("searchHistory", searchHistory);
                 	session.setAttribute("display_user", "flex");
                 	session.setAttribute("display_category", "block");
                 	session.setAttribute("display_ls", "none");

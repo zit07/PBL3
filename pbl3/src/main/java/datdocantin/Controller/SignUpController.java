@@ -6,10 +6,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.catalina.startup.PasswdUserDatabase;
+
 import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Model.AccountModel;
 import datdocantin.Model.KhachHangModel;
+import datdocantin.Util.PasswordEncoder;
 
 @WebServlet("/Signup")
 public class SignUpController extends HttpServlet {
@@ -31,7 +35,7 @@ public class SignUpController extends HttpServlet {
         try {
         	String hoten = request.getParameter("txtHoten");
         	String sdt = request.getParameter("txtSdt");
-            String password = request.getParameter("txtPassword");
+            String password = PasswordEncoder.encode(request.getParameter("txtPassword"));
             String typeUser = request.getParameter("typeUser");
             if (AccountDAO.CheckAccountNotExist(sdt)) {
             	String id = String.valueOf(AccountDAO.getLastId()+1);

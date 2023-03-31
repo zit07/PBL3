@@ -130,18 +130,18 @@ public class AccountDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "SELECT idAccount FROM account ORDER BY idAccount DESC LIMIT 1;";
+                String sql = "SELECT * FROM account;";
                 stm = conn.prepareStatement(sql);
                 rs = stm.executeQuery();
-                if (rs.next()) {
-                    result = rs.getInt("idAccount");
+                while (rs.next()) {
+                    result += 1;
                 }
             }
         } catch (Exception e) {
         } finally {
         	connectDB.closeConnection(conn, stm, rs);
         }
-        return result;
+        return result+10000;
     }
     
     
@@ -151,7 +151,7 @@ public class AccountDAO {
 //			Test function in here
 			
 			AccountModel acc = new AccountModel("1002", "333", "333", "admin");
-			System.out.print(AccountDAO.getIDbySdt("123"));
+			System.out.print(AccountDAO.getLastId());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

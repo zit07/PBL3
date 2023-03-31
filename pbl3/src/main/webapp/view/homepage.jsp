@@ -3,9 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <%@ page import="javax.servlet.http.HttpSession" %>
 <%@ page import="datdocantin.Model.KhachHangModel" %>
+<%@ page import="java.util.List" %>
+
 <%
 	KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
-	/* String id = (String) session.getAttribute("sdt"); */
+	List<String> searchHistory = (List<String>) session.getAttribute("searchHistory");
+	String sdt = (String)session.getAttribute("sdt");
+
 %>
 <!DOCTYPE html>
 <html>
@@ -135,7 +139,7 @@
 		                                    <a href="">Tài khoản của tôi</a>
 		                                </li>
 		                                <li class="header__nav-user-item">
-		                                    <a href="#">Đơn mua</a>
+		                                    <a href="#">Đơn đã mua</a>
 		                                </li>
 		                                <li class="header__nav-user-item" id="changepass-link">
 		                                    <a href="./Changepassword">Đổi mật khẩu</a>
@@ -162,38 +166,26 @@
                             <img src="./assets/img/logo/logo.png" class="header__logo-img">
                         </a>
                     </div>
-                    <input type="checkbox" id="mobile-search" class="header__search-check" hidden>
-                    <div class="header__search">
+                    
+                    <form class="header__search" method="POST" action="./search?id_user=${khachhang.getIDKH()}">
                         <div class="header__search-input-wrap">
-                            <input type="text" class="header__search-input" placeholder="Tìm kiếm món ăn">
+                            <input type="text" class="header__search-input" placeholder="Tìm kiếm món ăn" name="txtSearch" value="">
                             <div class="header__search-history">
                                 <!-- History Search -->
                                 <ul class="header__search-history-list">
-                                    <li class="header__search-history-item">
-                                        <a href="#">Đậu phụ lướt ván nhưng phải giòn</a>
+                                    <c:forEach items="${searchHistory}" var="i">
+							        	<li class="header__search-history-item">
+                                        <a href="#">${i}</a>
                                     </li>
-                                    <li class="header__search-history-item">
-                                        <a href="#">Một đĩa trâu luộc</a>
-                                    </li>
-                                    <li class="header__search-history-item">
-                                        <a href="#">Một đĩa ba chỉ rang cháy cạnh không được dính mỡ</a>
-                                    </li>
-                                    <li class="header__search-history-item">
-                                        <a href="#">Gan cháy tỏi</a>
-                                    </li>
-                                    <li class="header__search-history-item">
-                                        <a href="#">Tôm mũ ni nướng muối ớt</a>
-                                    </li>
-                                    <li class="header__search-history-item">
-                                        <a href="#">Gà xào hạt điều</a>
-                                    </li>
+									</c:forEach> 
+									
                                 </ul>
                             </div>
                         </div>
-                        <button class="btn header__search-btn" >
+                        <button class="btn header__search-btn" type="submit">
                             <i class="header__search-btn-icon fas fa-search"></i>
                         </button>
-                    </div>
+                    </form>
                     <!-- header__cart--no-cart --><!-- header__cart--has-cart -->
                     <div class="header__cart header__cart--has-cart">
                         <i class="header__cart-icon fas fa-shopping-cart"></i>
@@ -1339,7 +1331,8 @@
                                 <span>Cantin:</span>
                             </div>
                             <div class="auth-form__group">
-                                <input type="text" class="auth-form__input_info" name="txtIDCantin" value="${khachhang.getIDCantin()}">
+                                <input type="text" class="auth-form__input_info input-chosseCantin" name="txtIDCantin" value="${khachhang.getIDCantin()}" readonly>
+                                <a class="btn btn--primary btn-ChosseCantin" href="./">Chọn Cantin</a>
                             </div>
                             <div class="auth-form__title">
                                 <span>Món yêu thích:</span>

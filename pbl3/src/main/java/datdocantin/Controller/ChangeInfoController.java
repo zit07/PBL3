@@ -31,6 +31,7 @@ public class ChangeInfoController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
 		HttpSession session = request.getSession(true);
+		session.setMaxInactiveInterval(-1);
         try {
         	String id = request.getParameter("id_user");
         	String hoten = request.getParameter("txtHoten");
@@ -52,9 +53,6 @@ public class ChangeInfoController extends HttpServlet {
             	response.sendRedirect(request.getContextPath());
             }
             else {
-            	request.setAttribute("display_form__signup", "flex");
-            	request.setAttribute("display_noti__signup", "flex");
-            	request.setAttribute("sdt", sdt);
             	request.getRequestDispatcher("view/homepage.jsp").forward(request, response);
             }
         } catch (Exception e) {

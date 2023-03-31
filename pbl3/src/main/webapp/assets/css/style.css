@@ -512,6 +512,14 @@ border-color: red green blue yellow */
     align-items: center;
 }
 
+.input-chosseCantin{
+	width: 70%;
+}
+
+.btn-ChosseCantin{
+	height: 40px
+}
+
 .header__contain {
     height: 86px;
     display: flex;
