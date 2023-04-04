@@ -502,7 +502,7 @@ border-color: red green blue yellow */
 .auth-form__info {
     width: 600px;
     background-color: var(--white-color);
-    border-radius: 5px;
+    border-radius: 0 5px 5px 0;
     overflow: hidden;
 }
 
@@ -518,6 +518,33 @@ border-color: red green blue yellow */
 
 .btn-ChosseCantin{
 	height: 40px
+}
+
+.form-info{ 
+    display: flex;
+}
+
+.avatar{
+    width: 230px;
+    background-color: white;
+    border-radius: 5px 0 0 5px;
+    text-align: center;
+    padding: 0 32px 0 32px;
+}
+
+.avatar-form__img{
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #dfdfdf;
+    margin-top: 40px;
+}
+
+.avatar-form__input{
+    margin: 20px 10px;
+    font-size: 1.4rem;
+    cursor: pointer;
 }
 
 .header__contain {

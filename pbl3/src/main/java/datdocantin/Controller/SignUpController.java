@@ -12,6 +12,7 @@ import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Model.AccountModel;
 import datdocantin.Model.KhachHangModel;
+import datdocantin.Service.getNewIDforTable;
 import datdocantin.Util.PasswordEncoder;
 
 @WebServlet("/Signup")
@@ -37,10 +38,10 @@ public class SignUpController extends HttpServlet {
             String password = PasswordEncoder.encode(request.getParameter("txtPassword"));
             String typeUser = request.getParameter("typeUser");
             if (AccountDAO.CheckAccountNotExist(sdt)) {
-            	String id = String.valueOf(AccountDAO.getLastId()+1);
+            	String id = getNewIDforTable.getNewID("account"); System.out.print(id);
             	AccountModel acc = new AccountModel(id, sdt, password, typeUser);
             	AccountDAO.addAccount(acc);
-            	KhachHangModel newKH = new KhachHangModel(id,hoten,null,"","","",sdt,"","","",""); 
+            	KhachHangModel newKH = new KhachHangModel(id,hoten,null,"","","",sdt,"","","","",null); 
             	KhachhangDAO.addKhachhang(newKH);
             	response.sendRedirect(request.getContextPath());
             }

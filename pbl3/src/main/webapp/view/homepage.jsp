@@ -4,12 +4,12 @@
 <%@ page import="javax.servlet.http.HttpSession" %>
 <%@ page import="datdocantin.Model.KhachHangModel" %>
 <%@ page import="java.util.List" %>
-
+<%@ page import="java.util.Base64" %>
 <%
 	KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
 	List<String> searchHistory = (List<String>) session.getAttribute("searchHistory");
 	String sdt = (String)session.getAttribute("sdt");
-
+	
 %>
 <!DOCTYPE html>
 <html>
@@ -132,7 +132,12 @@
 						</c:if>
 						<c:if test="${khachhang!=null}">
 						        <li class="header__nav-item header__nav-user" >
-		                            <img src="./assets/img/user.png" class="header__nav-user-avt">
+						        	<c:if test="${khachhang.getAvatar()==null}">
+		                            	<img src="./assets/img/avatarDefault.jpg" class="header__nav-user-avt">
+		                            </c:if>
+		                            <c:if test="${khachhang.getAvatar()!=null}">
+		                            <img src="data:image/jpeg;base64, <%= Base64.getEncoder().encodeToString(khachhang.getAvatar()) %>" class="header__nav-user-avt"/>
+		                            </c:if>
 		                            <a href="#" class="header__nav-item-link header__nav-item--bold">${khachhang.getHoten()}</a>
 		                            <ul class="header__nav-user-menu">
 		                                <li class="header__nav-user-item" id="info-link">
@@ -172,8 +177,8 @@
                                 <ul class="header__search-history-list">
                                     <c:forEach items="${searchHistory}" var="i">
 							        	<li class="header__search-history-item">
-                                        <a href="#">${i}</a>
-                                    </li>
+                                        	<a href="#">${i}</a>
+                                    	</li>
 									</c:forEach> 
 									
                                 </ul>
@@ -1110,246 +1115,278 @@
     
     <!-- Signup Form -->
     <c:if test="${khachhang==null}"> 
-	<div class="modal" id="form-signup" style="display: ${display_form__signup}">
-	    <div class="modal__body">
-	        <form class="formSignup" method="POST" action="./Signup">
-		        <div class="auth-form">
-	                <div class="auth-form__container">
-	                    <div class="auth-form__header">
-	                        <h3 class="auth-form__heading">Đăng Ký</h3>
-	                        <div class="auth-form__switch-btn">
-	                            <a href="#" id="login-link2" class="auth-form__switch-btn--link">Đăng nhập</a>
+		<div class="modal" id="form-signup" style="display: ${display_form__signup}">
+		    <div class="modal__body">
+		        <form class="formSignup" method="POST" action="./Signup">
+			        <div class="auth-form">
+		                <div class="auth-form__container">
+		                    <div class="auth-form__header">
+		                        <h3 class="auth-form__heading">Đăng Ký</h3>
+		                        <div class="auth-form__switch-btn">
+		                            <a href="#" id="login-link2" class="auth-form__switch-btn--link">Đăng nhập</a>
+		                        </div>
+		                    </div>
+		                    <div class="auth-form__form">
+								<div class="auth-form__group--noti" id="notiSignupConfirmPass">
+									<span>Mật khẩu và xác nhận mật khẩu không giống nhau.</span>
+								</div>
+								<div class="auth-form__group--noti" id="notiSignupsdt" style="display: ${display_noti__signup}">
+									<span>Số điện thoại này đã được đăng ký.</span>
+								</div>
+								<div class="auth-form__group">
+		                            <input type="text" placeholder="Họ và tên" name="txtHoten" class="auth-form__input" required>
+		                        </div>
+								<div class="auth-form__group">
+									<input type="text" value="${sdt}" name="txtSdt" placeholder="Số điện thoại" class="auth-form__input" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
+								</div>
+		                        <div class="auth-form__group">
+		                            <input type="password" placeholder="Mật khẩu" name="txtPassword" class="auth-form__input" required>
+		                        </div>
+		                        <div class="auth-form__group">
+		                            <input type="password" placeholder="Nhập lại mật khẩu" name="txtConfirmPassword" class="auth-form__input" required>
+		                        </div> 
+		                        <div class="auth-form__radio">
+		                            <label class="auth-form__label">Loại tài khoản:</label>
+		                            <div class="auth-form__radio-group">
+		                                <input type="radio" name="typeUser" checked="checked" id="customer" value="customer">
+		                                <label class="auth-form__label" for="customer">Khách hàng</label>
+		                                <input type="radio" name="typeUser" id="cantin" value="cantin">
+		                                <label class="auth-form__label" for="cantin">Cantin</label>
+		                            </div>
+		                        </div>
+		                    </div>
+		                    <div class="auth-form__control">
+		                        <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+		                        <button class="btn btn--primary" type="submit">ĐĂNG KÝ</button>
+		                    </div>
+		                </div>
+		            </div>
+		        </form>
+		    </div> 
+		</div>
+	
+		<!-- Login Form -->
+		<div class="modal" id="form-login" style="display: ${display_form__login}">
+		    <div class="modal__body">
+		        <form class="auth-form" method="POST" action="./Login">
+		            <div class="auth-form__container">
+		                <div class="auth-form__header">
+		                    <h3 class="auth-form__heading">Đăng Nhập</h3>
+		                    <div class="auth-form__switch-btn">
+		                        <a href="#" id="signup-link2" class="auth-form__switch-btn--link">Đăng ký</a>
+		                    </div>
+		                </div>
+		                <div class="auth-form__form">
+		                	<div class="auth-form__group--noti" style="display: ${noti_login__ErrorSdt}">
+	                            <span>Số điện thoại này chưa được đăng ký.</span>
 	                        </div>
-	                    </div>
-	                    <div class="auth-form__form">
-							<div class="auth-form__group--noti" id="notiSignupConfirmPass">
-								<span>Mật khẩu và xác nhận mật khẩu không giống nhau.</span>
-							</div>
-							<div class="auth-form__group--noti" id="notiSignupsdt" style="display: ${display_noti__signup}">
-								<span>Số điện thoại này đã được đăng ký.</span>
-							</div>
-							<div class="auth-form__group">
-	                            <input type="text" placeholder="Họ và tên" name="txtHoten" class="auth-form__input" required>
+	                        <div class="auth-form__group--noti" style="display: ${noti_login__ErrorPass}">
+	                            <span>Mật khẩu bạn vừa nhập không chính xác.</span>
 	                        </div>
-							<div class="auth-form__group">
-								<input type="text" value="${sdt}" name="txtSdt" placeholder="Số điện thoại" class="auth-form__input" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
-							</div>
-	                        <div class="auth-form__group">
-	                            <input type="password" placeholder="Mật khẩu" name="txtPassword" class="auth-form__input" required>
-	                        </div>
-	                        <div class="auth-form__group">
-	                            <input type="password" placeholder="Nhập lại mật khẩu" name="txtConfirmPassword" class="auth-form__input" required>
-	                        </div> 
-	                        <div class="auth-form__radio">
-	                            <label class="auth-form__label">Loại tài khoản:</label>
-	                            <div class="auth-form__radio-group">
-	                                <input type="radio" name="typeUser" checked="checked" id="customer" value="customer">
-	                                <label class="auth-form__label" for="customer">Khách hàng</label>
-	                                <input type="radio" name="typeUser" id="cantin" value="cantin">
-	                                <label class="auth-form__label" for="cantin">Cantin</label>
-	                            </div>
-	                        </div>
-	                    </div>
-	                    <div class="auth-form__control">
-	                        <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
-	                        <button class="btn btn--primary" type="submit">ĐĂNG KÝ</button>
-	                    </div>
-	                </div>
-	            </div>
-	        </form>
-	    </div> 
-	</div>
-
-	<!-- Login Form -->
-	<div class="modal" id="form-login" style="display: ${display_form__login}">
-	    <div class="modal__body">
-	        <form class="auth-form" method="POST" action="./Login">
-	            <div class="auth-form__container">
-	                <div class="auth-form__header">
-	                    <h3 class="auth-form__heading">Đăng Nhập</h3>
-	                    <div class="auth-form__switch-btn">
-	                        <a href="#" id="signup-link2" class="auth-form__switch-btn--link">Đăng ký</a>
-	                    </div>
-	                </div>
-	                <div class="auth-form__form">
-	                	<div class="auth-form__group--noti" style="display: ${noti_login__ErrorSdt}">
-                            <span>Số điện thoại này chưa được đăng ký.</span>
-                        </div>
-                        <div class="auth-form__group--noti" style="display: ${noti_login__ErrorPass}">
-                            <span>Mật khẩu bạn vừa nhập không chính xác.</span>
-                        </div>
-	                    <div class="auth-form__group">
-	                        <input type="text" placeholder="Số điện thoại" name="txtSdt" class="auth-form__input" value="${sdt}" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
-	                    </div>
-	                    <div class="auth-form__group">
-	                        <input type="password" placeholder="Mật khẩu" class="auth-form__input" name="txtPassword" required>
-	                    </div>
-	                </div>
-	                <div class="auth-form__help">
-	                    <a href="#" class="auth-form__help-link auth-form__help-forgot">Quên Mật Khẩu</a>
-	                    <div class="auth-form__help--separate"></div>
-	                    <a href="#" class="auth-form__help-link">Cần trợ giúp?</a>
-	                </div>
-	                <div class="auth-form__control">
-	                    <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
-	                    <button class="btn btn--primary" type="submit">ĐĂNG NHẬP</button>
-	                </div>
-	            </div>
-	        </form>
-	    </div> 
-	</div>
+		                    <div class="auth-form__group">
+		                        <input type="text" placeholder="Số điện thoại" name="txtSdt" class="auth-form__input" value="${sdt}" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
+		                    </div>
+		                    <div class="auth-form__group">
+		                        <input type="password" placeholder="Mật khẩu" class="auth-form__input" name="txtPassword" required>
+		                    </div>
+		                </div>
+		                <div class="auth-form__help">
+		                    <a href="#" class="auth-form__help-link auth-form__help-forgot">Quên Mật Khẩu</a>
+		                    <div class="auth-form__help--separate"></div>
+		                    <a href="#" class="auth-form__help-link">Cần trợ giúp?</a>
+		                </div>
+		                <div class="auth-form__control">
+		                    <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+		                    <button class="btn btn--primary" type="submit">ĐĂNG NHẬP</button>
+		                </div>
+		            </div>
+		        </form>
+		    </div> 
+		</div>
 	</c:if>
 	<c:if test="${khachhang!=null}">
-	<div class="modal" id="form-changepassword" style="display: ${display_form__changepass}" >
-        <div class="modal__body">
-            <form action="./ChangePassword?id_user=${khachhang.getIDKH()}" method="post" class="formChangePass">
-                <div class="auth-form">
-                    <div class="auth-form__container">
-                        <div class="auth-form__header">
-                            <h3 class="auth-form__heading">Đổi mật khẩu</h3>
-                            <div class="auth-form__switch-btn">
-                                <a href="#" id="changepin-link2" class="auth-form__switch-btn--link">Đổi mã xác thực</a>
-                            </div>
-                        </div>
-                        <div class="auth-form__form">
-                            <div class="auth-form__group--noti" id="notiChangePassConfirm">
-                                <span>Mật khẩu mới và xác nhận mật khẩu mới không giống nhau.</span>
-                            </div>
-                            <div class="auth-form__group--noti" id="notiErrorOldPass" style="display: ${notiErrorOldPass}">
-                                <span>Sai mật khẩu cũ.</span>
-                            </div>
-                            <div class="auth-form__group--noti" id="notiSuccessNewPass" style="display: ${notiSuccessNewPass}">
-                                <span>Cập nhật mật khẩu mới thành công.</span>
-                            </div>
-                            <div class="auth-form__group">
-                                <input type="text" placeholder="Mật khẩu cũ" class="auth-form__input" name="txtOldPass" required>
-                            </div>
-                            <div class="auth-form__group">
-                                <input type="password" placeholder="Mật khẩu mới" class="auth-form__input" name="txtNewPass" required>
-                            </div>
-                            <div class="auth-form__group">
-                                <input type="password" placeholder="Nhập lại mật khẩu mới" class="auth-form__input" name="txtConfirmNewPass" required>
-                            </div>
-                        </div>
-                        <div class="auth-form__control">
-                            <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
-                            <button class="btn btn--primary" type="submit">Xác nhận</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div> 
-    </div>
-
-	<!-- Change PIN form -->
-    <div class="modal" id="form-changepin" style="display: ${display_form__changepin}">
-        <div class="modal__body">
-            <form action="./ChangePin?id_user=${khachhang.getIDKH()}" method="post" class="auth-form">
-                <div class="auth-form">
-                    <div class="auth-form__container">
-                        <div class="auth-form__header">
-                            <h3 class="auth-form__heading">Đổi mã xác thực</h3>
-                            <div class="auth-form__switch-btn">
-                                <a href="#" id="changepass-link2" class="auth-form__switch-btn--link">Đổi mật khẩu</a>
-                            </div>
-                        </div>
-                        <div class="auth-form__form">
-                            <div class="auth-form__group--noti" id="notiErrorOldPass" style="display: ${notiErrorOldPass}">
-                                <span>Sai mật khẩu.</span>
-                            </div>
-                            <div class="auth-form__group--noti" id="notiSuccessNewPin" style="display: ${notiSuccessNewPin}">
-                                <span>Cập nhật mã xác thực mới thành công.</span>
-                            </div>
-                            <div class="auth-form__group">
-                                <input type="text" placeholder="Nhập mật khẩu" class="auth-form__input" name="txtPass" required>
-                            </div>
-                            <div class="auth-form__group">
-                                <input type="text" placeholder="Nhập mã xác thực mới" class="auth-form__input" name="txtNewPin" required>
-                            </div>
-                        </div>
-                        <div class="auth-form__control">
-                            <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
-                            <button class="btn btn--primary" type="submit">Xác nhận</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div> 
-    </div>
-    <div class="modal" id="form-info">
-        <div class="modal__body">
+		<div class="modal" id="form-changepassword" style="display: ${display_form__changepass}" >
+	        <div class="modal__body">
+	            <form action="./ChangePassword?id_user=${khachhang.getIDKH()}" method="post" class="formChangePass">
+	                <div class="auth-form">
+	                    <div class="auth-form__container">
+	                        <div class="auth-form__header">
+	                            <h3 class="auth-form__heading">Đổi mật khẩu</h3>
+	                            <div class="auth-form__switch-btn">
+	                                <a href="#" id="changepin-link2" class="auth-form__switch-btn--link">Đổi mã xác thực</a>
+	                            </div>
+	                        </div>
+	                        <div class="auth-form__form">
+	                            <div class="auth-form__group--noti" id="notiChangePassConfirm">
+	                                <span>Mật khẩu mới và xác nhận mật khẩu mới không giống nhau.</span>
+	                            </div>
+	                            <div class="auth-form__group--noti" id="notiErrorOldPass" style="display: ${notiErrorOldPass}">
+	                                <span>Sai mật khẩu cũ.</span>
+	                            </div>
+	                            <div class="auth-form__group--noti" id="notiSuccessNewPass" style="display: ${notiSuccessNewPass}">
+	                                <span>Cập nhật mật khẩu mới thành công.</span>
+	                            </div>
+	                            <div class="auth-form__group">
+	                                <input type="text" placeholder="Mật khẩu cũ" class="auth-form__input" name="txtOldPass" required>
+	                            </div>
+	                            <div class="auth-form__group">
+	                                <input type="password" placeholder="Mật khẩu mới" class="auth-form__input" name="txtNewPass" required>
+	                            </div>
+	                            <div class="auth-form__group">
+	                                <input type="password" placeholder="Nhập lại mật khẩu mới" class="auth-form__input" name="txtConfirmNewPass" required>
+	                            </div>
+	                        </div>
+	                        <div class="auth-form__control">
+	                            <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+	                            <button class="btn btn--primary" type="submit">Xác nhận</button>
+	                        </div>
+	                    </div>
+	                </div>
+	            </form>
+	        </div> 
+	    </div>
+	
+		<!-- Change PIN form -->
+	    <div class="modal" id="form-changepin" style="display: ${display_form__changepin}">
+	        <div class="modal__body">
+	            <form action="./ChangePin?id_user=${khachhang.getIDKH()}" method="post" class="auth-form">
+	                <div class="auth-form">
+	                    <div class="auth-form__container">
+	                        <div class="auth-form__header">
+	                            <h3 class="auth-form__heading">Đổi mã xác thực</h3>
+	                            <div class="auth-form__switch-btn">
+	                                <a href="#" id="changepass-link2" class="auth-form__switch-btn--link">Đổi mật khẩu</a>
+	                            </div>
+	                        </div>
+	                        <div class="auth-form__form">
+	                            <div class="auth-form__group--noti" id="notiErrorOldPass" style="display: ${notiErrorOldPass}">
+	                                <span>Sai mật khẩu.</span>
+	                            </div>
+	                            <div class="auth-form__group--noti" id="notiSuccessNewPin" style="display: ${notiSuccessNewPin}">
+	                                <span>Cập nhật mã xác thực mới thành công.</span>
+	                            </div>
+	                            <div class="auth-form__group">
+	                                <input type="text" placeholder="Nhập mật khẩu" class="auth-form__input" name="txtPass" required>
+	                            </div>
+	                            <div class="auth-form__group">
+	                                <input type="text" placeholder="Nhập mã xác thực mới" class="auth-form__input" name="txtNewPin" required>
+	                            </div>
+	                        </div>
+	                        <div class="auth-form__control">
+	                            <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+	                            <button class="btn btn--primary" type="submit">Xác nhận</button>
+	                        </div>
+	                    </div>
+	                </div>
+	            </form>
+	        </div> 
+	    </div>
+	    <div class="modal" id="form-info">
+	        <div class="modal__body" >
             <!-- authen change info-->
-            <form action="./ChangeInfo?id_user=${khachhang.getIDKH()}" method="post">
-                <div class="auth-form__info">
-                    <div class="auth-form__container">
-                        <div class="auth-form__header">
-                            <h3 class="auth-form__heading">Thông tin cá nhân</h3>
-                        </div>
-                        <div class="auth-form__form">
-                            <div class="auth-form__title">
-                                <span >Họ và tên:</span>
-                            </div>
-                            <div class="auth-form__group">
-                                <input type="text" class="auth-form__input_info" name="txtHoten" value="${khachhang.getHoten()}">
-                            </div>
-                            <div class="auth-form__title">
-                                <span>Ngày tháng năm sinh:</span>
-                            </div>
-                            <div class="auth-form__group">
-                                <input type="date" class="auth-form__input_info" name="txtNgaysinh" value="${khachhang.getNgaysinh()}">
-                            </div>
-                            <div class="auth-form__group_row">
-                                <div class="auth-form__title_row"><span>Giới tính:</span></div>
-                                <div class="auth-form__title_row"><span>Chiều cao(mét):</span></div>
-                                <div class="auth-form__title_row"><span>Cân nặng(Kg):</span></div>
-                            </div>
-                            <div class="auth-form__group_row">
-                                <div class="auth-form__input_info_row">
-                                    <select name="txtGioitinh" id="" class="auth-form__input_info_select">
-									    <option value="-1"></option>
-									    <option value="nam" ${khachhang.getGioitinh() == 'nam' ? 'selected' : ''}>Nam</option>
-									    <option value="nu" ${khachhang.getGioitinh() == 'nu' ? 'selected' : ''}>Nữ</option>
-									</select>
-                                    
-                                </div>
-                                <input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: 1.7" name="txtChieucao" value="${khachhang.getChieucao()}">
-                                <input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: 54.8" name="txtCannang" value="${khachhang.getCannang()}">
-                            </div>
-                            <div class="auth-form__title">
-                                <span>Số điện thoại:</span>
-                            </div>
-                            <div class="auth-form__group">
-                                <input type="text" value="${khachhang.getSodienthoai()}" name="txtSdt" class="auth-form__input_info" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
-                            </div>
-                            <div class="auth-form__title">
-                                <span>Email:</span>
-                            </div>
-                            <div class="auth-form__group">
-                                <input type="email" class="auth-form__input_info" name="txtEmail" value="${khachhang.getEmail()}">
-                            </div>
-                            <div class="auth-form__title">
-                                <span>Cantin:</span>
-                            </div>
-                            <div class="auth-form__group">
-                                <input type="text" class="auth-form__input_info input-chosseCantin" name="txtIDCantin" value="${khachhang.getIDCantin()}" readonly>
-                                <a class="btn btn--primary btn-ChosseCantin" href="./">Chọn Cantin</a>
-                            </div>
-                            <div class="auth-form__title">
-                                <span>Món yêu thích:</span>
-                            </div>
-                            <div class="auth-form__group">
-                                <input type="text" class="auth-form__input_info" placeholder="Ví dụ: Rau, Cá, Thịt gà,..." name="txtMonyeuthich" value="${khachhang.getMonyeuthich()}">
-                            </div>
-                        </div>
-                        <div class="auth-form__control_info">
-                            <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
-                            <button class="btn btn--primary" type="submit">Lưu</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div> 
-    </div>
+				<form action="./ChangeInfo?id_user=${khachhang.getIDKH()}" method="post" class="form-info" enctype="multipart/form-data">
+					<div class="avatar">
+						<c:if test="${khachhang.getAvatar()==null}">
+							<img src="./assets/img/avatarDefault.jpg" class="avatar-form__img" id="img-form"/>
+						</c:if>
+						<c:if test="${khachhang.getAvatar()!=null}">
+							<img src="data:image/jpeg;base64,<%= Base64.getEncoder().encodeToString(khachhang.getAvatar()) %>" class="avatar-form__img" id="img-form"/>
+						</c:if>
+						<input class="avatar-form__input" type="file" name="avatar" id="input-img-form">
+					</div>
+					<div class="auth-form__info">
+						<div class="auth-form__container">
+							<div class="auth-form__header">
+								<h3 class="auth-form__heading">Thông tin cá nhân</h3>
+							</div>
+							<div class="auth-form__form">
+								<div class="auth-form__title">
+									<span>Họ và tên:</span>
+								</div>
+								<div class="auth-form__group">
+									<input type="text" class="auth-form__input_info"
+										name="txtHoten" value="${khachhang.getHoten()}">
+								</div>
+								<div class="auth-form__title">
+									<span>Ngày tháng năm sinh:</span>
+								</div>
+								<div class="auth-form__group">
+									<input type="date" class="auth-form__input_info"
+										name="txtNgaysinh" value="${khachhang.getNgaysinh()}">
+								</div>
+								<div class="auth-form__group_row">
+									<div class="auth-form__title_row">
+										<span>Giới tính:</span>
+									</div>
+									<div class="auth-form__title_row">
+										<span>Chiều cao(mét):</span>
+									</div>
+									<div class="auth-form__title_row">
+										<span>Cân nặng(Kg):</span>
+									</div>
+								</div>
+								<div class="auth-form__group_row">
+									<div class="auth-form__input_info_row">
+										<select name="txtGioitinh" id=""
+											class="auth-form__input_info_select">
+											<option value="-1"></option>
+											<option value="nam"
+												${khachhang.getGioitinh() == 'nam' ? 'selected' : ''}>Nam</option>
+											<option value="nu"
+												${khachhang.getGioitinh() == 'nu' ? 'selected' : ''}>Nữ</option>
+										</select>
+
+									</div>
+									<input type="text" class="auth-form__input_info_row"
+										placeholder="Ví dụ: 1.7" name="txtChieucao"
+										value="${khachhang.getChieucao()}"> <input type="text"
+										class="auth-form__input_info_row" placeholder="Ví dụ: 54.8"
+										name="txtCannang" value="${khachhang.getCannang()}">
+								</div>
+								<div class="auth-form__title">
+									<span>Số điện thoại:</span>
+								</div>
+								<div class="auth-form__group">
+									<input type="text" value="${khachhang.getSodienthoai()}"
+										name="txtSdt" class="auth-form__input_info"
+										oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+										required>
+								</div>
+								<div class="auth-form__title">
+									<span>Email:</span>
+								</div>
+								<div class="auth-form__group">
+									<input type="email" class="auth-form__input_info"
+										name="txtEmail" value="${khachhang.getEmail()}">
+								</div>
+								<div class="auth-form__title">
+									<span>Cantin:</span>
+								</div>
+								<div class="auth-form__group">
+									<input type="text"
+										class="auth-form__input_info input-chosseCantin"
+										name="txtIDCantin" value="${khachhang.getIDCantin()}" readonly>
+									<a class="btn btn--primary btn-ChosseCantin" href="./">Chọn
+										Cantin</a>
+								</div>
+								<div class="auth-form__title">
+									<span>Món yêu thích:</span>
+								</div>
+								<div class="auth-form__group">
+									<input type="text" class="auth-form__input_info"
+										placeholder="Ví dụ: Rau, Cá, Thịt gà,..."
+										name="txtMonyeuthich" value="${khachhang.getMonyeuthich()}">
+								</div>
+							</div>
+							<div class="auth-form__control_info">
+								<a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+								<button class="btn btn--primary" type="submit">Lưu</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div> 
+	    </div>
 	</c:if>
 	
     <!-- script js -->

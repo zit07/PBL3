@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Base64;
+
 import datdocantin.Model.KhachHangModel;
 import datdocantin.Util.connectDB;
 
@@ -17,13 +19,18 @@ public class KhachhangDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT idkh, hoten, ngaysinh, gioitinh, chieucao, cannang, sodienthoai, email, idcantin, monyeuthich FROM khachhang WHERE idkh = ?;";
+            	String sql = "SELECT idkh, hoten, ngaysinh, gioitinh, chieucao, cannang, sodienthoai, email, idcantin, monyeuthich, avatar FROM khachhang WHERE idkh = ?;";
             	stm = conn.prepareStatement(sql);
             	stm.setString(1, id);
             	rs = stm.executeQuery();
                 if (rs.next()) {
-                    result = new KhachHangModel(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10),"");
-
+                	byte[] encodedAvatar = null;
+                	byte[] decodedAvatar = null;
+                	if (rs.getBytes(11)!=null){
+	                	encodedAvatar = rs.getBytes(11);
+	                	decodedAvatar = Base64.getDecoder().decode(encodedAvatar);
+                	}
+                	result = new KhachHangModel(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), "", decodedAvatar);
                 }
             }
         } catch (Exception e) {
@@ -38,19 +45,11 @@ public class KhachhangDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "INSERT INTO khachhang(idkh, hoten, ngaysinh, gioitinh, chieucao, cannang, sodienthoai, email, idcantin, monyeuthich, pin) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                String sql = "INSERT INTO khachhang(idkh, hoten, sodienthoai) VALUES(?, ?, ?);";
                 stm = conn.prepareStatement(sql);
                 stm.setString(1, newKhachhang.getIDKH());
                 stm.setString(2, newKhachhang.getHoten());
-                stm.setString(3, newKhachhang.getNgaysinh());
-                stm.setString(4, newKhachhang.getGioitinh());
-                stm.setString(5, newKhachhang.getChieucao());
-                stm.setString(6, newKhachhang.getCannang());
-                stm.setString(7, newKhachhang.getSodienthoai());
-                stm.setString(8, newKhachhang.getEmail());
-                stm.setString(9, newKhachhang.getIDCantin());
-                stm.setString(10, newKhachhang.getMonyeuthich());
-                stm.setString(11, newKhachhang.getPIN());
+                stm.setString(3, newKhachhang.getSodienthoai());
                 stm.executeUpdate();
             }
         } catch (Exception e) {
@@ -63,7 +62,11 @@ public class KhachhangDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "UPDATE khachhang SET hoten = ?, ngaysinh = ?, gioitinh = ?, chieucao = ?, cannang = ?, sodienthoai = ?, email = ?, idcantin = ?, monyeuthich = ? WHERE idkh = ?;";
+                String sql = "UPDATE khachhang SET hoten = ?, ngaysinh = ?, gioitinh = ?, chieucao = ?, cannang = ?, sodienthoai = ?, email = ?, idcantin = ?, monyeuthich = ?";
+                if (khachhang.getAvatar() != null) {
+                    sql += ", avatar = ?";
+                }
+                sql += " WHERE idkh = ?;";
                 stm = conn.prepareStatement(sql);
                 stm.setString(1, khachhang.getHoten());
                 stm.setString(2, khachhang.getNgaysinh());
@@ -74,10 +77,17 @@ public class KhachhangDAO {
                 stm.setString(7, khachhang.getEmail());
                 stm.setString(8, khachhang.getIDCantin());
                 stm.setString(9, khachhang.getMonyeuthich());
-                stm.setString(10, khachhang.getIDKH());
+                if (khachhang.getAvatar() != null) {
+                    stm.setString(10, Base64.getEncoder().encodeToString(khachhang.getAvatar()));
+                    stm.setString(11, khachhang.getIDKH());
+                } else {
+                    stm.setString(10, khachhang.getIDKH());
+                }
                 stm.executeUpdate();
             }
+
         } catch (Exception e) {
+        	e.printStackTrace();
         } finally {
             connectDB.closeConnection(conn, stm, rs);
         }

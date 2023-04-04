@@ -1,21 +1,21 @@
 // Link Click To Show
 
-const Signuplink = document.getElementById("signup-link");
-const Signuplink2 = document.getElementById("signup-link2");
-const Loginlink = document.getElementById("login-link");
-const Loginlink2 = document.getElementById("login-link2");
-const ChangePasslink = document.getElementById("changepass-link");
-const ChangePasslink2 = document.getElementById("changepass-link2");
-const ChangePINlink = document.getElementById("changepin-link");
-const ChangePINlink2 = document.getElementById("changepin-link2");
-const Infolink = document.getElementById("info-link"); 
+const Signuplink = document.getElementById("signup-link"),
+	  Signuplink2 = document.getElementById("signup-link2"),
+	  Loginlink = document.getElementById("login-link"),
+	  Loginlink2 = document.getElementById("login-link2"),
+	  ChangePasslink = document.getElementById("changepass-link"),
+	  ChangePasslink2 = document.getElementById("changepass-link2"),
+	  ChangePINlink = document.getElementById("changepin-link"),
+	  ChangePINlink2 = document.getElementById("changepin-link2"),
+	  Infolink = document.getElementById("info-link"); 
 
 // Form to show
-const Signupform = document.getElementById("form-signup");
-const Loginform = document.getElementById("form-login");
-const ChangePassform = document.getElementById("form-changepassword");
-const ChangePINform = document.getElementById("form-changepin");
-const Infoform = document.getElementById("form-info");
+const Signupform = document.getElementById("form-signup"),
+	  Loginform = document.getElementById("form-login"),
+ 	  ChangePassform = document.getElementById("form-changepassword"),
+	  ChangePINform = document.getElementById("form-changepin"),
+	  Infoform = document.getElementById("form-info");
 
 // Function to show form
 if  (Signuplink!==null){
@@ -114,10 +114,21 @@ $(function () {
                   element.wards.forEach(element1 => {
                       $('#town').append(`<option value="${element1.code}">${element1.name}</option>`)
                   });
-              }
+              } 
           })       
       });
   }
   prodvince = JSON.parse(address);
    apiProvince(prodvince);
 })
+
+const avatar = document.getElementById("img-form"),
+	  inputIMG = document.getElementById("input-img-form");
+	  
+	inputIMG.addEventListener("change", ()=>{
+		avatar.src = URL.createObjectURL(inputIMG.files[0]);
+	});
+	  
+	  
+	  
+	  

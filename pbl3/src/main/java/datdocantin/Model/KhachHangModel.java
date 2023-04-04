@@ -1,15 +1,15 @@
 package datdocantin.Model;
 
-import java.sql.Date;
 
 public class KhachHangModel {
 	private String IDKH, Hoten, Ngaysinh, Gioitinh, Chieucao, Cannang, Sodienthoai, Email, IDCantin, Monyeuthich, PIN;
+	private byte[] avatar;
 
 	public KhachHangModel() {
 		// TODO Auto-generated constructor stub
 	}
     
-    public KhachHangModel(String IDKH, String Hoten, String Ngaysinh, String Gioitinh, String Chieucao, String Cannang, String Sodienthoai, String Email, String IDCantin, String Monyeuthich,String PIN) {
+    public KhachHangModel(String IDKH, String Hoten, String Ngaysinh, String Gioitinh, String Chieucao, String Cannang, String Sodienthoai, String Email, String IDCantin, String Monyeuthich,String PIN,byte[] avatar) {
     	this.IDKH = IDKH;
     	this.Hoten = Hoten;
     	this.Ngaysinh = Ngaysinh;
@@ -21,6 +21,7 @@ public class KhachHangModel {
     	this.IDCantin = IDCantin;
     	this.Monyeuthich = Monyeuthich;
     	this.PIN = PIN;
+    	this.avatar = avatar;
     }
     
 	public String getIDKH() {
@@ -110,5 +111,14 @@ public class KhachHangModel {
 	public void setPIN(String PIN) {
 		this.PIN = PIN;
 	}
+
+	public byte[] getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(byte[] avatar) {
+		this.avatar = avatar;
+	}
+	
 }
 

@@ -18,13 +18,13 @@ public class AccountDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT idAccount, sdt, pass, typeUser FROM account WHERE idAccount = ? AND pass = ?;";
+            	String sql = "SELECT id, sdt, pass, typeUser FROM account WHERE id = ? AND pass = ?;";
             	stm = conn.prepareStatement(sql);
             	stm.setString(1, id);
             	stm.setString(2, PasswordEncoder.encode(pass));
             	rs = stm.executeQuery();
                 if (rs.next()) {
-                    result = new AccountModel(rs.getString("idAccount"), rs.getString("sdt"), rs.getString("pass"), rs.getString("typeUser"));
+                    result = new AccountModel(rs.getString("id"), rs.getString("sdt"), rs.getString("pass"), rs.getString("typeUser"));
                 }
             }
         } catch (Exception e) {
@@ -39,12 +39,12 @@ public class AccountDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "SELECT idAccount FROM account WHERE sdt = ?;";
+                String sql = "SELECT id FROM account WHERE sdt = ?;";
                 stm = conn.prepareStatement(sql);
                 stm.setString(1, sdt);
                 rs = stm.executeQuery();
                 if (rs.next()) {
-                    result = rs.getString("idAccount");
+                    result = rs.getString("id");
                 }
             }
         } catch (Exception e) {
@@ -77,9 +77,9 @@ public class AccountDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "INSERT INTO account(idAccount, sdt, pass, typeUser) VALUES(?, ?, ?, ?);";
+                String sql = "INSERT INTO account(id, sdt, pass, typeUser) VALUES(?, ?, ?, ?);";
                 stm = conn.prepareStatement(sql);
-                stm.setString(1, account.getID_Account());
+                stm.setString(1, account.getid());
                 stm.setString(2, account.getSdt());
                 stm.setString(3, account.getPass());
                 stm.setString(4, account.getType_User());
@@ -95,7 +95,7 @@ public class AccountDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "UPDATE account SET pass=? WHERE idAccount=?";
+                String sql = "UPDATE account SET pass=? WHERE id=?";
                 stm = conn.prepareStatement(sql);
                 stm.setString(1, PasswordEncoder.encode(pass));
                 stm.setString(2, id);
@@ -111,7 +111,7 @@ public class AccountDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "UPDATE account SET sdt=? WHERE idAccount=?";
+                String sql = "UPDATE account SET sdt=? WHERE id=?";
                 stm = conn.prepareStatement(sql);
                 stm.setString(1, sdt);
                 stm.setString(2, id);

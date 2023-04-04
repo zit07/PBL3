@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.SearchHistoryDAO;
+import datdocantin.Service.getNewIDforTable;
 
 @WebServlet("/search")
 public class SearchController extends HttpServlet {
@@ -34,7 +35,7 @@ public class SearchController extends HttpServlet {
         	String idkh = request.getParameter("id_user");
         	String noidung = request.getParameter("txtSearch");
             if (idkh!=null) { 
-            	SearchHistoryDAO.addSearchHistory(String.valueOf(SearchHistoryDAO.getLastId()+1),idkh, noidung);
+            	SearchHistoryDAO.addSearchHistory(getNewIDforTable.getNewID("lichsutimkiem"),idkh, noidung);
             	session.setAttribute("searchHistory", SearchHistoryDAO.getSearchHistory(idkh));
             	response.sendRedirect(request.getContextPath());
             }

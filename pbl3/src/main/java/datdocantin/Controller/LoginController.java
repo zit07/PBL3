@@ -13,6 +13,7 @@ import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Dao.SearchHistoryDAO;
 import datdocantin.Model.AccountModel;
+import datdocantin.Model.KhachHangModel;
 
 @WebServlet("/Login")
 public class LoginController extends HttpServlet {
@@ -47,7 +48,7 @@ public class LoginController extends HttpServlet {
                 else if (role.equals("cantin")) {
               	    url = "view/cantin-homepage.jsp";
                 }
-                else {
+                else {KhachHangModel khachhang = KhachhangDAO.getKhachhangInfo(id);System.out.println(khachhang.getHoten().toString()+id);
                 	session.setAttribute("khachhang", KhachhangDAO.getKhachhangInfo(id));
                 	session.setAttribute("searchHistory", SearchHistoryDAO.getSearchHistory(id));
                 	response.sendRedirect(request.getContextPath());
