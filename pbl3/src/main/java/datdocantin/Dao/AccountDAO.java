@@ -148,7 +148,7 @@ public class AccountDAO {
 		try {
 //			Test function in here
 			
-			AccountModel acc = new AccountModel("1002", "333", "333", "admin");
+//			AccountModel acc = new AccountModel("1002", "333", "333", "admin");
 			System.out.print(AccountDAO.getLastId());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

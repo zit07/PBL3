@@ -1,15 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <%@ page import="javax.servlet.http.HttpSession" %>
 <%@ page import="datdocantin.Model.KhachHangModel" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Base64" %>
-<%
+<%@ page import="datdocantin.Model.MonAnModel"%>
+<%@ page import="java.util.Enumeration" %>
+<%	
+	/* String sdt = (String)session.getAttribute("sdt"); */
 	KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
-	List<String> searchHistory = (List<String>) session.getAttribute("searchHistory");
-	String sdt = (String)session.getAttribute("sdt");
-	
+	List<String> searchHistory = (List<String>)session.getAttribute("searchHistory"); 
+	List<MonAnModel> listMonAnCantin = (List<MonAnModel>)session.getAttribute("listMonan");
+	MonAnModel banhmy = (MonAnModel)session.getAttribute("banhmy"); 
 %>
 <!DOCTYPE html>
 <html>
@@ -26,8 +28,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <!-- main -->
-    <div class="app">
+	<c:if test="${banhmy!=null }">
+	    <h1>day la mon an ${banhmy.getTenmon()}</h1>
+	</c:if>
+	
+	<c:if test="${listMonAnCantin!=null }">
+	    <h1>day la mon an ${listMonAnCantin.get(0).getTenmon()}</h1>
+	</c:if>
+	
+	<c:forEach items="${listMonAnCantin}" var="monan">
+	    <h1>day la list mon an </h1>
+	</c:forEach>
+	
+	<!-- main -->
+	<div class="app">
         <!-- header -->
         <header class="header">
             <div class="grid wide">
@@ -136,7 +150,7 @@
 		                            	<img src="./assets/img/avatarDefault.jpg" class="header__nav-user-avt">
 		                            </c:if>
 		                            <c:if test="${khachhang.getAvatar()!=null}">
-		                            <img src="data:image/jpeg;base64, <%= Base64.getEncoder().encodeToString(khachhang.getAvatar()) %>" class="header__nav-user-avt"/>
+		                           		<img src="data:image/jpeg;base64, <%= Base64.getEncoder().encodeToString(khachhang.getAvatar()) %>" class="header__nav-user-avt"/>
 		                            </c:if>
 		                            <a href="#" class="header__nav-item-link header__nav-item--bold">${khachhang.getHoten()}</a>
 		                            <ul class="header__nav-user-menu">
@@ -189,136 +203,138 @@
                         </button>
                     </form>
                     <!-- header__cart--no-cart --><!-- header__cart--has-cart -->
-                    <div class="header__cart header__cart--has-cart">
-                        <i class="header__cart-icon fas fa-shopping-cart"></i>
-                        <div class="header__cart-count">7</div>
-                        
-                        <div class="header__cart-list no-cart">
-                            <img src="./assets/img/sp/no-cart.png" class="header__no-cart-img">
-                            <p class="header__no-cart-text">Chưa có sản phẩm</p>
-                        </div>
-                        <!-- Giỏ hàng -->
-                        <div class="header__cart-list has-cart">
-                            <h4 class="header__cart-heading">Sản phẩm đã chọn</h4>
-                            <ul class="header__cart-list-item">
-                                <li class="header__cart-item">
-                                    <img src="./assets/img/buy/1.png" class="header__cart-item-img">
-                                    <div class="header__cart-item-info">
-                                        <div class="header__cart-item-heading">
-                                            <h3 class="header__cart-item-name">Bánh tráng</h3>
-                                            <p class="header__cart-item-price">100.000đ</p>
-                                        </div>
-                                        <div class="header__cart-item-body">
-                                            <p class="header__cart-item-number">x 2</p>
-                                            <div class="header__cart-item-close">
-                                                Xoá
-                                                <i class="fas fa-times"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="header__cart-item">
-                                    <img src="./assets/img/buy/2.png" class="header__cart-item-img">
-                                    <div class="header__cart-item-info">
-                                        <div class="header__cart-item-heading">
-                                            <h3 class="header__cart-item-name">Bánh mỳ</h3>
-                                            <p class="header__cart-item-price">15.000đ</p>
-                                        </div>
-                                        <div class="header__cart-item-body">
-                                            <p class="header__cart-item-number">x 1</p>
-                                            <div class="header__cart-item-close">
-                                                Xoá
-                                                <i class="fas fa-times"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="header__cart-item">
-                                    <img src="./assets/img/buy/3.png" class="header__cart-item-img">
-                                    <div class="header__cart-item-info">
-                                        <div class="header__cart-item-heading">
-                                            <h3 class="header__cart-item-name">Cơm tấm</h3>
-                                            <p class="header__cart-item-price">35.000đ</p>
-                                        </div>  
-                                        <div class="header__cart-item-body">
-                                            <p class="header__cart-item-number">x 1</p>
-                                            <div class="header__cart-item-close">
-                                                Xoá
-                                                <i class="fas fa-times"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="header__cart-item">
-                                    <img src="./assets/img/buy/4.png" class="header__cart-item-img">
-                                    <div class="header__cart-item-info">
-                                        <div class="header__cart-item-heading">
-                                            <h3 class="header__cart-item-name">Cơm gà</h3>
-                                            <p class="header__cart-item-price">30.000đ</p>
-                                        </div>  
-                                        <div class="header__cart-item-body">
-                                            <p class="header__cart-item-number">x 3</p>
-                                            <div class="header__cart-item-close">
-                                                Xoá
-                                                <i class="fas fa-times"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="header__cart-item">
-                                    <img src="./assets/img/buy/5.png" class="header__cart-item-img">
-                                    <div class="header__cart-item-info">
-                                        <div class="header__cart-item-heading">
-                                            <h3 class="header__cart-item-name"> Cơm gà chiên mắm</h3>
-                                            <p class="header__cart-item-price">35.000đ</p>
-                                        </div>
-                                        <div class="header__cart-item-body">
-                                            <p class="header__cart-item-number">x 2</p>
-                                            <div class="header__cart-item-close">
-                                                Xoá
-                                                <i class="fas fa-times"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="header__cart-item">
-                                    <img src="./assets/img/buy/4.png" class="header__cart-item-img">
-                                    <div class="header__cart-item-info">
-                                        <div class="header__cart-item-heading">
-                                            <h3 class="header__cart-item-name">Cơm gà xối mỡ</h3>
-                                            <p class="header__cart-item-price">150.000đ</p>
-                                        </div>  
-                                        <div class="header__cart-item-body">
-                                            <p class="header__cart-item-number">x 3</p>
-                                            <div class="header__cart-item-close">
-                                                Xoá
-                                                <i class="fas fa-times"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="header__cart-item">
-                                    <img src="./assets/img/buy/5.png" class="header__cart-item-img">
-                                    <div class="header__cart-item-info">
-                                        <div class="header__cart-item-heading">
-                                            <h3 class="header__cart-item-name"> Cơm gà chiên mắm</h3>
-                                            <p class="header__cart-item-price">100.000đ</p>
-                                        </div>
-                                        <div class="header__cart-item-body">
-                                            <p class="header__cart-item-number">x 2</p>
-                                            <div class="header__cart-item-close">
-                                                Xoá
-                                                <i class="fas fa-times"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="header__cart-footer">
-                                <a href="#" class="btn btn--primary header__cart-see-cart">Xem giỏ hàng</a>
-                            </div>
-                        </div>
-                    </div>
+                    <c:if test="${khachhang!=null }">
+	                    <div class="header__cart header__cart--has-cart">
+	                        <i class="header__cart-icon fas fa-shopping-cart"></i>
+	                        <div class="header__cart-count">7</div>
+	                        
+	                        <div class="header__cart-list no-cart">
+	                            <img src="./assets/img/sp/no-cart.png" class="header__no-cart-img">
+	                            <p class="header__no-cart-text">Chưa có sản phẩm</p>
+	                        </div>
+	                        <!-- Giỏ hàng -->
+	                        <div class="header__cart-list has-cart">
+	                            <h4 class="header__cart-heading">Sản phẩm đã chọn</h4>
+	                            <ul class="header__cart-list-item">
+	                                <li class="header__cart-item">
+	                                    <img src="./assets/img/buy/1.png" class="header__cart-item-img">
+	                                    <div class="header__cart-item-info">
+	                                        <div class="header__cart-item-heading">
+	                                            <h3 class="header__cart-item-name">Bánh tráng</h3>
+	                                            <p class="header__cart-item-price">100.000đ</p>
+	                                        </div>
+	                                        <div class="header__cart-item-body">
+	                                            <p class="header__cart-item-number">x 2</p>
+	                                            <div class="header__cart-item-close">
+	                                                Xoá
+	                                                <i class="fas fa-times"></i>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </li>
+	                                <li class="header__cart-item">
+	                                    <img src="./assets/img/buy/2.png" class="header__cart-item-img">
+	                                    <div class="header__cart-item-info">
+	                                        <div class="header__cart-item-heading">
+	                                            <h3 class="header__cart-item-name">Bánh mỳ</h3>
+	                                            <p class="header__cart-item-price">15.000đ</p>
+	                                        </div>
+	                                        <div class="header__cart-item-body">
+	                                            <p class="header__cart-item-number">x 1</p>
+	                                            <div class="header__cart-item-close">
+	                                                Xoá
+	                                                <i class="fas fa-times"></i>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </li>
+	                                <li class="header__cart-item">
+	                                    <img src="./assets/img/buy/3.png" class="header__cart-item-img">
+	                                    <div class="header__cart-item-info">
+	                                        <div class="header__cart-item-heading">
+	                                            <h3 class="header__cart-item-name">Cơm tấm</h3>
+	                                            <p class="header__cart-item-price">35.000đ</p>
+	                                        </div>  
+	                                        <div class="header__cart-item-body">
+	                                            <p class="header__cart-item-number">x 1</p>
+	                                            <div class="header__cart-item-close">
+	                                                Xoá
+	                                                <i class="fas fa-times"></i>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </li>
+	                                <li class="header__cart-item">
+	                                    <img src="./assets/img/buy/4.png" class="header__cart-item-img">
+	                                    <div class="header__cart-item-info">
+	                                        <div class="header__cart-item-heading">
+	                                            <h3 class="header__cart-item-name">Cơm gà</h3>
+	                                            <p class="header__cart-item-price">30.000đ</p>
+	                                        </div>  
+	                                        <div class="header__cart-item-body">
+	                                            <p class="header__cart-item-number">x 3</p>
+	                                            <div class="header__cart-item-close">
+	                                                Xoá
+	                                                <i class="fas fa-times"></i>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </li>
+	                                <li class="header__cart-item">
+	                                    <img src="./assets/img/buy/5.png" class="header__cart-item-img">
+	                                    <div class="header__cart-item-info">
+	                                        <div class="header__cart-item-heading">
+	                                            <h3 class="header__cart-item-name"> Cơm gà chiên mắm</h3>
+	                                            <p class="header__cart-item-price">35.000đ</p>
+	                                        </div>
+	                                        <div class="header__cart-item-body">
+	                                            <p class="header__cart-item-number">x 2</p>
+	                                            <div class="header__cart-item-close">
+	                                                Xoá
+	                                                <i class="fas fa-times"></i>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </li>
+	                                <li class="header__cart-item">
+	                                    <img src="./assets/img/buy/4.png" class="header__cart-item-img">
+	                                    <div class="header__cart-item-info">
+	                                        <div class="header__cart-item-heading">
+	                                            <h3 class="header__cart-item-name">Cơm gà xối mỡ</h3>
+	                                            <p class="header__cart-item-price">150.000đ</p>
+	                                        </div>  
+	                                        <div class="header__cart-item-body">
+	                                            <p class="header__cart-item-number">x 3</p>
+	                                            <div class="header__cart-item-close">
+	                                                Xoá
+	                                                <i class="fas fa-times"></i>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </li>
+	                                <li class="header__cart-item">
+	                                    <img src="./assets/img/buy/5.png" class="header__cart-item-img">
+	                                    <div class="header__cart-item-info">
+	                                        <div class="header__cart-item-heading">
+	                                            <h3 class="header__cart-item-name"> Cơm gà chiên mắm</h3>
+	                                            <p class="header__cart-item-price">100.000đ</p>
+	                                        </div>
+	                                        <div class="header__cart-item-body">
+	                                            <p class="header__cart-item-number">x 2</p>
+	                                            <div class="header__cart-item-close">
+	                                                Xoá
+	                                                <i class="fas fa-times"></i>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </li>
+	                            </ul>
+	                            <div class="header__cart-footer">
+	                                <a href="#" class="btn btn--primary header__cart-see-cart">Xem giỏ hàng</a>
+	                            </div>
+	                        </div>
+	                    </div>
+	            	</c:if>
                 </div>
             </div>
             <ul class="header__sort-bar">
@@ -555,11 +571,52 @@
                                 </div>
                             </div>
                         </div>
+                      
                         <!-- home product -->
                         <div class="home-product">        
                             <!-- <div id="list-product" class="row sm-gutter"> -->
+                            <c:if test="${listMonAnCantin!=null }">
+                            	<h1>${banhmy.getTenmon()}</h1>
+                            </c:if>
                             <div class="row sm-gutter">
-                                <div class="col l-2-4 m-3 c-6 home-product-item">
+                            	<%-- <c:forEach items="${listMonAnCantin}" var="monan">
+							        <div class="col l-2-4 m-3 c-6 home-product-item">
+	                                    <a class="home-product-item-link" href="#">
+	                                        <div class="home-product-item__img" style="background-image: url(./assets/img/home/1.png);"></div>
+	                                        <div class="home-product-item__info">
+	                                            <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
+	                                            <div class="home-product-item__price">
+	                                                <p class="home-product-item__price-old">${monan.getGiacu()}đ</p>
+	                                                <p class="home-product-item__price-new">${monan.getGiahientai()}đ</p>
+	                                            </div>
+	                                            <div class="home-product-item__footer">
+	                                                <div class="home-product-item__save">
+	                                                    <input type="checkbox" id="heart-save-1">
+	                                                    <label for="heart-save-1" class="far fa-heart"></label>
+	                                                </div>
+	                                                <div class="home-product-item__rating-star">
+	                                                    <i class="star-checked far fa-star"></i>
+	                                                    <i class="star-checked far fa-star"></i>
+	                                                    <i class="star-checked far fa-star"></i>  
+	                                                    <i class="star-checked far fa-star"></i>
+	                                                    <i class="star-uncheck far fa-star"></i>
+	                                                </div>
+	                                                <div class="home-product-item__saled">Đã bán ${monan.getSoluongSold()}</div>
+	                                            </div>
+	                                            <div class="home-product-item__favourite">
+	                                                Yêu thích
+	                                            </div>
+	                                            <div class="home-product-item__sale-off">
+	                                                <div class="home-product-item__sale-off-value">${monan.getGiamgia()}%</div>
+	                                                <div class="home-product-item__sale-off-label">GIẢM</div>
+	                                            </div>
+	                                        </div>
+	                                    </a>
+	                                </div>
+								</c:forEach>   --%>
+								
+                            
+                                <!-- <div class="col l-2-4 m-3 c-6 home-product-item">
                                     <a class="home-product-item-link" href="#">
                                         <div class="home-product-item__img" style="background-image: url(./assets/img/home/1.png);"></div>
                                         <div class="home-product-item__info">
@@ -567,7 +624,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">80.000đ</p>
                                                 <p class="home-product-item__price-new">50.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -583,7 +640,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 3,8k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -592,7 +649,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                                 <div class="col l-2-4 m-3 c-6 home-product-item">
@@ -603,7 +660,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">20.000đ</p>
                                                 <p class="home-product-item__price-new">15.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -619,7 +676,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 4,8k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -628,7 +685,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                                 <div class="col l-2-4 m-3 c-6 home-product-item">
@@ -639,7 +696,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">40.000đ</p>
                                                 <p class="home-product-item__price-new">35.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -655,7 +712,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 4,2k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -664,7 +721,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                                 <div class="col l-2-4 m-3 c-6 home-product-item">
@@ -675,7 +732,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">35.000đ</p>
                                                 <p class="home-product-item__price-new">30.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -691,7 +748,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 4,5k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -700,7 +757,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                                 <div class="col l-2-4 m-3 c-6 home-product-item">
@@ -711,7 +768,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">50.000đ</p>
                                                 <p class="home-product-item__price-new">35.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -727,7 +784,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 3,8k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -736,7 +793,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                             
@@ -750,7 +807,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">80.000đ</p>
                                                 <p class="home-product-item__price-new">50.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -766,7 +823,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 3,8k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -775,7 +832,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                                 <div class="col l-2-4 m-3 c-6 home-product-item">
@@ -786,7 +843,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">20.000đ</p>
                                                 <p class="home-product-item__price-new">15.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -802,7 +859,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 4,8k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -811,7 +868,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                                 <div class="col l-2-4 m-3 c-6 home-product-item">
@@ -822,7 +879,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">40.000đ</p>
                                                 <p class="home-product-item__price-new">35.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -838,7 +895,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 4,2k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -847,7 +904,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                                 <div class="col l-2-4 m-3 c-6 home-product-item">
@@ -858,7 +915,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">35.000đ</p>
                                                 <p class="home-product-item__price-new">30.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -874,7 +931,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 4,5k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -883,7 +940,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                                 <div class="col l-2-4 m-3 c-6 home-product-item">
@@ -894,7 +951,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">50.000đ</p>
                                                 <p class="home-product-item__price-new">35.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -910,7 +967,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 3,8k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -919,7 +976,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                             
@@ -933,7 +990,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">80.000đ</p>
                                                 <p class="home-product-item__price-new">50.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -949,7 +1006,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 3,8k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -958,7 +1015,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                                 <div class="col l-2-4 m-3 c-6 home-product-item">
@@ -969,7 +1026,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">20.000đ</p>
                                                 <p class="home-product-item__price-new">15.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -985,7 +1042,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 4,8k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -994,7 +1051,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                                 <div class="col l-2-4 m-3 c-6 home-product-item">
@@ -1005,7 +1062,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">40.000đ</p>
                                                 <p class="home-product-item__price-new">35.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -1021,7 +1078,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 4,2k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -1030,7 +1087,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                                 <div class="col l-2-4 m-3 c-6 home-product-item">
@@ -1041,7 +1098,7 @@
                                             <div class="home-product-item__price">
                                                 <p class="home-product-item__price-old">35.000đ</p>
                                                 <p class="home-product-item__price-new">30.000đ</p>
-                                                <!-- <i class="home-product-item__ship fas fa-shipping-fast"></i> -->
+                                                <i class="home-product-item__ship fas fa-shipping-fast"></i>
                                             </div>
                                             <div class="home-product-item__footer">
                                                 <div class="home-product-item__save">
@@ -1057,7 +1114,7 @@
                                                 </div>
                                                 <div class="home-product-item__saled">Đã bán 4,5k</div>
                                             </div>
-                                            <!-- <div class="home-product-item__origin"></div> -->
+                                            <div class="home-product-item__origin"></div>
                                             <div class="home-product-item__favourite">
                                                 Yêu thích
                                             </div>
@@ -1066,7 +1123,7 @@
                                                 <div class="home-product-item__sale-off-label">GIẢM</div>
                                             </div>
                                         </div>
-                                        <!-- <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> -->
+                                        <div class="home-product-item-footer">Tìm sản phẩm tương tự</div>
                                     </a>
                                 </div>
                                 <div class="col l-2-4 m-3 c-6 home-product-item">
@@ -1102,7 +1159,7 @@
                                         </div>
                                         <div class="home-product-item-footer">Tìm sản phẩm tương tự</div> 
                                     </a>
-                                </div>
+                                </div> -->
                             </div>
                         </div>   
                     </div>
@@ -1245,7 +1302,6 @@
 	            </form>
 	        </div> 
 	    </div>
-	
 		<!-- Change PIN form -->
 	    <div class="modal" id="form-changepin" style="display: ${display_form__changepin}">
 	        <div class="modal__body">
@@ -1281,6 +1337,8 @@
 	            </form>
 	        </div> 
 	    </div>
+	</c:if>
+	<c:if test="${khachhang!=null}">
 	    <div class="modal" id="form-info">
 	        <div class="modal__body" >
             <!-- authen change info-->
@@ -1290,7 +1348,7 @@
 							<img src="./assets/img/avatarDefault.jpg" class="avatar-form__img" id="img-form"/>
 						</c:if>
 						<c:if test="${khachhang.getAvatar()!=null}">
-							<img src="data:image/jpeg;base64,<%= Base64.getEncoder().encodeToString(khachhang.getAvatar()) %>" class="avatar-form__img" id="img-form"/>
+							<img src="data:image/jpeg;base64,<%=Base64.getEncoder().encodeToString(khachhang.getAvatar())%>" class="avatar-form__img" id="img-form"/>
 						</c:if>
 						<input class="avatar-form__input" type="file" name="avatar" id="input-img-form">
 					</div>
@@ -1330,10 +1388,8 @@
 										<select name="txtGioitinh" id=""
 											class="auth-form__input_info_select">
 											<option value="-1"></option>
-											<option value="nam"
-												${khachhang.getGioitinh() == 'nam' ? 'selected' : ''}>Nam</option>
-											<option value="nu"
-												${khachhang.getGioitinh() == 'nu' ? 'selected' : ''}>Nữ</option>
+											<option value="nam" ${khachhang.getGioitinh() == 'nam' ? 'selected' : ''}>Nam</option>
+											<option value="nu" ${khachhang.getGioitinh() == 'nu' ? 'selected' : ''}>Nữ</option>
 										</select>
 
 									</div>
@@ -1401,6 +1457,6 @@
         crossorigin="anonymous">
     </script>
     <script src="./assets/data/address.json"></script>
-    <script src="./assets/js/index.js"></script>
+    <script src="./assets/js/customer.js"></script>
 </body>
 </html>

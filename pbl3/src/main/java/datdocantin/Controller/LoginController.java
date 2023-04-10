@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.AccountDAO;
+import datdocantin.Dao.CanteenDAO;
 import datdocantin.Dao.KhachhangDAO;
+import datdocantin.Dao.MonAnDAO;
 import datdocantin.Dao.SearchHistoryDAO;
 import datdocantin.Model.AccountModel;
 import datdocantin.Model.KhachHangModel;
@@ -43,17 +45,22 @@ public class LoginController extends HttpServlet {
             if (acc!=null) {
             	String role = acc.getType_User();
                 if (role.equals("admin")) {
-            	    url = "view/admin-homepage.jsp";
+                	session.setAttribute("role", "admin");
                 }
                 else if (role.equals("cantin")) {
-              	    url = "view/cantin-homepage.jsp";
+                	session.setAttribute("canteen", CanteenDAO.getInfoCanteen(id));
+                	session.setAttribute("listMonan", MonAnDAO.getListMonan(id));
                 }
-                else {KhachHangModel khachhang = KhachhangDAO.getKhachhangInfo(id);System.out.println(khachhang.getHoten().toString()+id);
-                	session.setAttribute("khachhang", KhachhangDAO.getKhachhangInfo(id));
+                else {
+                	KhachHangModel khachhang = KhachhangDAO.getKhachhangInfo(id);
+                	session.setAttribute("khachhang", khachhang);
                 	session.setAttribute("searchHistory", SearchHistoryDAO.getSearchHistory(id));
-                	response.sendRedirect(request.getContextPath());
+//                	session.setAttribute("listMonan", MonAnDAO.getInfoMonAn(khachhang.getIDCantin()));
+//                	session.setAttribute("listMonan", MonAnDAO.getInfoMonAn(khachhang.getIDCantin()));
+//                	session.setAttribute("banhmy", listMonAn.get(1));
                 } 
-			}
+                response.sendRedirect(request.getContextPath());
+			} 
             else {
             	if (AccountDAO.CheckAccountNotExist(sdt)) {
                 	request.setAttribute("noti_login__ErrorSdt", "flex");

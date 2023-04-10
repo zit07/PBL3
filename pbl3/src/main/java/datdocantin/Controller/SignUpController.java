@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import datdocantin.Dao.AccountDAO;
+import datdocantin.Dao.CanteenDAO;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Model.AccountModel;
+import datdocantin.Model.CanteenModel;
 import datdocantin.Model.KhachHangModel;
 import datdocantin.Service.getNewIDforTable;
 import datdocantin.Util.PasswordEncoder;
@@ -33,16 +35,19 @@ public class SignUpController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
         try {
-        	String hoten = request.getParameter("txtHoten");
+        	String ten = request.getParameter("txtHoten");
         	String sdt = request.getParameter("txtSdt");
             String password = PasswordEncoder.encode(request.getParameter("txtPassword"));
             String typeUser = request.getParameter("typeUser");
             if (AccountDAO.CheckAccountNotExist(sdt)) {
-            	String id = getNewIDforTable.getNewID("account"); System.out.print(id);
-            	AccountModel acc = new AccountModel(id, sdt, password, typeUser);
-            	AccountDAO.addAccount(acc);
-            	KhachHangModel newKH = new KhachHangModel(id,hoten,null,"","","",sdt,"","","","",null); 
-            	KhachhangDAO.addKhachhang(newKH);
+            	String id = getNewIDforTable.getNewID("account");
+            	AccountDAO.addAccount(new AccountModel(id, sdt, password, typeUser));
+            	if (typeUser.equals("customer")) {
+                	KhachhangDAO.addKhachhang(new KhachHangModel(id,ten,null,"","","",sdt,"","","","",null));
+            	}
+            	else {
+            		CanteenDAO.addCanteen(new CanteenModel(id,ten,sdt,"","","","","",null));
+				}
             	response.sendRedirect(request.getContextPath());
             }
             else {

@@ -129,6 +129,6 @@ const avatar = document.getElementById("img-form"),
 		avatar.src = URL.createObjectURL(inputIMG.files[0]);
 	});
 	  
-	  
+
 	  
 	  

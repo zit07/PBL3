@@ -17,7 +17,7 @@ no-gutters : no gutters each column
 }
 
 .grid.wide {
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 0 auto;
 }
 
@@ -68,13 +68,14 @@ no-gutters : no gutters each column
     .l-0 {
         display: none;
     }
-
+    
+    .l-0-5,
     .l-1,
     .l-2,
     .l-2-4,
     .l-3,
     .l-4,
-    .l-5,
+    .l-5, 
     .l-6,
     .l-7,
     .l-8,
@@ -85,9 +86,13 @@ no-gutters : no gutters each column
         display: block;
     }
 
+    .l-0-5 {
+        flex: 0 0 8%;
+        max-width: 8%; 
+    }
     .l-1 {
-        flex: 0 0 8.33333%;
-        max-width: 8.33333%;
+        flex: 0 0 12%;
+        max-width: 12%;
     }
 
     .l-2 {
@@ -330,7 +335,7 @@ no-gutters : no gutters each column
     }
 
     .wide .l-o-5 {
-        margin-left: 41.66667%;
+        margin-left: 41.66667%; 
     }
 
     .wide .l-o-6 {
