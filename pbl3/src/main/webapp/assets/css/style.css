@@ -1476,7 +1476,7 @@ border-color: red green blue yellow */
     background-color: white;
     border-radius: 5px 0 0 5px;
     text-align: center;
-    padding: 8px;
+    padding: 8px 16px;
     max-width: 200px;
 }
 

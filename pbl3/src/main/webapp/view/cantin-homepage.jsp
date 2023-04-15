@@ -9,7 +9,7 @@
 <%	
 	CanteenModel canteen = (CanteenModel)session.getAttribute("canteen");
 	List<MonAnModel> listMonan = (List<MonAnModel>)session.getAttribute("listMonan");
-	/* List<String> searchHistory = (List<String>)session.getAttribute("searchHistory");  */
+	List<String> searchHistory = (List<String>)session.getAttribute("searchHistory");  
 %>
 <!DOCTYPE html>
 <html>
@@ -90,7 +90,7 @@
 	                <!-- search -->
 	                <div class="header__contain">
 	                    <div class="header__logo">
-	                        <a href="#" class="header__logo-link">
+	                        <a href="./" class="header__logo-link">
 	                            <img src="./assets/img/logo/logo.png" class="header__logo-img">
 	                        </a>
 	                    </div>
@@ -103,7 +103,7 @@
 	                                <ul class="header__search-history-list">
 	                                    <c:forEach items="${searchHistory}" var="i">
 								        	<li class="header__search-history-item">
-	                                        	<a href="#">${i}</a>
+	                                        	<a href="./?id_user=${canteen.getId()}&txtSearch=${i}">${i}</a>
 	                                    	</li>
 										</c:forEach> 
 										
@@ -233,10 +233,12 @@
 	                                                    </div>
 	                                                    <div class="home-product-item__saled">Đã bán ${monan.getDaban()}</div>
 	                                                </div>
-	                                                <div class="home-product-item__sale-off">
-	                                                    <div class="home-product-item__sale-off-value">30%</div>
-	                                                    <div class="home-product-item__sale-off-label">GIẢM</div>
-	                                                </div>
+	                                                <c:if test='${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}'>
+													    <div class="home-product-item__sale-off">
+															<div class="home-product-item__sale-off-value">${((monan.giacu-monan.giahientai)/monan.giacu)*100}%</div>
+													        <div class="home-product-item__sale-off-label">GIẢM</div>
+													    </div>
+													</c:if>
 	                                            </div>
 	                                            <div class="home-product-item-footer">Xem chi tiet</div>
 	                                        </a>
@@ -245,22 +247,26 @@
 	                                        <span class="Product-Description">${monan.getMota()}</span>
 	                                    </div>
 	                                    <div class="col l-1 home-product-item">
-	                                        <span class="Product-Description">${monan.getHuongvi()}</span>
+	                                        <span class="Product-Description">${monan.getThanhphan()}</span>
 	                                    </div>
 	                                    <div class="col l-1 home-product-item">
-	                                        <span class="Product-Description">${monan.getLoaithucan()}</span>
+	                                        <span class="Product-Description">${monan.getHuongvi()}</span>
 	                                    </div>
 	                                    <div class="col l-1 home-product-item">
 	                                        <span class="Product-Description">${monan.getNgaytao()}</span>
 	                                    </div>
 	                                    <div class="col l-1 home-product-item">
-	                                        <span class="Product-Description">${monan.getTrangthai()}</span>
+	                                        <span class="Product-Description">${monan.getTrangthai().equals("dang ban") ? "Đang bán" : "Ngưng bán"}</span>
 	                                    </div>
 	                                    <div class="col l-1 home-product-item">
 	                                        <span class="Product-Description">
-	                                            <a href="" class="btn btn--primary home-product-btn edit-product" >Sửa</a>
-	                                            <a href="" class="btn btn--primary home-product-btn stop-sold-product">Ngưng bán</a>
-	                                            <a href="" class="btn btn--primary home-product-btn continue-sold-product">Mở bán</a>
+	                                            <a href="" class="btn btn--primary home-product-btn edit-product" name="link-editproduct" id="${monan.getId()}">Sửa</a>
+	                                            <c:if test='${monan.getTrangthai().equals("dang ban")}'>
+	                                            	<a href="./Editproduct?idmonan=${monan.getId()}&k=ngungban&idcanteen=${monan.getIdcantin()}" class="btn btn--primary home-product-btn stop-sold-product">Ngưng bán</a>
+	                                            </c:if>
+	                                            <c:if test='${monan.getTrangthai().equals("ngung ban")}'>
+	                                            	<a href="./Editproduct?idmonan=${monan.getId()}&k=moban&idcanteen=${monan.getIdcantin()}" class="btn btn--primary home-product-btn continue-sold-product">Mở bán</a>
+	                                            </c:if>
 	                                        </span>
 	                                    </div>
 	                                </div>
@@ -439,6 +445,12 @@
 	                            <div class="auth-form__group" >
 	                                <textarea class="auth-form__input_info" name="txtMota" value="" style="height: 80px; margin: none;" required></textarea>
 	                            </div>
+	                            <div class="auth-form__title">
+	                                <span>Thành phần:</span>
+	                            </div>
+	                            <div class="auth-form__group">
+	                                <input type="text" class="auth-form__input_info" name="txtThanhphan" placeholder="Ví dụ: 500g thịt gà, 1 quả trứng,..." required>
+	                            </div>
 	                            <div class="auth-form__group_row">
 	                                <div class="auth-form__title_row">
 	                                    <span>Hương vị:</span>
@@ -464,7 +476,7 @@
 	                                        <option value="chay">Món chay</option>
 	                                    </select>
 	                                </div>
-	                                <input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: 50000" name="txtGia" value="" required>
+									<input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: 50000" name="txtGia" value="" pattern="[0-9]+" required>
 	                            </div>
 	                            <div class="auth-form__title">
 	                                <span>Thêm hình ảnh (ít nhất 1 ảnh, ảnh đầu tiên được lấy làm ảnh chính):</span>
@@ -536,7 +548,7 @@
 									</div>
 								</div>
 								<%}%>
-							</div>
+							</div> 
 	                        <div class="auth-form__control_info">
 	                            <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
 	                            <button class="btn btn--primary" type="submit">Lưu</button>
@@ -546,6 +558,88 @@
 	            </form>
 	        </div> 
 	    </div>
+	    <c:forEach items="${listMonan}" var="monan">
+	    	<div class="modal" name="form-editProduct" id="${monan.getId()}">
+		        <div class="modal__body" >
+		        <!-- authen change info-->
+		            <form action="./Editproduct?id_monan=${monan.getId()}&id_canteen=${monan.getIdcantin()}&giacu=${monan.getGiahientai()}" method="post" class="form__info" enctype="multipart/form-data">
+		                <div class="auth-form__addproduct">
+		                    <div class="auth-form__container">
+		                        <div class="auth-form__header">
+		                            <h3 class="auth-form__heading">Sửa thông tin món ăn</h3>
+		                        </div>
+		                        <div class="auth-form__form">
+		                            <div class="auth-form__title">
+		                                <span>Tên món ăn:</span>
+		                            </div>
+		                            <div class="auth-form__group">
+		                                <input type="text" class="auth-form__input_info" name="txtTenmonNew" value="${monan.getTenmon()}" required>
+		                            </div>
+		                            <div class="auth-form__title">
+		                                <span>Mô tả:</span>
+		                            </div>
+		                            <div class="auth-form__group" >
+		                                <textarea class="auth-form__input_info" name="txtMotaNew" style="height: 80px; margin: none;" required>${monan.getMota()}</textarea>
+		                            </div>
+		                            <div class="auth-form__title">
+		                                <span>Thành phần:</span>
+		                            </div>
+		                            <div class="auth-form__group">
+		                                <input type="text" class="auth-form__input_info" name="txtThanhphanNew" value="${monan.getThanhphan()}" required>
+		                            </div>
+		                            <div class="auth-form__group_row">
+		                                <div class="auth-form__title_row">
+		                                    <span>Hương vị:</span>
+		                                </div>
+		                                <div class="auth-form__title_row">
+		                                    <span>Loại thức ăn:</span>
+		                                </div>
+		                                <div class="auth-form__title_row">
+		                                    <span>Giá:</span>
+		                                </div>
+		                            </div>
+		                            <div class="auth-form__group_row">
+		                                <input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: Chua,cay,mặn,..." name="txtHuongviNew" value="${monan.getHuongvi()}" required> 
+		                                <div class="auth-form__input_info_row">
+		                                     <select name="txtLoaiNew" id="" class="auth-form__input_info_select" required>
+		                                        <option value="-1"></option>
+												<option value="thit" ${monan.getLoaithucan().equals("thit") ? "selected" : ""}>Món thịt</option>
+												<option value="haisan" ${monan.getLoaithucan().equals("haisan") ? "selected" : ""}>Món hải sản</option>
+												<option value="nuoc" ${monan.getLoaithucan().equals("nuoc") ? "selected" : ""}>Món nước</option>
+												<option value="kho" ${monan.getLoaithucan().equals("kho") ? "selected" : ""}>Món khô</option>
+												<option value="chien" ${monan.getLoaithucan().equals("chien") ? "selected" : ""}>Món chiên</option>
+												<option value="xao" ${monan.getLoaithucan().equals("xao") ? "selected" : ""}>Món xào</option>
+												<option value="chay" ${monan.getLoaithucan().equals("chay") ? "selected" : ""}>Món chay</option>
+		                                    </select>
+		                                </div>
+										<input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: 50000" name="txtGiaNew" value="${monan.getGiahientai().replaceAll('\\.', '')}" pattern="[0-9]+" required>
+		                            </div>
+		                            <div class="auth-form__title">
+		                                <span>Thêm hình ảnh (ít nhất 1 ảnh, ảnh đầu tiên được lấy làm ảnh chính):</span>
+		                            </div>
+									<div class="auth-form__group add-product-img">
+										<%for (int i = 1; i <= 8; i++) {%>
+										<div class="img-add-product">
+											<label for="img${monan.getId()}<%=i%>"> 
+											<% if (i == 1) { %> <img src="data:image/jpeg;base64,<c:out value='${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())}'/>" class="img-add-product__img"/>
+											<% } else { %> <img src="./assets/img/addproduct.png" class="img-add-product__img"/> <% } %>  
+											</label> 
+											<input class="img-add-product__input" type="file" name="img<%=i%>New" id="img${monan.getId()}<%=i%>"/>
+										</div> 
+										<% } %>
+									</div>
+
+								</div>
+		                        <div class="auth-form__control_info">
+		                            <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+		                            <button class="btn btn--primary" type="submit">Lưu</button>
+		                        </div>
+		                    </div>
+		                </div>
+		            </form>
+		        </div> 
+		    </div>
+		</c:forEach>
 	</c:if>
 	
     <!-- script js -->

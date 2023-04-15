@@ -9,7 +9,7 @@ import java.util.List;
 
 import datdocantin.Util.connectDB;
 
-public class SearchHistoryDAO {
+public class HistorySearchDAO {
 	private static Connection conn = null;
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
@@ -35,7 +35,6 @@ public class SearchHistoryDAO {
         }
         return history;
     }
-
 	
     public static int getLastId() throws Exception {
     	int result = 0;
@@ -79,7 +78,7 @@ public class SearchHistoryDAO {
 //	    	if (CheckSearchNotExist("10002","dsadasd")) {
 //	    		SearchHistoryDAO.addSearchHistory(String.valueOf(SearchHistoryDAO.getLastId()+1),"123", "123");
 //			}
-	    	System.out.print(SearchHistoryDAO.getSearchHistory("10001"));
+//	    	System.out.print(HistorySearchDAO.getResultSearchforCanteen("10003", "Banh My"));
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }

@@ -1,7 +1,6 @@
 package datdocantin.Controller;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
 
 import javax.servlet.ServletException;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 
 import datdocantin.Dao.CanteenDAO;
 import datdocantin.Dao.MonAnDAO;
@@ -33,8 +31,7 @@ public class AddProductController extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		response.sendRedirect(request.getContextPath());
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,15 +43,14 @@ public class AddProductController extends HttpServlet {
         	String idcantin = request.getParameter("id_canteen");
         	String ten = request.getParameter("txtTenmon");
         	String mota = request.getParameter("txtMota");
+        	String thanhphan = request.getParameter("txtThanhphan");
         	String huongvi = request.getParameter("txtHuongvi");
         	String loai = request.getParameter("txtLoai");
-        	String gia = request.getParameter("txtGia");
+            String gia = Double.toString(Double.parseDouble(request.getParameter("txtGia")) / 1000);
         	String today = LocalDate.now().toString();
-        	Part hinhanhchinhPart = request.getPart("img1"); 
-            InputStream inputStream = hinhanhchinhPart.getInputStream();
-            byte[] hinhanhchinhBytes = inputStream.readAllBytes(); 
-            if (hinhanhchinhBytes.length==0) hinhanhchinhBytes=null; System.out.println(gia);
-        	MonAnDAO.addNewMonan(new MonAnModel(id,idcantin,ten,mota,huongvi,loai,null,gia,today,hinhanhchinhBytes,"dang ban","0"));
+        	byte[] hinhanhchinhBytes = request.getPart("img1").getInputStream().readAllBytes();
+        	if (hinhanhchinhBytes.length == 0) hinhanhchinhBytes = null;
+        	MonAnDAO.addNewMonan(new MonAnModel(id,idcantin,ten,mota,thanhphan,huongvi,loai,gia,gia,today,hinhanhchinhBytes,"dang ban","0"));
         	session.setAttribute("canteen", CanteenDAO.getInfoCanteen(idcantin));
         	session.setAttribute("listMonan", MonAnDAO.getListMonan(idcantin));
         	response.sendRedirect(request.getContextPath());

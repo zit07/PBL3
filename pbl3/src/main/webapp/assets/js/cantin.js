@@ -72,7 +72,6 @@ const avatar = document.getElementById("img-form"),
 	
 const imgElements = document.querySelectorAll('.img-add-product__img');
 const imgInputs = document.querySelectorAll('.img-add-product__input');
-    
     for (let i = 0; i < imgElements.length; i++) {
       imgInputs[i].addEventListener('change', () => {
         imgElements[i].src = URL.createObjectURL(imgInputs[i].files[0]);
@@ -150,6 +149,21 @@ $(function () {
   });
 });
 
-    
-    
-   
+
+
+const forms = document.querySelectorAll('div[name="form-editProduct"]'); // Lấy tất cả các phần tử có name="form-editProduct"
+const links = document.querySelectorAll('a[name="link-editproduct"]'); // Lấy tất cả các thẻ a có name="linkeditproduct"
+
+links.forEach((link) => {
+  link.addEventListener("click", (event) => {
+	const idlink = link.getAttribute('id')
+	forms.forEach((form) => {
+      const idform = form.getAttribute('id');
+	  event.preventDefault(); 
+	  form.style.display = "none";
+	  if (idform === idlink) {
+		form.style.display = 'flex';
+	  }
+	});
+  });
+});
