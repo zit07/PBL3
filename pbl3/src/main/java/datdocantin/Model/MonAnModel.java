@@ -1,12 +1,12 @@
 package datdocantin.Model;
 
 public class MonAnModel {
-	private String id,idcantin,tenmon,mota,thanhphan,huongvi,loaithucan,giacu,giahientai,ngaytao,trangthai,daban;
+	private String id,idcantin,tenmon,mota,thanhphan,huongvi,loaithucan,giacu,giahientai,ngaytao,trangthai,daban,xoa;
 	private byte[] hinhanhchinh;
 	
 	public MonAnModel() {}
 	
-	public MonAnModel(String id,String idcantin,String tenmon,String mota,String thanhphan,String huongvi,String loaithucan,String giacu,String giahientai,String ngaytao,byte[] hinhanhchinh,String trangthai,String daban){
+	public MonAnModel(String id,String idcantin,String tenmon,String mota,String thanhphan,String huongvi,String loaithucan,String giacu,String giahientai,String ngaytao,byte[] hinhanhchinh,String trangthai,String daban,String xoa){
 		this.id = id;
 		this.idcantin = idcantin;
 		this.tenmon = tenmon;
@@ -20,6 +20,7 @@ public class MonAnModel {
 		this.hinhanhchinh = hinhanhchinh;
 		this.trangthai = trangthai;
 		this.daban = daban;
+		this.xoa = xoa;
 	}
 	public String getId() {
 		return id;
@@ -98,5 +99,11 @@ public class MonAnModel {
 	}
 	public void setDaban(String daban) {
 		this.daban = daban;
+	}
+	public String getXoa() {
+		return xoa;
+	}
+	public void setXoa(String xoa) {
+		this.xoa = xoa;
 	}
 }

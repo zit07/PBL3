@@ -18,6 +18,7 @@ no-gutters : no gutters each column
 
 .grid.wide {
     max-width: 1300px;
+    min-height: 680px !important;
     margin: 0 auto;
 }
 

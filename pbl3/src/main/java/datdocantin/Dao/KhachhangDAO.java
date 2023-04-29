@@ -24,11 +24,9 @@ public class KhachhangDAO {
             	stm.setString(1, id);
             	rs = stm.executeQuery();
                 if (rs.next()) {
-                	byte[] encodedAvatar = null;
                 	byte[] decodedAvatar = null;
                 	if (rs.getBytes(11)!=null){
-	                	encodedAvatar = rs.getBytes(11);
-	                	decodedAvatar = Base64.getDecoder().decode(encodedAvatar);
+	                	decodedAvatar = Base64.getDecoder().decode(rs.getBytes(11));
                 	}
                 	result = new KhachHangModel(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), "", decodedAvatar);
                 }

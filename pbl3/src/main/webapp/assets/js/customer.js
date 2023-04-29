@@ -1,41 +1,17 @@
 // Link Click To Show
 
-const Signuplink = document.getElementById("signup-link"),
-	  Signuplink2 = document.getElementById("signup-link2"),
-	  Loginlink = document.getElementById("login-link"),
-	  Loginlink2 = document.getElementById("login-link2"),
-	  ChangePasslink = document.getElementById("changepass-link"),
+const ChangePasslink = document.getElementById("changepass-link"),
 	  ChangePasslink2 = document.getElementById("changepass-link2"),
 	  ChangePINlink = document.getElementById("changepin-link"),
 	  ChangePINlink2 = document.getElementById("changepin-link2"),
 	  Infolink = document.getElementById("info-link"); 
 
 // Form to show
-const Signupform = document.getElementById("form-signup"),
-	  Loginform = document.getElementById("form-login"),
- 	  ChangePassform = document.getElementById("form-changepassword"),
+const ChangePassform = document.getElementById("form-changepassword"),
 	  ChangePINform = document.getElementById("form-changepin"),
 	  Infoform = document.getElementById("form-info");
 
 // Function to show form
-if  (Signuplink!==null){
-	const showForm = (form, event) => {
-	    event.preventDefault(); 
-	    Signupform.style.display = "none";
-	    Loginform.style.display = "none"; 
-	    form.style.display = "flex";
-	}
-	Signuplink.addEventListener("click", (event) => showForm(Signupform, event));
-	Loginlink.addEventListener("click", (event) => showForm(Loginform, event));
-	Signuplink2.addEventListener("click", (event) => {
-	    showForm(Signupform, event);
-	    Loginform.style.display = "none";
-	});
-	Loginlink2.addEventListener("click", (event) => {
-	    Signupform.style.display = "none";
-	    showForm(Loginform, event);
-	});
-} else {
 	const showForm = (form, event) => {
 	    event.preventDefault();
 	    ChangePassform.style.display = "none";
@@ -54,24 +30,10 @@ if  (Signuplink!==null){
 	    showForm(ChangePINform, event);
 	});
 	Infolink.addEventListener("click", (event) => showForm(Infoform, event));
-}
+
 
 // Show noti
-if  (Signuplink!==null){
-	const shownotisdt = document.getElementById('notiSignupsdt');
-	const shownotiSignupConfirm = document.getElementById('notiSignupConfirmPass');
-	var formSignup = document.querySelector('.formSignup');
-	formSignup.addEventListener('submit', function(event) {
-	  var password = formSignup.querySelector('input[name="txtPassword"]');
-	  var confirmPassword = formSignup.querySelector('input[name="txtConfirmPassword"]');
-	  if (password.value !==  confirmPassword.value) {
-	    shownotiSignupConfirm.style.display = "flex";
-	    shownotisdt.style.display = "none";
-	    event.preventDefault();
-	  }
-	});
-} else {
-	const shownotiChangePassConfirm = document.getElementById('notiChangePassConfirm');
+ shownotiChangePassConfirm = document.getElementById('notiChangePassConfirm');
 	const notiErrorOldPass = document.getElementById('notiErrorOldPass');
 	var formChangePass = document.querySelector('.formChangePass');
 	formChangePass.addEventListener('submit', function(event) {
@@ -83,7 +45,7 @@ if  (Signuplink!==null){
 	    event.preventDefault(); 
 	  }
 	});
-}
+
 
 $(function () {
   apiProvince=(prodvince)=>{
@@ -129,6 +91,19 @@ const avatar = document.getElementById("img-form"),
 		avatar.src = URL.createObjectURL(inputIMG.files[0]);
 	});
 	  
+	  
+const historyLinks = document.querySelectorAll('.header__search-history-item-link');
+	historyLinks.forEach(link => {
+	  link.addEventListener('mousedown', (event) => {
+	    event.preventDefault();
+	  });
+	});
+const btnDelhistoryLinks = document.querySelectorAll('.btn-del-history');
+	btnDelhistoryLinks.forEach(link => {
+	  link.addEventListener('mousedown', (event) => {
+	    event.preventDefault(); 
+	  });
+	});
 
 	  
 	  

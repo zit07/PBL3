@@ -20,7 +20,7 @@ public class AccountDAO {
             if (conn != null) {
             	String sql = "SELECT id, sdt, pass, typeUser FROM account WHERE id = ? AND pass = ?;";
             	stm = conn.prepareStatement(sql);
-            	stm.setString(1, id);
+            	stm.setString(1, id); 
             	stm.setString(2, PasswordEncoder.encode(pass));
             	rs = stm.executeQuery();
                 if (rs.next()) {

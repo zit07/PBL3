@@ -1,4 +1,4 @@
-<%@page import="datdocantin.Model.MonAnModel"%>
+<%@page import="datdocantin.Model.LichsutimkiemModel"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
@@ -6,10 +6,14 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Base64" %>
 <%@ page import="datdocantin.Model.CanteenModel"%>
+<%@page import="datdocantin.Model.GiohoatdongModel"%>
+<%@page import="datdocantin.Model.MonAnModel"%>
 <%	
 	CanteenModel canteen = (CanteenModel)session.getAttribute("canteen");
-	List<MonAnModel> listMonan = (List<MonAnModel>)session.getAttribute("listMonan");
-	List<String> searchHistory = (List<String>)session.getAttribute("searchHistory");  
+	List<MonAnModel> MonanList = (List<MonAnModel>)session.getAttribute("listMonan");
+	List<LichsutimkiemModel> searchHistory = (List<LichsutimkiemModel>)session.getAttribute("searchHistory");  
+	List<GiohoatdongModel> giohoatdongList = (List<GiohoatdongModel>) session.getAttribute("listGiohoatdong");
+	String danhmuc = (String)request.getAttribute("danhmuc"); 
 %>
 <!DOCTYPE html>
 <html>
@@ -96,63 +100,56 @@
 	                    </div>
 	                    
 	                    <form class="header__search" method="POST" action="./search?id_user=${canteen.getId()}">
-	                        <div class="header__search-input-wrap">
-	                            <input type="text" class="header__search-input" placeholder="Tìm kiếm món ăn" name="txtSearch" value="">
-	                            <div class="header__search-history">
-	                                <!-- History Search -->
-	                                <ul class="header__search-history-list">
-	                                    <c:forEach items="${searchHistory}" var="i">
-								        	<li class="header__search-history-item">
-	                                        	<a href="./?id_user=${canteen.getId()}&txtSearch=${i}">${i}</a>
-	                                    	</li>
-										</c:forEach> 
-										
-	                                </ul>
-	                            </div>
-	                        </div>
-	                        <button class="btn header__search-btn" type="submit">
-	                            <i class="header__search-btn-icon fas fa-search"></i>
-	                        </button>
-	                    </form>
+                        <div class="header__search-input-wrap">
+                            <input type="text" class="header__search-input" placeholder="Tìm kiếm món ăn" name="txtSearch" value="${txtSearch}">
+                            <div class="header__search-history">
+                                <!-- History Search -->
+                                <ul class="header__search-history-list">
+	                            	<c:forEach items="${searchHistory}" var="lichsu">
+								    	<li class="header__search-history-item">
+	                                    	<a class="header__search-history-item-link" href="./search?id_user=${canteen.getId()}&txtSearch=${lichsu.getNoidung()}" >${lichsu.getNoidung()}</a>
+	                                    	<a class="btn-del-history" href="./delHistorySearch?id=${lichsu.getId()}">
+                                            	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                	<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                                                </svg>
+                                             </a>
+	                                    </li>
+									</c:forEach> 
+	                        	</ul>
+                            </div>
+                        </div>
+                        <button class="btn header__search-btn" type="submit">
+                            <i class="header__search-btn-icon fas fa-search"></i>
+                        </button>
+                    </form>
 	
 	                    <div class="btn btn--primary btn-while" id="add-product-link">
 	                        <a class="btn-add-product" href="#">Thêm món ăn</a>
 	                    </div>
 	                </div>
 	            </div>
-	            <ul class="header__sort-bar">
-	                <li class="header__sort-item">
-	                    <a href="#" class="header__sort-link">Liên quan</a>
-	                </li>
-	                <li class="header__sort-item header__sort-item--active">
-	                    <a href="#" class="header__sort-link">Mới nhất</a>
-	                </li>
-	                <li class="header__sort-item">
-	                    <a href="#" class="header__sort-link">Bán chạy</a>
-	                </li>
-	                <li class="header__sort-item">
-	                    <a href="#" class="header__sort-link">Giá</a>
-	                </li>
-	            </ul>
 	        </header>
 	        <!-- container -->
 	        <div class="container">
 	            <div class="grid wide">
 	                <div class="row sm-gutter">
-						<div class="col l-2 m-0 c-0">
+						<div class="col l-2">
 							<!-- category -->
 							<nav class="category" id="category">
 								<h3 class="category-heading">
 									<i class="category-heading-icon fas fa-list-ul"></i> HOME
 								</h3>
 								<div class="navbar">
-									<a class="navbar-link" href="">Tất cả sản phẩm</a> 
-									<a class="navbar-link" href="">Xem doanh thu</a> 
-									<a class="navbar-link" href="">...</a>
+									<a class="navbar-link <%if(danhmuc==null) {%>choose<% } %>" href="./getProduct?"> Tất cả món ăn</a> 
+									<a class="navbar-link <%if(danhmuc!=null && danhmuc.equals("dangban")) {%>choose<% } %>" href="./getProduct?danhmuc=dangban"> Món ăn đang kinh doanh</a> 
+									<a class="navbar-link <%if(danhmuc!=null && danhmuc.equals("ngungban")) {%>choose<% } %>" href="./getProduct?danhmuc=ngungban">Món ăn ngừng kinh doanh</a> 
+									<a class="navbar-link <%if(danhmuc!=null && danhmuc.equals("daxoa")) {%>choose<% } %>" href="./getProduct?danhmuc=daxoa">Món ăn đã xoá</a> 
+									<a class="navbar-link <%if(danhmuc!=null && danhmuc.equals("dondatmon")) {%>choose<% } %>" href="./">  Đơn đặt món</a> 
+									<a class="navbar-link <%if(danhmuc!=null && danhmuc.equals("doanhthu")) {%>choose<% } %>" href="./">  Xem doanh thu</a> 
 								</div>
 							</nav>
 						</div>
-						<div class="col l-10 m-12 c-12">
+						<div class="col l-10">
 	                        <!-- home filter -->
 	                        <div class="home-filter">
 	                            <div class="home-filter-control">
@@ -193,85 +190,201 @@
 	                                </div>
 	                            </div>
 	                        </div>
-	
-	                        <div class="home-product">  
-	                            <div class="row sm-gutter productoverview">
-	                                <div class="list-product__title">
-	                                    <div class="col l-2-4 home-product-item__title">Tổng quan</div>
-	                                    <div class="col l-2-4 home-product-item__title">Mô tả</div>
-	                                    <div class="col l-1 home-product-item__title">Thành phần</div>
-	                                    <div class="col l-1 home-product-item__title">Hương vị</div>
-	                                    <div class="col l-1 home-product-item__title">Ngày tạo</div>
-	                                    <div class="col l-1 home-product-item__title">Trạng thái</div>
-	                                    <div class="col l-1 home-product-item__title"></div>
-	                                </div>
-	                            </div>
-	                        </div>
-	
+							
+							<%if (danhmuc!=null) { %>
+		                        <div class="home-product">  
+		                            <div class="row sm-gutter productoverview">
+		                                <div class="list-product__title">
+		                                    <div class="col l-2-4 home-product-item__title">Tổng quan</div>
+		                                    <div class="col l-2-4 home-product-item__title">Mô tả</div>
+		                                    <div class="col l-1 home-product-item__title">Thành phần</div>
+		                                    <div class="col l-1 home-product-item__title">Hương vị</div>
+		                                    <div class="col l-1 home-product-item__title">Ngày tạo</div>
+		                                    <div class="col l-1 home-product-item__title">Trạng thái</div>
+		                                    <div class="col l-1 home-product-item__title"></div>
+		                                </div>
+		                            </div>
+		                        </div>
+							<%} %>
 	                        <!-- home product -->
-	                        <div class="home-product">        
-	                            <!-- <div id="list-product" class="row sm-gutter"> -->
-	                            <div class="row sm-gutter productoverview">
-	                            <c:forEach items="${listMonan}" var="monan">
-							        <div class="list-product">
-	                                    <div class="col l-2-4 home-product-item">
-	                                        <a class="home-product-item-link" href="#">
-	                                            <div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,<c:out value="${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())}"/>);"></div>
-	                                            <div class="home-product-item__info">
-	                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
-	                                                <div class="home-product-item__price">
-	                                                    <p class="home-product-item__price-old">${monan.getGiacu()}đ</p>
-	                                                    <p class="home-product-item__price-new">${monan.getGiahientai()}đ</p>
-	                                                </div>
-	                                                <div class="home-product-item__footer">
-	                                                    <div class="home-product-item__rating-star">
-	                                                        <i class="star-checked far fa-star"></i>
-	                                                        <i class="star-checked far fa-star"></i>
-	                                                        <i class="star-checked far fa-star"></i>
-	                                                        <i class="star-checked far fa-star"></i>
-	                                                        <i class="star-uncheck far fa-star"></i>
-	                                                    </div>
-	                                                    <div class="home-product-item__saled">Đã bán ${monan.getDaban()}</div>
-	                                                </div>
-	                                                <c:if test='${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}'>
-													    <div class="home-product-item__sale-off">
-															<div class="home-product-item__sale-off-value">${((monan.giacu-monan.giahientai)/monan.giacu)*100}%</div>
-													        <div class="home-product-item__sale-off-label">GIẢM</div>
-													    </div>
-													</c:if>
-	                                            </div>
-	                                            <div class="home-product-item-footer">Xem chi tiet</div>
-	                                        </a>
-	                                    </div>
-	                                    <div class="col l-2-4 home-product-item">
-	                                        <span class="Product-Description">${monan.getMota()}</span>
-	                                    </div>
-	                                    <div class="col l-1 home-product-item">
-	                                        <span class="Product-Description">${monan.getThanhphan()}</span>
-	                                    </div>
-	                                    <div class="col l-1 home-product-item">
-	                                        <span class="Product-Description">${monan.getHuongvi()}</span>
-	                                    </div>
-	                                    <div class="col l-1 home-product-item">
-	                                        <span class="Product-Description">${monan.getNgaytao()}</span>
-	                                    </div>
-	                                    <div class="col l-1 home-product-item">
-	                                        <span class="Product-Description">${monan.getTrangthai().equals("dang ban") ? "Đang bán" : "Ngưng bán"}</span>
-	                                    </div>
-	                                    <div class="col l-1 home-product-item">
-	                                        <span class="Product-Description">
-	                                            <a href="" class="btn btn--primary home-product-btn edit-product" name="link-editproduct" id="${monan.getId()}">Sửa</a>
-	                                            <c:if test='${monan.getTrangthai().equals("dang ban")}'>
-	                                            	<a href="./Editproduct?idmonan=${monan.getId()}&k=ngungban&idcanteen=${monan.getIdcantin()}" class="btn btn--primary home-product-btn stop-sold-product">Ngưng bán</a>
-	                                            </c:if>
-	                                            <c:if test='${monan.getTrangthai().equals("ngung ban")}'>
-	                                            	<a href="./Editproduct?idmonan=${monan.getId()}&k=moban&idcanteen=${monan.getIdcantin()}" class="btn btn--primary home-product-btn continue-sold-product">Mở bán</a>
-	                                            </c:if>
-	                                        </span>
-	                                    </div>
-	                                </div>
-								</c:forEach>                    
+	                        <div class="home-product">   
+	                        <%if (danhmuc==null){ %>      
+	                        	<div class="row sm-gutter">
+	                            <%if (MonanList!=null) { %> 
+	                            	<c:set var="MonanList" value="<%=MonanList%>"/>
+	                            	<c:forEach items="${MonanList}" var="monan">
+	                            		<div class="col l-2-4">
+		                                        <a class="home-product-item-link" href="#">
+	  	                                            <div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())});"></div>
+	 	                                            <div class="home-product-item__info">
+		                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
+		                                                <div class="home-product-item__price"> 
+			                                                <c:if test="${ Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}">
+			                                                    <p class="home-product-item__price-old">${monan.getGiacu()}VNĐ</p>
+			                                                </c:if>
+		                                                    <p class="home-product-item__price-new">${monan.getGiahientai()}VNĐ</p>
+		                                                </div>
+		                                                <div class="home-product-item__footer">
+		                                                	<div class="home-product-item__save">
+			                                                    <input type="checkbox" id="heart-save-1">
+			                                                    <label for="heart-save-1" class="far fa-heart"></label>
+			                                                </div>
+		                                                    <div class="home-product-item__rating-star"> 
+		                                                        <i class="star-checked far fa-star"></i>
+		                                                        <i class="star-checked far fa-star"></i>
+		                                                        <i class="star-checked far fa-star"></i>
+		                                                        <i class="star-checked far fa-star"></i>
+		                                                        <i class="star-uncheck far fa-star"></i>
+		                                                    </div>
+		                                                    <div class="home-product-item__saled">Đã bán ${monan.getDaban()}</div>
+		                                                </div>
+		                                                <c:if test="${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}">
+															<c:set var="giamgia" value="${Math.round((monan.giacu - monan.giahientai) / monan.giacu * 100)}" />
+		                                                	<div class="home-product-item__sale-off">
+														    	<div class="home-product-item__sale-off-value">${giamgia} %</div>
+																<div class="home-product-item__sale-off-label">GIẢM</div>
+															</div>	 
+														</c:if>
+		                                            </div>
+		                                            <div class="home-product-item-footer">Xem chi tiet</div>
+		                                        </a>
+		                                    </div>
+	                            	</c:forEach>
+	                            <%}%> 
 	                            </div>
+                            <%} else if (!danhmuc.equals("daxoa")) { %> 
+	                            <div class="row sm-gutter productoverview">
+	                            <%if (MonanList!=null){ %> 
+	                            	<c:set var="MonanList" value="<%=MonanList%>"/>
+	                            		<c:forEach items="${MonanList}" var="monan"> 
+									        <div class="list-product">
+			                                    <div class="col l-2-4 home-product-item">
+			                                        <a class="home-product-item-link" href="#">
+			                                            <div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,<c:out value="${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())}"/>);"></div>
+			                                            <div class="home-product-item__info">
+			                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
+			                                                <div class="home-product-item__price">
+			                                                	<c:if test='${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}'>
+																    <p class="home-product-item__price-old">${monan.getGiacu()}đ</p>
+																</c:if>
+			                                                    <p class="home-product-item__price-new">${monan.getGiahientai()}đ</p>
+			                                                </div>
+			                                                <div class="home-product-item__footer">
+			                                                    <div class="home-product-item__rating-star">
+			                                                        <i class="star-checked far fa-star"></i>
+			                                                        <i class="star-checked far fa-star"></i>
+			                                                        <i class="star-checked far fa-star"></i>
+			                                                        <i class="star-checked far fa-star"></i>
+			                                                        <i class="star-uncheck far fa-star"></i>
+			                                                    </div>
+			                                                    <div class="home-product-item__saled">Đã bán ${monan.getDaban()}</div>
+			                                                </div>
+			                                                <c:if test="${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}">
+																<c:set var="giamgia" value="${Math.round((monan.giacu - monan.giahientai) / monan.giacu * 100)}" />
+			                                                	<div class="home-product-item__sale-off">
+															    	<div class="home-product-item__sale-off-value">${giamgia} %</div>
+																	<div class="home-product-item__sale-off-label">GIẢM</div>
+																</div>	 
+															</c:if>
+			                                            </div>
+			                                            <div class="home-product-item-footer">Xem chi tiet</div>
+			                                        </a>
+			                                    </div>
+			                                    <div class="col l-2-4 home-product-item">
+			                                        <span class="Product-Description">${monan.getMota()}</span>
+			                                    </div>
+			                                    <div class="col l-1 home-product-item">
+			                                        <span class="Product-Description">${monan.getThanhphan()}</span>
+			                                    </div>
+			                                    <div class="col l-1 home-product-item">
+			                                        <span class="Product-Description">${monan.getHuongvi()}</span>
+			                                    </div>
+			                                    <div class="col l-1 home-product-item">
+			                                        <span class="Product-Description">${monan.getNgaytao()}</span>
+			                                    </div>
+			                                    <div class="col l-1 home-product-item">
+			                                        <span class="Product-Description">${monan.getTrangthai().equals("dang ban") ? "Đang bán" : "Ngưng bán"}</span>
+			                                    </div>
+			                                    <div class="col l-1 home-product-item">
+			                                        <span class="Product-Description">
+			                                            <a href="" class="btn btn--primary home-product-btn edit-product" name="link-editproduct" id="${monan.getId()}">Sửa</a>
+			                                            <c:if test='${monan.getTrangthai().equals("dang ban")}'>
+			                                            	<a href="./Editproduct?idmonan=${monan.getId()}&k=ngungban" class="btn btn--primary home-product-btn stop-sold-product">Ngưng bán</a>
+			                                            </c:if>
+			                                            <c:if test='${monan.getTrangthai().equals("ngung ban")}'>
+			                                            	<a href="./Editproduct?idmonan=${monan.getId()}&k=moban" class="btn btn--primary home-product-btn continue-sold-product">Mở bán</a>
+			                                            </c:if>
+			                                            <a href="./DeleteProduct?idmonan=${monan.getId()}" class="btn btn--primary home-product-btn delete-product">Xoá</a>
+			                                        </span>
+			                                    </div>
+			                                </div>
+										</c:forEach>   
+									<%}%>                  
+	                            </div>
+	                        <%} else { %> 
+	                            <div class="row sm-gutter productoverview">
+	                            <%if (MonanList!=null){ %> 
+	                            	<c:set var="MonanList" value="<%=MonanList%>"/>
+	                            		<c:forEach items="${MonanList}" var="monan"> 
+									        <div class="list-product">
+			                                    <div class="col l-2-4 home-product-item">
+			                                        <a class="home-product-item-link" href="#">
+			                                            <div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,<c:out value="${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())}"/>);"></div>
+			                                            <div class="home-product-item__info">
+			                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
+			                                                <div class="home-product-item__price">
+			                                                	<c:if test='${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}'>
+																    <p class="home-product-item__price-old">${monan.getGiacu()}đ</p>
+																</c:if>
+			                                                    <p class="home-product-item__price-new">${monan.getGiahientai()}đ</p>
+			                                                </div>
+			                                                <div class="home-product-item__footer">
+			                                                    <div class="home-product-item__rating-star">
+			                                                        <i class="star-checked far fa-star"></i>
+			                                                        <i class="star-checked far fa-star"></i>
+			                                                        <i class="star-checked far fa-star"></i>
+			                                                        <i class="star-checked far fa-star"></i>
+			                                                        <i class="star-uncheck far fa-star"></i>
+			                                                    </div>
+			                                                    <div class="home-product-item__saled">Đã bán ${monan.getDaban()}</div>
+			                                                </div>
+			                                                <c:if test="${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}">
+																<c:set var="giamgia" value="${Math.round((monan.giacu - monan.giahientai) / monan.giacu * 100)}" />
+			                                                	<div class="home-product-item__sale-off">
+															    	<div class="home-product-item__sale-off-value">${giamgia} %</div>
+																	<div class="home-product-item__sale-off-label">GIẢM</div>
+																</div>	 
+															</c:if>
+			                                            </div>
+			                                            <div class="home-product-item-footer">Xem chi tiet</div>
+			                                        </a>
+			                                    </div>
+			                                    <div class="col l-2-4 home-product-item">
+			                                        <span class="Product-Description">${monan.getMota()}</span>
+			                                    </div>
+			                                    <div class="col l-1 home-product-item">
+			                                        <span class="Product-Description">${monan.getThanhphan()}</span>
+			                                    </div>
+			                                    <div class="col l-1 home-product-item">
+			                                        <span class="Product-Description">${monan.getHuongvi()}</span>
+			                                    </div>
+			                                    <div class="col l-1 home-product-item">
+			                                        <span class="Product-Description">${monan.getNgaytao()}</span>
+			                                    </div>
+			                                    <div class="col l-1 home-product-item">
+			                                        <span class="Product-Description">${monan.getTrangthai().equals("dang ban") ? "Đang bán" : "Ngưng bán"}</span>
+			                                    </div>
+			                                    <div class="col l-1 home-product-item">
+			                                        <span class="Product-Description">
+			                                        	<a href="./Restore?idmonan=${monan.getId()}" class="btn btn--primary home-product-btn ">Khôi phục</a>
+			                                            <a href="./DeleteProductForever?idmonan=${monan.getId()}" class="btn btn--primary home-product-btn delete-product">Xoá vĩnh viễn</a>
+			                                        </span>
+			                                    </div>
+			                                </div>
+										</c:forEach>   
+									<%}%>                  
+	                            </div>
+	                        <%}%>
 	                        </div>   
 	                    </div>
 	                </div>
@@ -321,9 +434,9 @@
 	                                <input type="email" class="auth-form__input_info" name="txtEmail" value="${canteen.getEmail() }">
 	                            </div>
 	                           	<div style="display: none">
-	                           		<span id="tinh">${canteen.getTinh() }</span>
-	                           		<span id="huyen">${canteen.getHuyen() }</span>
-	                           		<span id="xa">${canteen.getXa() }</span>
+	                           		<span id="tinh">${canteen.getTinh()}</span>
+	                           		<span id="huyen">${canteen.getHuyen()}</span>
+	                           		<span id="xa">${canteen.getXa()}</span>
 	                           	</div>
 	                            <div class="auth-form__title">
 	                                <div class="search-group-title">Địa chỉ</div>
@@ -504,11 +617,11 @@
 		<div class="modal" id="form-changeTimeOpen" style="display: none;">
 	        <div class="modal__body" >
 	        <!-- authen change info-->
-	            <form action="./ChangeTimeOpen" method="post" enctype="multipart/form-data">
+	            <form action="./ChangeTimeOpen?id_canteen=${canteen.getId()}" method="post" id="form-editTime">
 	                <div class="auth-form">
 	                    <div class="auth-form__container">
 	                        <div class="auth-form__header">
-	                            <h3 class="auth-form__heading">Sửa giờ hoạt động</h3>
+	                            <h3 class="auth-form__heading">Sửa giờ hoạt động ${giohoatdongList.get(0).getGiodongcua()}</h3>
 								<div class="auth-form__switch-btn">
 									<a href="#" id="info-link2" class="auth-form__switch-btn--link">Thông tin Canteen</a>
 								</div>
@@ -516,6 +629,7 @@
 	                        <div class="auth-form__form">
 								<%
 								String[] weekdays = {"Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"};
+								String[] weekdaysnumber = {"2", "3", "4", "5", "6", "7", "8"};
 								for (int i = 0; i < weekdays.length; i++) {
 								%>
 								<div class="auth-form__group_row">
@@ -526,24 +640,36 @@
 										<span>Từ</span>
 									</div>
 									<div class="auth-form__input_info_row">
-										<select name="txtTimeStart" id="" class="auth-form__input_info_select">
+										<select name="txtTimeOpen<%=weekdaysnumber[i] %>" class="auth-form__input_info_select" >
 											<option value="-1">Đóng cửa</option>
-											<%for (int j = 0; j < 24; j++) {%>
-											<option value="<%=j%>"><%=j%>:00</option>
-											<option value="<%=j%>.5"><%=j%>:30</option>
-											<%}%>
+											<%for (int j = 0; j < 24; j++) {
+												String t = String.valueOf(j);
+												if (j<10) t="0"+t;
+												if (giohoatdongList.get(i).getGiomocua().equals(t+":00")) { 
+											%> 
+													<option value="<%=j%>:00" selected='selected'> <%=j%>:00</option> 
+												<%} else {%>
+													<option value="<%=j%>:00"> <%=j%>:00</option>
+								            	<%}
+											}%> 
 										</select>
 									</div>
 									<div class="auth-form__title_row-time">
 										<span>Đến</span>
 									</div>
 									<div class="auth-form__input_info_row">
-										<select name="txtTimeStart" id="" class="auth-form__input_info_select">
+										<select name="txtTimeClose<%=weekdaysnumber[i] %>" class="auth-form__input_info_select" >
 											<option value="-1">Đóng cửa</option>
-											<%for (int j = 0; j < 24; j++) {%>
-											<option value="<%=j%>"><%=j%>:00</option>
-											<option value="<%=j%>.5"><%=j%>:30</option>
-											<% } %>
+											<%for (int j = 0; j < 24; j++) {
+												String t = String.valueOf(j);
+												if (j<10) t="0"+t;
+												if (giohoatdongList.get(i).getGiodongcua().equals(t+":00")) { 
+											%> 
+													<option value="<%=j%>:00" selected='selected'> <%=j%>:00</option> 
+												<%} else {%>
+													<option value="<%=j%>:00"> <%=j%>:00</option>
+								            	<%}
+											}%> 
 										</select>
 									</div>
 								</div>
@@ -558,11 +684,11 @@
 	            </form>
 	        </div> 
 	    </div>
-	    <c:forEach items="${listMonan}" var="monan">
+	    <c:forEach items="${MonanList}" var="monan">
 	    	<div class="modal" name="form-editProduct" id="${monan.getId()}">
 		        <div class="modal__body" >
 		        <!-- authen change info-->
-		            <form action="./Editproduct?id_monan=${monan.getId()}&id_canteen=${monan.getIdcantin()}&giacu=${monan.getGiahientai()}" method="post" class="form__info" enctype="multipart/form-data">
+		            <form action="./Editproduct?id_monan=${monan.getId()}&giacu=${monan.getGiahientai()}" method="post" class="form__info" enctype="multipart/form-data">
 		                <div class="auth-form__addproduct">
 		                    <div class="auth-form__container">
 		                        <div class="auth-form__header">
@@ -603,7 +729,7 @@
 		                                <div class="auth-form__input_info_row">
 		                                     <select name="txtLoaiNew" id="" class="auth-form__input_info_select" required>
 		                                        <option value="-1"></option>
-												<option value="thit" ${monan.getLoaithucan().equals("thit") ? "selected" : ""}>Món thịt</option>
+												<option value="thit" ${monan.getLoaithucan().equals("1") ? "selected" : ""}>Món thịt</option>
 												<option value="haisan" ${monan.getLoaithucan().equals("haisan") ? "selected" : ""}>Món hải sản</option>
 												<option value="nuoc" ${monan.getLoaithucan().equals("nuoc") ? "selected" : ""}>Món nước</option>
 												<option value="kho" ${monan.getLoaithucan().equals("kho") ? "selected" : ""}>Món khô</option>

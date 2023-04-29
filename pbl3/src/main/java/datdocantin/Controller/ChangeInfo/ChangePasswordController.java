@@ -1,4 +1,4 @@
-package datdocantin.Controller;
+package datdocantin.Controller.ChangeInfo;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -32,6 +32,7 @@ public class ChangePasswordController extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
         try {
         	String id = request.getParameter("id_user"); 
+        	if (id==null) id = request.getParameter("id_canteen"); 
             String oldPass = request.getParameter("txtOldPass");
             String newPass = request.getParameter("txtNewPass");
             AccountModel acc = AccountDAO.getAccountInfo(id, oldPass);

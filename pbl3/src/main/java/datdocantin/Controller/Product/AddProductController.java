@@ -1,4 +1,4 @@
-package datdocantin.Controller;
+package datdocantin.Controller.Product;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -9,9 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import datdocantin.Dao.CanteenDAO;
 import datdocantin.Dao.MonAnDAO;
 import datdocantin.Model.MonAnModel;
 import datdocantin.Service.getNewIDforTable;
@@ -37,7 +34,6 @@ public class AddProductController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
-		HttpSession session = request.getSession(true);
         try {
         	String id = getNewIDforTable.getNewID("monan");
         	String idcantin = request.getParameter("id_canteen");
@@ -50,9 +46,7 @@ public class AddProductController extends HttpServlet {
         	String today = LocalDate.now().toString();
         	byte[] hinhanhchinhBytes = request.getPart("img1").getInputStream().readAllBytes();
         	if (hinhanhchinhBytes.length == 0) hinhanhchinhBytes = null;
-        	MonAnDAO.addNewMonan(new MonAnModel(id,idcantin,ten,mota,thanhphan,huongvi,loai,gia,gia,today,hinhanhchinhBytes,"dang ban","0"));
-        	session.setAttribute("canteen", CanteenDAO.getInfoCanteen(idcantin));
-        	session.setAttribute("listMonan", MonAnDAO.getListMonan(idcantin));
+        	MonAnDAO.addNewMonan(new MonAnModel(id,idcantin,ten,mota,thanhphan,huongvi,loai,gia,gia,today,hinhanhchinhBytes,"dang ban","0","0"));
         	response.sendRedirect(request.getContextPath());
         } catch (Exception e) {
             log("error at login servlet: " + e.toString());

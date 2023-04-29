@@ -1,4 +1,4 @@
-package datdocantin.Controller;
+package datdocantin.Controller.ChangeInfo;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

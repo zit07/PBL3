@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.CanteenDAO;
+import datdocantin.Dao.GiohoatdongDAO;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Model.AccountModel;
 import datdocantin.Model.CanteenModel;
@@ -47,6 +48,7 @@ public class SignUpController extends HttpServlet {
             	}
             	else {
             		CanteenDAO.addCanteen(new CanteenModel(id,ten,sdt,"","","","","",null));
+            		GiohoatdongDAO.Addgiohoatdong(Integer.valueOf(getNewIDforTable.getNewID("giohoatdong")), id);
 				}
             	response.sendRedirect(request.getContextPath());
             }

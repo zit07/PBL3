@@ -9,14 +9,14 @@ const ChangePasslink = document.getElementById("changepass-link"),
       ChangeTimeOpenlink = document.getElementById("changeTimeOpen-link"),
       ChangeTimeOpenlink2 = document.getElementById("changeTimeOpen-link2"),
       AddProductlink = document.getElementById("add-product-link");
-
+      
 // Form to show
 const ChangePassform = document.getElementById("form-changepassword"),
 	  ChangePINform = document.getElementById("form-changepin"),
 	  Infoform = document.getElementById("form-info"),
       AddProductform = document.getElementById("form-addProduct"),
       ChangeTimeOpenform = document.getElementById("form-changeTimeOpen");
-
+      
 // Function to show form
 	const showForm = (form, event) => {
 	    event.preventDefault();
@@ -48,6 +48,16 @@ const ChangePassform = document.getElementById("form-changepassword"),
 	    Infoform.style.display = "none";
 	});
     AddProductlink.addEventListener("click", (event) => showForm(AddProductform, event));
+    
+    const historyLinks = document.querySelectorAll('.header__search-history-item-link');
+	historyLinks.forEach(link => {
+	  link.addEventListener('mousedown', (event) => {
+	    event.preventDefault();
+	  });
+	});
+
+
+
 
 // Show noti
 	const shownotiChangePassConfirm = document.getElementById('notiChangePassConfirm');
@@ -167,3 +177,28 @@ links.forEach((link) => {
 	});
   });
 });
+
+const formEditTime = document.getElementById("form-editTime");
+formEditTime.addEventListener("submit", (event) => {
+	    event.defaultPrevented;
+	    for (let i = 2; i <= 8; i++) {
+	        const openSelect = document.getElementsByName(`txtTimeOpen${i}`)[0];
+	        const closeSelect = document.getElementsByName(`txtTimeClose${i}`)[0];
+	        const openValue = parseInt(openSelect.value.replace(":", ""));
+	        const closeValue = parseInt(closeSelect.value.replace(":", ""));
+	        if (openValue >= closeValue && openValue !== -1 && closeValue !== -1) {
+				console.log(closeValue+openValue);
+	            alert(`Thời gian đóng cửa phải sau thời gian mở cửa của thứ ${i}`);
+	            event.preventDefault();
+	            break; // Dừng kiểm tra nếu có ít nhất một ngay làm việc không hợp lệ
+	        }
+   		}
+	});
+
+const btnDelhistoryLinks = document.querySelectorAll('.btn-del-history');
+	btnDelhistoryLinks.forEach(link => {
+	  link.addEventListener('mousedown', (event) => {
+	    event.preventDefault(); 
+	  });
+	});
+

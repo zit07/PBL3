@@ -44,5 +44,4 @@ public class AccountModel {
 	public void setType_User(String type_User) {
 		this.type_User = type_User;
 	}
-
 }

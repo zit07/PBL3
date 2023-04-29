@@ -12,8 +12,6 @@ import javax.servlet.http.HttpSession;
 import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.CanteenDAO;
 import datdocantin.Dao.KhachhangDAO;
-import datdocantin.Dao.MonAnDAO;
-import datdocantin.Dao.HistorySearchDAO;
 import datdocantin.Model.AccountModel;
 import datdocantin.Model.KhachHangModel;
 
@@ -48,17 +46,11 @@ public class LoginController extends HttpServlet {
                 	session.setAttribute("role", "admin");
                 }
                 else if (role.equals("cantin")) {
-                	session.setAttribute("canteen", CanteenDAO.getInfoCanteen(id));
-                	session.setAttribute("listMonan", MonAnDAO.getListMonan(id));
-                	session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(id));
+                	session.setAttribute("canteen", CanteenDAO.getInfoCanteen(id)); 
                 }
                 else {
                 	KhachHangModel khachhang = KhachhangDAO.getKhachhangInfo(id);
                 	session.setAttribute("khachhang", khachhang);
-                	session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(id));
-//                	session.setAttribute("listMonan", MonAnDAO.getInfoMonAn(khachhang.getIDCantin()));
-//                	session.setAttribute("listMonan", MonAnDAO.getInfoMonAn(khachhang.getIDCantin()));
-//                	session.setAttribute("banhmy", listMonAn.get(1));
                 } 
                 response.sendRedirect(request.getContextPath());
 			} 

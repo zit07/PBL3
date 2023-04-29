@@ -1,4 +1,4 @@
-package datdocantin.Controller;
+package datdocantin.Controller.ChangeInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,7 +59,6 @@ public class ChangeInfoController extends HttpServlet {
 					KhachhangDAO.updateInfo(new KhachHangModel(id, hoten, ngaysinh, gioitinh, chieucao, cannang, sdt,
 							email, IDcantin, Monyeuthich, "", avatarBytes));
 					AccountDAO.ChangeSdt(id, sdt);
-					session.setAttribute("khachhang", KhachhangDAO.getKhachhangInfo(id));
 				}
 			} catch (Exception e) {
 				log("error at login servlet: " + e.toString());
@@ -81,7 +80,6 @@ public class ChangeInfoController extends HttpServlet {
 				if (id != null) {
 					CanteenDAO.updateInfo(new CanteenModel(id, ten, sdt, email, tinh, huyen, xa, "", avatarBytes));
 					AccountDAO.ChangeSdt(id, sdt);
-					session.setAttribute("canteen", CanteenDAO.getInfoCanteen(id));
 				}
 			} catch (Exception e) {
 				log("error at login servlet: " + e.toString());

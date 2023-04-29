@@ -17,23 +17,43 @@ public class MonAnDAO {
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
     
-    public static List<MonAnModel> getListMonan(String idcantin) throws SQLException, Exception {
-    	List<MonAnModel> result = new ArrayList<MonAnModel>();
+    public static List<MonAnModel> getListMonanforCanteen(String idcantin, String danhmuc) throws SQLException, Exception {
+    	List<MonAnModel> result = new ArrayList<MonAnModel>(); 
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT id, idcantin, tenmon, mota, thanhphan, huongvi, loaithucan, giacu, giahientai, ngaytao, hinhanhchinh, trangthai, daban FROM monan WHERE idcantin = ?;";
+            	String sql = "SELECT id, idcantin, tenmon, mota, thanhphan, huongvi, loaithucan, giacu, giahientai, ngaytao, hinhanhchinh, trangthai, daban, xoa FROM monan WHERE idcantin = ?";
+            	if (danhmuc!=null) {
+            		if (danhmuc.equals("dangban")) sql += " AND trangthai = 'dang ban' AND xoa = '0';";
+                	else if (danhmuc.equals("ngungban")) sql += " AND trangthai = 'ngung ban' AND xoa = '0';";
+                	else if (danhmuc.equals("daxoa")) sql += " AND xoa = '1';";
+            	} else sql += " AND xoa = '0';";
             	stm = conn.prepareStatement(sql);
             	stm.setString(1, idcantin);
             	rs = stm.executeQuery();
                 while (rs.next()) {
-                	byte[] encodedHinhanh = null;
-                	byte[] decodedHinhanh = null;
-                	if (rs.getBytes(11)!=null){
-                		encodedHinhanh = rs.getBytes(11);
-                		decodedHinhanh = Base64.getDecoder().decode(encodedHinhanh);
-                	}
-                	result.add(new MonAnModel(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), decodedHinhanh, rs.getString(12),rs.getString(13)));
+                	result.add(new MonAnModel(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), Base64.getDecoder().decode(rs.getBytes(11)), rs.getString(12),rs.getString(13),rs.getString(13)));
+                }
+            }
+        } catch (Exception e) {
+        	e.printStackTrace(); 
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+        return result;
+    }
+    
+    public static List<MonAnModel> getListMonanforKhach(String idcantin) throws SQLException, Exception {
+    	List<MonAnModel> result = new ArrayList<MonAnModel>();
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+            	String sql = "SELECT id, idcantin, tenmon, mota, thanhphan, huongvi, loaithucan, giacu, giahientai, hinhanhchinh, daban FROM monan WHERE idcantin = ? AND trangthai = 'dang ban';";
+            	stm = conn.prepareStatement(sql);
+            	stm.setString(1, idcantin);
+            	rs = stm.executeQuery();
+                while (rs.next()) {
+                	result.add(new MonAnModel(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), "", Base64.getDecoder().decode(rs.getBytes(10)), "", rs.getString(11), ""));
                 }
             }
         } catch (Exception e) {
@@ -46,29 +66,43 @@ public class MonAnDAO {
     
     public static List<MonAnModel> getResultSearchforCanteen(String idcantin, String tukhoa) throws SQLException, Exception {
     	List<MonAnModel> result = new ArrayList<MonAnModel>();
-    	tukhoa = tukhoa.toLowerCase();
-    	tukhoa = Normalizer.normalize(tukhoa, Normalizer.Form.NFD);
-    	tukhoa = tukhoa.replaceAll("\\p{M}", "");
+    	tukhoa = Normalizer.normalize(tukhoa.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT id, idcantin, tenmon, mota, thanhphan, huongvi, loaithucan, giacu, giahientai, ngaytao, hinhanhchinh, trangthai, daban FROM monan WHERE idcantin = ? ;";
+            	String sql = "SELECT id, idcantin, tenmon, mota, thanhphan, huongvi, loaithucan, giacu, giahientai, ngaytao, hinhanhchinh, trangthai, daban, xoa FROM monan WHERE idcantin = ? ;";
+            	stm = conn.prepareStatement(sql);
+            	stm.setString(1, idcantin); 
+            	rs = stm.executeQuery();
+                while (rs.next()) {
+                	String t = Normalizer.normalize((rs.getString(3)+rs.getString(5)+rs.getString(6)+rs.getString(7)).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");;
+                	if (t.contains(tukhoa)) {
+                    	result.add(new MonAnModel(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), Base64.getDecoder().decode(rs.getBytes(11)), rs.getString(12),rs.getString(13),rs.getString(14)));
+                	}
+                }
+            }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+        return result;
+    }
+    
+    public static List<MonAnModel> getResultSearchforKhach(String idcantin, String tukhoa) throws SQLException, Exception {
+    	List<MonAnModel> result = new ArrayList<MonAnModel>();
+    	tukhoa = Normalizer.normalize(tukhoa.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+            	String sql = "SELECT id, idcantin, tenmon, mota, thanhphan, huongvi, loaithucan, giacu, giahientai, hinhanhchinh, daban FROM monan WHERE idcantin = ? AND trangthai = 'dang ban';";
             	stm = conn.prepareStatement(sql);
             	stm.setString(1, idcantin);
             	rs = stm.executeQuery();
                 while (rs.next()) {
-                	String t = rs.getString(3)+rs.getString(4)+rs.getString(5)+rs.getString(6)+rs.getString(7);
-                	t = t.toLowerCase();
-                	t = Normalizer.normalize(t, Normalizer.Form.NFD);
-                	t = t.replaceAll("\\p{M}", "");
+                	String t = Normalizer.normalize((rs.getString(3)+rs.getString(5)+rs.getString(6)+rs.getString(7)).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", ""); 
                 	if (t.contains(tukhoa)) {
-                		byte[] encodedHinhanh = null;
-                    	byte[] decodedHinhanh = null;
-                    	if (rs.getBytes(11)!=null){
-                    		encodedHinhanh = rs.getBytes(11);
-                    		decodedHinhanh = Base64.getDecoder().decode(encodedHinhanh);
-                    	}
-                    	result.add(new MonAnModel(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), decodedHinhanh, rs.getString(12),rs.getString(13)));
+                    	result.add(new MonAnModel(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9),"", Base64.getDecoder().decode(rs.getBytes(10)),"",rs.getString(11),""));
                 	}
                 }
             }
@@ -84,7 +118,7 @@ public class MonAnDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "INSERT INTO monan(id, idcantin, tenmon, mota, thanhphan, huongvi, loaithucan, giacu, giahientai, ngaytao, hinhanhchinh, trangthai, daban) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                String sql = "INSERT INTO monan(id, idcantin, tenmon, mota, thanhphan, huongvi, loaithucan, giacu, giahientai, ngaytao, hinhanhchinh, trangthai, daban, xoa) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
                 stm = conn.prepareStatement(sql);
                 stm.setString(1, newMonan.getId());
                 stm.setString(2, newMonan.getIdcantin());
@@ -99,6 +133,7 @@ public class MonAnDAO {
                 stm.setString(11, Base64.getEncoder().encodeToString(newMonan.getHinhanhchinh()));
                 stm.setString(12, newMonan.getTrangthai());
                 stm.setString(13, newMonan.getDaban());
+                stm.setString(14, newMonan.getXoa());
                 stm.executeUpdate();
             }
         } catch (Exception e) {
@@ -158,8 +193,57 @@ public class MonAnDAO {
         }
     }
     
+    public static void Delete(String id) throws SQLException, Exception {
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+                String sql = "UPDATE monan SET xoa = '1' WHERE id = ?;";
+                stm = conn.prepareStatement(sql);
+                stm.setString(1, id);
+                stm.executeUpdate();
+            }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+    }
+    
+    public static void Restore(String id) throws SQLException, Exception {
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+                String sql = "UPDATE monan SET xoa = '0' WHERE id = ?;";
+                stm = conn.prepareStatement(sql);
+                stm.setString(1, id);
+                stm.executeUpdate();
+            }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+    }
+    
+    public static void DeleteForever(String id) throws SQLException, Exception {
+        try {System.out.println(id);
+            conn = connectDB.getConnection();
+            if (conn != null) {
+                String sql = "DELETE FROM monan WHERE id = ?;";
+                stm = conn.prepareStatement(sql);
+                stm.setString(1, id);
+                stm.executeUpdate();   
+            }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+    }
+    
+    
     public static void main(String[] args) throws SQLException, Exception {
-    	List<MonAnModel> listMonAn = MonAnDAO.getResultSearchforCanteen("10003", "my");
+    	List<MonAnModel> listMonAn = MonAnDAO.getResultSearchforKhach("10002", "com");System.out.println(listMonAn.size());
     	for (MonAnModel monAn : listMonAn) {
     	    System.out.println("ID món ăn: " + monAn.getId());
     	    System.out.println("Tên món ăn: " + monAn.getTenmon());
