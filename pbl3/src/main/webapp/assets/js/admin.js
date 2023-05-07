@@ -1,43 +1,27 @@
 // Link Click To Show
 
 const ChangePasslink = document.getElementById("changepass-link"),
-	  ChangePasslink2 = document.getElementById("changepass-link2"),
-	  ChangePINlink = document.getElementById("changepin-link"),
-	  ChangePINlink2 = document.getElementById("changepin-link2"),
-	  Infolink = document.getElementById("info-link"),
-	  ChoosecanteenLink = document.getElementById("choosecanteen"); 
-
+      ListCuslink = document.getElementById("list-cus-link");
+      
 // Form to show
 const ChangePassform = document.getElementById("form-changepassword"),
-	  ChangePINform = document.getElementById("form-changepin"),
-	  Infoform = document.getElementById("form-info"),
-	  ChoosecanteenForm = document.getElementById("form-chosseCantin");
-
+	  ListCusform = document.getElementById("form-list__custumer");
+      
 // Function to show form
 	const showForm = (form, event) => {
 	    event.preventDefault();
 	    ChangePassform.style.display = "none";
-	    ChangePINform.style.display = "none";
-	    Infoform.style.display = "none";
-	    ChoosecanteenForm.style.display = "none";
+	    ListCusform.style.display = "none";
 	    form.style.display = "flex";
 	}
 	ChangePasslink.addEventListener("click", (event) => showForm(ChangePassform, event));
-	ChangePINlink.addEventListener("click", (event) => showForm(ChangePINform, event));
-	ChangePasslink2.addEventListener("click", (event) => {
-	    showForm(ChangePassform, event);
-	    ChangePINform.style.display = "none";
-	});
-	ChangePINlink2.addEventListener("click", (event) => {
-	    ChangePassform.style.display = "none";
-	    showForm(ChangePINform, event);
-	});
-	Infolink.addEventListener("click", (event) => showForm(Infoform, event));
-	ChoosecanteenLink.addEventListener("click", (event) => showForm(ChoosecanteenForm, event));
+	ListCuslink.addEventListener("click", (event) => showForm(ListCusform, event));
+
+
 
 
 // Show noti
- shownotiChangePassConfirm = document.getElementById('notiChangePassConfirm');
+	const shownotiChangePassConfirm = document.getElementById('notiChangePassConfirm');
 	const notiErrorOldPass = document.getElementById('notiErrorOldPass');
 	var formChangePass = document.querySelector('.formChangePass');
 	formChangePass.addEventListener('submit', function(event) {
@@ -50,14 +34,14 @@ const ChangePassform = document.getElementById("form-changepassword"),
 	  }
 	});
 
-
+    
 $(function () {
   var district;
   var province = JSON.parse(address);
   var tinhValue = $('#tinh').text();
   var huyenValue = $('#huyen').text();
   var xaValue = $('#xa').text();
-	
+
 
   $('#province').html('<option value="-1">Chọn tỉnh/thành phố</option>');
   $('#district').html('<option value="-1">Chọn quận/huyện</option>');
@@ -79,7 +63,7 @@ $(function () {
               option2[z].attr('selected', true);
             }
             z++;
-          }); 
+          });
         }
         y++;
       });
@@ -122,26 +106,3 @@ $(function () {
   });
 });
 
-const avatar = document.getElementById("img-form"),
-	  inputIMG = document.getElementById("input-img-form");
-	  
-	inputIMG.addEventListener("change", ()=>{
-		avatar.src = URL.createObjectURL(inputIMG.files[0]);
-	});
-	  
-	  
-const historyLinks = document.querySelectorAll('.header__search-history-item-link');
-	historyLinks.forEach(link => {
-	  link.addEventListener('mousedown', (event) => {
-	    event.preventDefault();
-	  });
-	});
-const btnDelhistoryLinks = document.querySelectorAll('.btn-del-history');
-	btnDelhistoryLinks.forEach(link => {
-	  link.addEventListener('mousedown', (event) => {
-	    event.preventDefault(); 
-	  });
-	});
-
-	  
-	  

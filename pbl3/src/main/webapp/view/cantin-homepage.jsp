@@ -94,7 +94,7 @@
 	                <!-- search -->
 	                <div class="header__contain">
 	                    <div class="header__logo">
-	                        <a href="./" class="header__logo-link">
+	                        <a href="./getProduct" class="header__logo-link">
 	                            <img src="./assets/img/logo/logo.png" class="header__logo-img">
 	                        </a>
 	                    </div>
@@ -140,7 +140,7 @@
 									<i class="category-heading-icon fas fa-list-ul"></i> HOME
 								</h3>
 								<div class="navbar">
-									<a class="navbar-link <%if(danhmuc==null) {%>choose<% } %>" href="./getProduct?"> Tất cả món ăn</a> 
+									<a class="navbar-link <%if(danhmuc==null) {%>choose<% } %>" href="./getProduct"> Tất cả món ăn</a> 
 									<a class="navbar-link <%if(danhmuc!=null && danhmuc.equals("dangban")) {%>choose<% } %>" href="./getProduct?danhmuc=dangban"> Món ăn đang kinh doanh</a> 
 									<a class="navbar-link <%if(danhmuc!=null && danhmuc.equals("ngungban")) {%>choose<% } %>" href="./getProduct?danhmuc=ngungban">Món ăn ngừng kinh doanh</a> 
 									<a class="navbar-link <%if(danhmuc!=null && danhmuc.equals("daxoa")) {%>choose<% } %>" href="./getProduct?danhmuc=daxoa">Món ăn đã xoá</a> 
@@ -214,7 +214,7 @@
 	                            	<c:set var="MonanList" value="<%=MonanList%>"/>
 	                            	<c:forEach items="${MonanList}" var="monan">
 	                            		<div class="col l-2-4">
-		                                        <a class="home-product-item-link" href="#">
+		                                        <a class='home-product-item-link ${monan.getTrangthai().equals("ngung ban") ? "product-deleted" : ""}' href="#">
 	  	                                            <div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())});"></div>
 	 	                                            <div class="home-product-item__info">
 		                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>

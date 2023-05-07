@@ -43,7 +43,7 @@ public class LoginController extends HttpServlet {
             if (acc!=null) {
             	String role = acc.getType_User();
                 if (role.equals("admin")) {
-                	session.setAttribute("role", "admin");
+                	session.setAttribute("admin", "admin");
                 }
                 else if (role.equals("cantin")) {
                 	session.setAttribute("canteen", CanteenDAO.getInfoCanteen(id)); 

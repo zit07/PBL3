@@ -31,8 +31,9 @@ public class HomeController extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		if (session.getAttribute("khachhang") != null) {
-			try {
+		try {
+			//khach hang
+			if (session.getAttribute("khachhang") != null) {
 				KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
 				String ID = khachhang.getIDKH();
 				if (session.getAttribute("txtSearch")!=null) {
@@ -44,12 +45,10 @@ public class HomeController extends HttpServlet {
 				}
 				session.setAttribute("khachhang", KhachhangDAO.getKhachhangInfo(ID));
 				session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			request.getRequestDispatcher("view/customer-homepage.jsp").forward(request, response);
-		} else if (session.getAttribute("canteen") != null) {
-			try {
+				request.getRequestDispatcher("view/customer-homepage.jsp").forward(request, response);
+			} 
+			//canteen
+			else if (session.getAttribute("canteen") != null) {
 				CanteenModel canteen = (CanteenModel)session.getAttribute("canteen");
 				String ID = canteen.getId();
 				if (session.getAttribute("txtSearch")!=null) {
@@ -59,26 +58,31 @@ public class HomeController extends HttpServlet {
 				} else {
 					request.setAttribute("danhmuc", (String)session.getAttribute("danhmuc"));
 					session.setAttribute("listMonan", MonAnDAO.getListMonanforCanteen(ID, (String)session.getAttribute("danhmuc")));
-					session.removeAttribute("danhmuc");
+//					session.removeAttribute("danhmuc");
 				}
 				
 				session.setAttribute("listGiohoatdong", GiohoatdongDAO.getGiohoatdong(ID)); 
 				session.setAttribute("canteen", CanteenDAO.getInfoCanteen(ID));
 				session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID));
-			} catch (Exception e) {
-				e.printStackTrace();
+				request.getRequestDispatcher("view/cantin-homepage.jsp").forward(request, response);
+			} 
+			//admin
+			else if (session.getAttribute("admin") != null) {
+				request.getRequestDispatcher("view/admin-homepage.jsp").forward(request, response);
 			}
-			request.getRequestDispatcher("view/cantin-homepage.jsp").forward(request, response);
-		} else if (session.getAttribute("admmin") != null) {
-			request.getRequestDispatcher("view/admin-homepage.jsp").forward(request, response);
-		}
-		else {
-			if (session.getAttribute("menu") != null) {
-				request.setAttribute("menu", (List<MonAnModel>)session.getAttribute("menu"));
-				session.removeAttribute("menu");
+			//trang chu
+			else {
+				if (session.getAttribute("menu") != null) {
+					request.setAttribute("menu", (List<MonAnModel>)session.getAttribute("menu"));
+					session.removeAttribute("menu");
+				}
+				request.getRequestDispatcher("view/homepage.jsp").forward(request, response);
 			}
-			request.getRequestDispatcher("view/homepage.jsp").forward(request, response);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

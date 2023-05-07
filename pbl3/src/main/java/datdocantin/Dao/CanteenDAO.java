@@ -92,7 +92,7 @@ public class CanteenDAO {
     
     public static List<CanteenModel> SearchCanteen(String txtSearch, String Tinh, String Huyen, String Xa) throws SQLException, Exception {
     	List<CanteenModel> result = new ArrayList<CanteenModel>();
-    	txtSearch = Normalizer.normalize(txtSearch.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+    	if (txtSearch!=null) txtSearch = Normalizer.normalize(txtSearch.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
     	try {
     		conn = connectDB.getConnection();
 			if (conn != null) {
@@ -119,9 +119,9 @@ public class CanteenDAO {
 	                	result.add(new CanteenModel(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),"", "", "", "", decodedAvatar));
 					}
 				}
-				else if (!txtSearch.equals("")) {
+				else if (!txtSearch.equals("") && txtSearch!=null) {
 					String sql = "SELECT id, ten, sodienthoai, email, tinh, huyen, xa, avatar FROM canteen;";
-					stm = conn.prepareStatement(sql);
+					stm = conn.prepareStatement(sql); 
 	            	rs = stm.executeQuery();
 	                while (rs.next()) {
 	                	byte[] decodedAvatar = null;

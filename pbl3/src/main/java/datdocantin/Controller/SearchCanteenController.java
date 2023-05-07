@@ -46,6 +46,7 @@ public class SearchCanteenController extends HttpServlet {
 				session.setAttribute("canteenList", canteens);
 			}
             if (txtTinh.equals("-1")) session.setAttribute("txtSearchCanteen", txtSearch);
+            if (session.getAttribute("khachhang")!=null) session.setAttribute("showcanteen", "flex");
         } catch (Exception e) {
             log("error at login servlet: " + e.toString());
         } 

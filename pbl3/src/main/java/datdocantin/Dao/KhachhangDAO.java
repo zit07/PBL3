@@ -19,7 +19,7 @@ public class KhachhangDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT idkh, hoten, ngaysinh, gioitinh, chieucao, cannang, sodienthoai, email, idcantin, monyeuthich, avatar FROM khachhang WHERE idkh = ?;";
+            	String sql = "SELECT idkh, hoten, ngaysinh, gioitinh, chieucao, cannang, sodienthoai, email, idcanteen, monyeuthich, avatar FROM khachhang WHERE idkh = ?;";
             	stm = conn.prepareStatement(sql);
             	stm.setString(1, id);
             	rs = stm.executeQuery();
@@ -60,7 +60,7 @@ public class KhachhangDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "UPDATE khachhang SET hoten = ?, ngaysinh = ?, gioitinh = ?, chieucao = ?, cannang = ?, sodienthoai = ?, email = ?, idcantin = ?, monyeuthich = ?";
+                String sql = "UPDATE khachhang SET hoten = ?, ngaysinh = ?, gioitinh = ?, chieucao = ?, cannang = ?, sodienthoai = ?, email = ?, monyeuthich = ?";
                 if (khachhang.getAvatar() != null) {
                     sql += ", avatar = ?";
                 }
@@ -73,7 +73,6 @@ public class KhachhangDAO {
                 stm.setString(5, khachhang.getCannang());
                 stm.setString(6, khachhang.getSodienthoai());
                 stm.setString(7, khachhang.getEmail());
-                stm.setString(8, khachhang.getIDCantin());
                 stm.setString(9, khachhang.getMonyeuthich());
                 if (khachhang.getAvatar() != null) {
                     stm.setString(10, Base64.getEncoder().encodeToString(khachhang.getAvatar()));
@@ -108,7 +107,21 @@ public class KhachhangDAO {
         }
     }
     
-     
+    public static void ChangeCanteen(String id, String idcanteen) throws SQLException, Exception {
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+                String sql = "UPDATE khachhang SET idcanteen=? WHERE idkh=?";
+                stm = conn.prepareStatement(sql);
+                stm.setString(1, idcanteen);
+                stm.setString(2, id);
+                stm.executeUpdate();
+            }
+        } catch (Exception e) {
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+    }
     
     public static void main(String[] args) {
 		try {

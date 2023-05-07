@@ -6,37 +6,30 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import datdocantin.Dao.HistorySearchDAO;
 
-@WebServlet("/getProduct")
-public class CategoriesProductController extends HttpServlet {
+@WebServlet("/delHistorySearch")
+public class DeleteHistorySearchController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    public CategoriesProductController() {
+    
+    public DeleteHistorySearchController() {
         super();
     }
-
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
-		HttpSession session = request.getSession();
-		try { 
-			String danhmuc = request.getParameter("danhmuc");
-			if (danhmuc!=null) {
-		        session.setAttribute("danhmuc", danhmuc);
-			}
-			else session.removeAttribute("danhmuc");
-			response.sendRedirect(request.getContextPath());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        try {
+        	HistorySearchDAO.deleteSearchHistory(request.getParameter("id"));
+        } catch (Exception e) {
+            log("error at login servlet: " + e.toString());
+        } 
+        response.sendRedirect(request.getContextPath());
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		response.sendRedirect(request.getContextPath());
 	}
 
 }
- 

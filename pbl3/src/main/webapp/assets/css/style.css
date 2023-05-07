@@ -306,6 +306,15 @@ border-color: red green blue yellow */
     overflow: hidden;
 }
 
+.list__custumer{
+    width: 1100px;
+}
+
+.form-choose-canteen {
+    display: flex;
+    justify-content: space-around;
+}
+
 .auth-form__container {
     padding: 0 32px 32px 32px;
 } 
@@ -321,6 +330,12 @@ border-color: red green blue yellow */
     font-weight: 600;
     color: var(--text-color);
     padding: 12px 12px 0;
+}
+
+.table-list-user {
+    font-weight: 500;
+    text-align: center;
+    font-size: 2rem;
 }
 
 .auth-form__switch-btn {
@@ -527,11 +542,16 @@ border-color: red green blue yellow */
     align-items: center;
 }
 
-.input-chosseCantin{
-	width: 70%;
+.input-chooseCantin{
+	width: 50%;
 }
 
-.btn-ChosseCantin{
+.form-group-choosecanteen {
+	display: flex;
+    align-items: end;
+}
+
+.btn-ChooseCantin{
 	height: 40px
 }
 
@@ -1620,6 +1640,10 @@ border-color: red green blue yellow */
     margin: 26px 0;
 }
 
+.btn-list-user {
+    margin: 16px 0;
+}
+
 .continue-sold-product {
     background-color: rgb(54, 102, 129) !important;
 }
@@ -1645,6 +1669,10 @@ border-color: red green blue yellow */
     background-color: #9d9999;
 }
 
+.product-deleted {
+	background-color: #ff9999;
+}
+
 .btn-add-product {
     color: var(--text-color);
     text-decoration: none;
@@ -1658,4 +1686,14 @@ border-color: red green blue yellow */
     font-size: 1.4rem;
     color: var(--text-color);
     font-weight: 500;
+}
+
+.list-user {
+    max-height: 600px; 
+    overflow-y: scroll;
+}
+
+.result-search-user {
+    max-height: 320px; 
+    overflow-y: scroll;
 }

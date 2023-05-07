@@ -167,3 +167,32 @@ html {
     cursor: default;
     box-shadow: none;
 }
+
+table{
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    width: 100%;
+    border-collapse: collapse
+  
+}
+tbody{
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+}
+th{
+    height: 3rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    padding: 0;
+}
+td{
+    height: 4rem;
+    font-size: 1.4rem;
+    font-weight: 400;
+    text-align: center;
+    padding: 0;
+}
+

@@ -7,10 +7,12 @@
 <%@ page import="java.util.Base64" %>
 <%@ page import="datdocantin.Model.MonAnModel"%>
 <%@ page import="java.util.Enumeration" %>
+<%@page import="datdocantin.Model.CanteenModel"%>
 <%	
 	KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
 	List<LichsutimkiemModel> searchHistory = (List<LichsutimkiemModel>)session.getAttribute("searchHistory"); 
 	List<MonAnModel> MonanList = (List<MonAnModel>)session.getAttribute("listMonan");
+	List<CanteenModel> canteenList = (List<CanteenModel>)session.getAttribute("canteenList");
 %>
 <!DOCTYPE html>
 <html>
@@ -694,47 +696,35 @@
 											<option value="nam" ${khachhang.getGioitinh() == 'nam' ? 'selected' : ''}>Nam</option>
 											<option value="nu" ${khachhang.getGioitinh() == 'nu' ? 'selected' : ''}>Nữ</option>
 										</select>
-
 									</div>
-									<input type="text" class="auth-form__input_info_row"
-										placeholder="Ví dụ: 1.7" name="txtChieucao"
-										value="${khachhang.getChieucao()}"> <input type="text"
-										class="auth-form__input_info_row" placeholder="Ví dụ: 54.8"
-										name="txtCannang" value="${khachhang.getCannang()}">
+									<input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: 1.7" name="txtChieucao" value="${khachhang.getChieucao()}"> 
+									<input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: 54.8" name="txtCannang" value="${khachhang.getCannang()}">
 								</div>
 								<div class="auth-form__title">
 									<span>Số điện thoại:</span>
 								</div>
 								<div class="auth-form__group">
-									<input type="text" value="${khachhang.getSodienthoai()}"
-										name="txtSdt" class="auth-form__input_info"
-										oninput="this.value=this.value.replace(/[^0-9]/g,'');"
-										required>
+									<input type="text" value="${khachhang.getSodienthoai()}" name="txtSdt" class="auth-form__input_info" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
 								</div>
 								<div class="auth-form__title">
 									<span>Email:</span>
 								</div>
 								<div class="auth-form__group">
-									<input type="email" class="auth-form__input_info"
-										name="txtEmail" value="${khachhang.getEmail()}">
+									<input type="email" class="auth-form__input_info" name="txtEmail" value="${khachhang.getEmail()}">
 								</div>
 								<div class="auth-form__title">
 									<span>Cantin:</span>
 								</div>
-								<div class="auth-form__group">
-									<input type="text"
-										class="auth-form__input_info input-chosseCantin"
-										name="txtIDCantin" value="${khachhang.getIDCantin()}" readonly>
-									<a class="btn btn--primary btn-ChosseCantin" href="./">Chọn
-										Cantin</a>
+								<div class="auth-form__group form-group-choosecanteen">
+									<input type="text" class="auth-form__input_info input-chooseCantin" name="txtIDCantin" value="${khachhang.getIDCantin()}" readonly>
+									<a class="btn btn--primary btn-ChooseCantin" href="./" id="choosecanteen">Chọn Cantin</a>
+									<a class="btn btn--primary btn-ChooseCantin stop-sold-product" href="./UnchooseCanteen?id_user=${khachhang.getIDKH()}">Huỷ chọn Cantin</a>
 								</div>
 								<div class="auth-form__title">
 									<span>Món yêu thích:</span>
 								</div>
 								<div class="auth-form__group">
-									<input type="text" class="auth-form__input_info"
-										placeholder="Ví dụ: Rau, Cá, Thịt gà,..."
-										name="txtMonyeuthich" value="${khachhang.getMonyeuthich()}">
+									<input type="text" class="auth-form__input_info" placeholder="Ví dụ: Rau, Cá, Thịt gà,..." name="txtMonyeuthich" value="${khachhang.getMonyeuthich()}">
 								</div>
 							</div>
 							<div class="auth-form__control_info">
@@ -746,7 +736,80 @@
 				</form>
 			</div> 
 	    </div>
-	
+		
+		<div class="modal" id="form-chosseCantin" style="display: ${showcanteen}">
+			<div class="modal__body">
+				<form class="auth-form list__custumer" method="POST" action="./SearchCanteen">
+					<div class="auth-form__container">
+						<div class="auth-form__header">
+							<h3 class="auth-form__heading">Tìm kiếm Cantin </h3>
+						</div>
+						<div class="search-group form-choose-canteen">
+							<div class="">
+								<div class="search-group-title">Nhập tên hoặc mã Cantin</div>
+								<input class="search-group-input" type="search" name="txtSearchCanteen" value="${txtSearchCanteen}">
+							</div>
+							
+							<div class="">
+								<div class="search-group-title">Chọn địa chỉ để tìm kiếm</div>
+								<select name="txtTinh" class="search-group-item" id="province">
+									<option value="-1">Chọn tỉnh thành</option>
+								</select>
+								<select name="txtHuyen" class="search-group-item" id="district">
+									<option value="-1">Chọn quận/huyện</option>
+								</select>
+								<select name="txtXa" class="search-group-item" id="town">
+									<option value="-1">Chọn phường/xã</option>
+								</select>
+								<div style="display: none">
+		                        	<span id="tinh">${tinh}</span>
+		                           	<span id="huyen">${huyen}</span>
+		                           	<span id="xa">${xa}</span>
+		                        </div>
+							</div>
+						</div>
+						<div class="search-group">
+							<%if (canteenList!=null){ %> 
+                            	<c:set var="canteenList" value="<%=canteenList%>"/>
+                            	<c:forEach items="${canteenList}" var="Canteen">
+                            		<div class="col l-2-4">
+		                                    <a class="home-product-item-link" href="./ChooseCanteen?id_canteen=${Canteen.getId()}&id_user=${khachhang.getIDKH()}">
+		                                    	<c:if test="${Canteen.getAvatar()==null}">
+					                            	<div class="home-product-item__img" style="background-image: url(./assets/img/avatarDefault.jpg);"></div>
+					                            </c:if>
+					                            <c:if test="${Canteen.getAvatar()!=null}">
+					                            	<div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,${Base64.getEncoder().encodeToString(Canteen.getAvatar())});"></div>
+					                            </c:if>
+		                                        <div class="home-product-item__info">
+		                                            <h4 class="home-product-item__name">${Canteen.getTen()}</h4>
+		                                            
+		                                            <div class="home-product-item__footer">
+		                                                <div class="home-product-item__save">
+		                                                    <input type="checkbox" id="heart-save-1">
+		                                                    <label for="heart-save-1" class="far fa-heart"></label>
+		                                                </div>
+		                                                <div class="home-product-item__rating-star">
+		                                                    <i class="star-checked far fa-star"></i>
+		                                                    <i class="star-checked far fa-star"></i>
+		                                                    <i class="star-checked far fa-star"></i>
+		                                                    <i class="star-checked far fa-star"></i>
+		                                                    <i class="star-uncheck far fa-star"></i>
+		                                                </div>
+		                                            </div>
+		                                        </div>
+		                                    </a>
+		                                </div>
+                            	</c:forEach>
+                            <%}%>
+						</div>
+						<div class="auth-form__control">
+							<a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+							<button class="btn btn--primary" type="submit">TÌM KIẾM</button>
+						</div>
+					</div>
+				</form>
+			</div> 
+		</div>
     <!-- script js -->
     <!-- <script src="./assets/js/product.js"></script> -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
