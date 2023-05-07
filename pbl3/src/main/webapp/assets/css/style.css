@@ -1179,8 +1179,11 @@ border-color: red green blue yellow */
     margin: 8px 0;
 }
 
+.product-link {
+	position: relative;
+}
+
 .home-product-item-link {
-    position: relative;
     margin: 5px 0;
     text-decoration: none;
     display: block;
@@ -1198,8 +1201,8 @@ border-color: red green blue yellow */
 
 .home-product-item-footer {
     position: absolute;
-    top: 100%;
-    width: 100%;
+	top: 100%;
+    width: 95%;
     height: 30px;
     font-size: 1.4rem;
     text-align: center;
@@ -1207,11 +1210,14 @@ border-color: red green blue yellow */
     background-color: var(--primary-color);
     color: var(--white-color);
     z-index: 1;
-    opacity: 0;
+    opacity: 0; 
+    transition: opacity 0.3s;
+    text-decoration: none;
 }
 
-.home-product-item:hover .home-product-item-footer {
-    opacity: 1;
+.home-product-item-link:hover + .home-product-item-footer,
+.home-product-item-footer:hover {
+  opacity: 1; 
 }
 
 .home-product-item__img {

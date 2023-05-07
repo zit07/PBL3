@@ -17,7 +17,7 @@ public class getNewIDforTable {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT MAX(id) FROM " + tableName;
+            	String sql = "SELECT MAX(id) FROM " +tableName;
             	stm = conn.prepareStatement(sql);
                 rs = stm.executeQuery();
                 if (rs.next()) {
@@ -34,7 +34,7 @@ public class getNewIDforTable {
     
     public static void main(String[] args) {
 		try {
-			System.out.println(getNewID("account"));
+			System.out.println(getNewID("khachhang"));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

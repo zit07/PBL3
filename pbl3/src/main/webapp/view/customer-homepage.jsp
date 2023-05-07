@@ -190,10 +190,10 @@
 	                        <i class="header__cart-icon fas fa-shopping-cart"></i>
 	                        <div class="header__cart-count">7</div>
 	                        
-	                        <div class="header__cart-list no-cart">
+	                        <!-- <div class="header__cart-list no-cart">
 	                            <img src="./assets/img/sp/no-cart.png" class="header__no-cart-img">
 	                            <p class="header__no-cart-text">Chưa có sản phẩm</p>
-	                        </div>
+	                        </div> -->
 	                        <!-- Giỏ hàng -->
 	                        <div class="header__cart-list has-cart">
 	                            <h4 class="header__cart-heading">Sản phẩm đã chọn</h4>
@@ -518,7 +518,7 @@
                             <%if (MonanList!=null){ %> 
                             	<c:set var="MonanList" value="<%=MonanList%>"/>
                             	<c:forEach items="${MonanList}" var="monan">
-                            		<div class="col l-2-4">
+                            		<div class="col l-2-4 product-link">
 	                                        <a class="home-product-item-link" href="#">
   	                                            <div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())});"></div>
  	                                            <div class="home-product-item__info">
@@ -551,8 +551,8 @@
 														</div>	 
 													</c:if>
 	                                            </div>
-	                                            <div class="home-product-item-footer">Xem chi tiet</div>
 	                                        </a>
+	                                       <a class="home-product-item-footer" href="./addtocart?id_monan=${monan.getId()}&id_user=${khachhang.getIDKH()}">Thêm vào giỏ hàng </a>
 	                                    </div>
                             	</c:forEach>
                             <%}%> 
