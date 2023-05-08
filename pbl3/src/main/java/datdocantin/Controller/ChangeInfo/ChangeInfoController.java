@@ -38,53 +38,49 @@ public class ChangeInfoController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
 		HttpSession session = request.getSession(true);
-		if (session.getAttribute("khachhang") != null) {
-			try {
-				String id = request.getParameter("id_user");
-				String hoten = request.getParameter("txtHoten");
-				String ngaysinh = request.getParameter("txtNgaysinh");
-				String gioitinh = request.getParameter("txtGioitinh");
-				String chieucao = request.getParameter("txtChieucao");
-				String cannang = request.getParameter("txtCannang");
-				String sdt = request.getParameter("txtSdt");
-				String email = request.getParameter("txtEmail");
-				String IDcantin = request.getParameter("txtIDCantin");
-				String Monyeuthich = request.getParameter("txtMonyeuthich");
-				Part avatarPart = request.getPart("avatar");
-				InputStream inputStream = avatarPart.getInputStream();
-				byte[] avatarBytes = inputStream.readAllBytes();
-				if (avatarBytes.length == 0)
-					avatarBytes = null;
-				if (id != null) {
-					KhachhangDAO.updateInfo(new KhachHangModel(id, hoten, ngaysinh, gioitinh, chieucao, cannang, sdt,
-							email, IDcantin, Monyeuthich, "", avatarBytes));
-					AccountDAO.ChangeSdt(id, sdt);
-				}
-			} catch (Exception e) {
-				log("error at login servlet: " + e.toString());
+		try {
+			if (session.getAttribute("khachhang") != null) {
+					String id = request.getParameter("id_user");
+					String hoten = request.getParameter("txtHoten");
+					String ngaysinh = request.getParameter("txtNgaysinh");
+					String gioitinh = request.getParameter("txtGioitinh");
+					String chieucao = request.getParameter("txtChieucao");
+					String cannang = request.getParameter("txtCannang");
+					String sdt = request.getParameter("txtSdt");
+					String email = request.getParameter("txtEmail");
+					String IDcantin = request.getParameter("txtIDCantin");
+					String Monyeuthich = request.getParameter("txtMonyeuthich");
+					Part avatarPart = request.getPart("avatar");
+					InputStream inputStream = avatarPart.getInputStream();
+					byte[] avatarBytes = inputStream.readAllBytes();
+					if (avatarBytes.length == 0)
+						avatarBytes = null;
+					if (id != null) {
+						KhachhangDAO.updateInfo(new KhachHangModel(id, hoten, ngaysinh, gioitinh, chieucao, cannang, sdt, email, IDcantin, Monyeuthich, "", avatarBytes));
+						AccountDAO.ChangeSdt(id, sdt);
+					}	
+			} else if (session.getAttribute("canteen") != null) {
+					String id = request.getParameter("id_canteen");
+					String ten = request.getParameter("txtTencanteen");
+					String sdt = request.getParameter("txtSodienthoai");
+					String email = request.getParameter("txtEmail");
+					String tinh = request.getParameter("tinh");
+					String huyen = request.getParameter("huyen");
+					String xa = request.getParameter("xa");
+					Part avatarPart = request.getPart("avatar");
+					InputStream inputStream = avatarPart.getInputStream();
+					byte[] avatarBytes = inputStream.readAllBytes();
+					if (avatarBytes.length == 0)
+						avatarBytes = null;
+					if (id != null) {
+						CanteenDAO.updateInfo(new CanteenModel(id, ten, sdt, email, tinh, huyen, xa, "", avatarBytes));
+						AccountDAO.ChangeSdt(id, sdt);
+					}
 			}
-		} else if (session.getAttribute("canteen") != null) {
-			try {
-				String id = request.getParameter("id_canteen");
-				String ten = request.getParameter("txtTencanteen");
-				String sdt = request.getParameter("txtSodienthoai");
-				String email = request.getParameter("txtEmail");
-				String tinh = request.getParameter("tinh");
-				String huyen = request.getParameter("huyen");
-				String xa = request.getParameter("xa");
-				Part avatarPart = request.getPart("avatar");
-				InputStream inputStream = avatarPart.getInputStream();
-				byte[] avatarBytes = inputStream.readAllBytes();
-				if (avatarBytes.length == 0)
-					avatarBytes = null;
-				if (id != null) {
-					CanteenDAO.updateInfo(new CanteenModel(id, ten, sdt, email, tinh, huyen, xa, "", avatarBytes));
-					AccountDAO.ChangeSdt(id, sdt);
-				}
-			} catch (Exception e) {
-				log("error at login servlet: " + e.toString());
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
 		response.sendRedirect(request.getContextPath());
 	}
 

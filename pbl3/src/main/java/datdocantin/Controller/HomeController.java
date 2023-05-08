@@ -36,14 +36,15 @@ public class HomeController extends HttpServlet {
 			if (session.getAttribute("khachhang") != null) {
 				KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
 				String ID = khachhang.getIDKH();
-				if (session.getAttribute("txtSearch")!=null) {
+				khachhang = KhachhangDAO.getKhachhangInfo(ID);
+				if (session.getAttribute("txtSearch")!=null) { 
 					session.setAttribute("listMonan", MonAnDAO.getResultSearchforKhach(khachhang.getIDCantin(),(String)session.getAttribute("txtSearch")));
 					request.setAttribute("txtSearch", (String)session.getAttribute("txtSearch"));
 					session.removeAttribute("txtSearch");
 				} else {
 		            session.setAttribute("listMonan", MonAnDAO.getListMonanforKhach(khachhang.getIDCantin()));
 				}
-				session.setAttribute("khachhang", KhachhangDAO.getKhachhangInfo(ID));
+				session.setAttribute("khachhang", khachhang);
 				session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID));
 				request.getRequestDispatcher("view/customer-homepage.jsp").forward(request, response);
 			} 

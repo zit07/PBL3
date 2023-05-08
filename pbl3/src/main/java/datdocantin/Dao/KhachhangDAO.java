@@ -73,12 +73,12 @@ public class KhachhangDAO {
                 stm.setString(5, khachhang.getCannang());
                 stm.setString(6, khachhang.getSodienthoai());
                 stm.setString(7, khachhang.getEmail());
-                stm.setString(9, khachhang.getMonyeuthich());
+                stm.setString(8, khachhang.getMonyeuthich());
                 if (khachhang.getAvatar() != null) {
-                    stm.setString(10, Base64.getEncoder().encodeToString(khachhang.getAvatar()));
-                    stm.setString(11, khachhang.getIDKH());
-                } else {
+                    stm.setString(9, Base64.getEncoder().encodeToString(khachhang.getAvatar()));
                     stm.setString(10, khachhang.getIDKH());
+                } else {
+                    stm.setString(9, khachhang.getIDKH());
                 }
                 stm.executeUpdate();
             }

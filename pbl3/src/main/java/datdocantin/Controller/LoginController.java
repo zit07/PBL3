@@ -49,8 +49,7 @@ public class LoginController extends HttpServlet {
                 	session.setAttribute("canteen", CanteenDAO.getInfoCanteen(id)); 
                 }
                 else {
-                	KhachHangModel khachhang = KhachhangDAO.getKhachhangInfo(id);
-                	session.setAttribute("khachhang", khachhang);
+                	session.setAttribute("khachhang", KhachhangDAO.getKhachhangInfo(id));
                 } 
                 response.sendRedirect(request.getContextPath());
 			} 

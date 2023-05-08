@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.KhachhangDAO;
+import datdocantin.Model.KhachHangModel;
 
 
 @WebServlet("/ChooseCanteen")
@@ -27,6 +28,7 @@ public class ChooseCanteenController extends HttpServlet {
 		String idcanteen = request.getParameter("id_canteen");
 		try {
 			KhachhangDAO.ChangeCanteen(id, idcanteen);
+			KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
