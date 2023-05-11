@@ -162,22 +162,25 @@
                         </a>
                     </div>
                     
-                    <form class="header__search" method="POST" action="./search?id_user=${khachhang.getIDKH()}">
+                    <form class="header__search" method="POST" action="./search?id_user=${khachhang.getID_khachhang()}">
                         <div class="header__search-input-wrap">
                             <input type="text" class="header__search-input" placeholder="Tìm kiếm món ăn" name="txtSearch" value="${txtSearch}">
                             <div class="header__search-history">
                                 <!-- History Search -->
                                 <ul class="header__search-history-list">
-	                            	<c:forEach items="${searchHistory}" var="lichsu">
+                                <%if (searchHistory!=null){ %> 
+                            	<c:set var="lichsutimkiem" value="<%=searchHistory%>"/>
+	                            	<c:forEach items="${lichsutimkiem}" var="lichsu">
 								    	<li class="header__search-history-item">
-	                                    	<a class="header__search-history-item-link" href="./search?id_user=${khachhang.getIDKH()}&txtSearch=${lichsu.getNoidung()}" >${lichsu.getNoidung()}</a>
-	                                    	<a class="btn-del-history" href="./delHistorySearch?id=${lichsu.getId()}">
+	                                    	<a class="header__search-history-item-link" href="./search?id_user=${khachhang.getID_khachhang()}&txtSearch=${lichsu.getNoidung()}" >${lichsu.getNoidung()}</a>
+	                                    	<a class="btn-del-history" href="./delHistorySearch?id=${lichsu.getID_lichsutimkiem()}">
                                             	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                                                 	<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
                                                 </svg>
                                              </a>
 	                                    </li>
 									</c:forEach> 
+								<%}%> 
 	                        	</ul>
                             </div>
                         </div>
@@ -524,10 +527,10 @@
  	                                            <div class="home-product-item__info">
 	                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
 	                                                <div class="home-product-item__price"> 
-		                                                <c:if test="${ Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}">
-		                                                    <p class="home-product-item__price-old">${monan.getGiacu()}VNĐ</p>
-		                                                </c:if>
-	                                                    <p class="home-product-item__price-new">${monan.getGiahientai()}VNĐ</p>
+		                                                <c:if test="${monan.getGiacu() > monan.getGiahientai()}">
+		                                                    <p class="home-product-item__price-old">${String.format("%.3f", monan.getGiacu())} VNĐ</p>
+			                                                </c:if>
+		                                                    <p class="home-product-item__price-new">${String.format("%.3f", monan.getGiahientai())} VNĐ</p>
 	                                                </div>
 	                                                <div class="home-product-item__footer">
 	                                                	<div class="home-product-item__save">
@@ -543,7 +546,7 @@
 	                                                    </div>
 	                                                    <div class="home-product-item__saled">Đã bán ${monan.getDaban()}</div>
 	                                                </div>
-	                                                <c:if test="${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}">
+	                                                <c:if test="${monan.getGiacu() > monan.getGiahientai()}">
 														<c:set var="giamgia" value="${Math.round((monan.giacu - monan.giahientai) / monan.giacu * 100)}" />
 		                                                <div class="home-product-item__sale-off">
 														    <div class="home-product-item__sale-off-value">${giamgia} %</div>
@@ -552,7 +555,7 @@
 													</c:if>
 	                                            </div>
 	                                        </a>
-	                                       <a class="home-product-item-footer" href="./addtocart?id_monan=${monan.getId()}&id_user=${khachhang.getIDKH()}">Thêm vào giỏ hàng </a>
+	                                       <a class="home-product-item-footer" href="./addtocart?id_monan=${monan.getID_monan()}&id_user=${khachhang.getID_khachhang()}">Thêm vào giỏ hàng </a>
 	                                    </div>
                             	</c:forEach>
                             <%}%> 
@@ -570,7 +573,7 @@
     
 		<div class="modal" id="form-changepassword" style="display: ${display_form__changepass}" >
 	        <div class="modal__body">
-	            <form action="./ChangePassword?id_user=${khachhang.getIDKH()}" method="post" class="formChangePass">
+	            <form action="./ChangePassword?id_user=${khachhang.getID_khachhang()}" method="post" class="formChangePass">
 	                <div class="auth-form">
 	                    <div class="auth-form__container">
 	                        <div class="auth-form__header">
@@ -611,7 +614,7 @@
 		<!-- Change PIN form -->
 	    <div class="modal" id="form-changepin" style="display: ${display_form__changepin}">
 	        <div class="modal__body">
-	            <form action="./ChangePin?id_user=${khachhang.getIDKH()}" method="post" class="auth-form">
+	            <form action="./ChangePin?id_user=${khachhang.getID_khachhang()}" method="post" class="auth-form">
 	                <div class="auth-form">
 	                    <div class="auth-form__container">
 	                        <div class="auth-form__header">
@@ -647,7 +650,7 @@
 	    <div class="modal" id="form-info">
 	        <div class="modal__body" >
             <!-- authen change info-->
-				<form action="./ChangeInfo?id_user=${khachhang.getIDKH()}" method="post" class="form-info" enctype="multipart/form-data">
+				<form action="./ChangeInfo?id_user=${khachhang.getID_khachhang()}" method="post" class="form-info" enctype="multipart/form-data">
 					<div class="avatar">
 						<c:if test="${khachhang.getAvatar()==null}">
 							<img src="./assets/img/avatarDefault.jpg" class="avatar-form__img" id="img-form"/>
@@ -716,15 +719,15 @@
 									<span>Cantin:</span>
 								</div>
 								<div class="auth-form__group form-group-choosecanteen">
-									<input type="text" class="auth-form__input_info input-chooseCantin" name="txtIDCantin" value="${khachhang.getIDCantin()}" readonly>
+									<input type="text" class="auth-form__input_info input-chooseCantin" name="txtIDCantin" value="${TenCanteen}" readonly>
 									<a class="btn btn--primary btn-ChooseCantin" href="./" id="choosecanteen">Chọn Cantin</a>
-									<a class="btn btn--primary btn-ChooseCantin stop-sold-product" href="./UnchooseCanteen?id_user=${khachhang.getIDKH()}">Huỷ chọn Cantin</a>
+									<a class="btn btn--primary btn-ChooseCantin stop-sold-product" href="./UnchooseCanteen?id_user=${khachhang.getID_khachhang()}">Huỷ chọn Cantin</a>
 								</div>
 								<div class="auth-form__title">
 									<span>Món yêu thích:</span>
 								</div>
 								<div class="auth-form__group">
-									<input type="text" class="auth-form__input_info" placeholder="Ví dụ: Rau, Cá, Thịt gà,..." name="txtMonyeuthich" value="${khachhang.getMonyeuthich()}">
+									<input type="text" class="auth-form__input_info" placeholder="Ví dụ: Rau, Cá, Thịt gà,..." name="txtMonyeuthich" value="${khachhang.getYeuthich()}">
 								</div>
 							</div>
 							<div class="auth-form__control_info">
@@ -773,7 +776,7 @@
                             	<c:set var="canteenList" value="<%=canteenList%>"/>
                             	<c:forEach items="${canteenList}" var="Canteen">
                             		<div class="col l-2-4">
-		                                    <a class="home-product-item-link" href="./ChooseCanteen?id_canteen=${Canteen.getId()}&id_user=${khachhang.getIDKH()}">
+		                                    <a class="home-product-item-link" href="./ChooseCanteen?id_canteen=${Canteen.getID_canteen()}&id_user=${khachhang.getID_khachhang()}">
 		                                    	<c:if test="${Canteen.getAvatar()==null}">
 					                            	<div class="home-product-item__img" style="background-image: url(./assets/img/avatarDefault.jpg);"></div>
 					                            </c:if>

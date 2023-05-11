@@ -22,7 +22,7 @@ public class DeleteProductController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
 		try {
-			MonAnDAO.Delete(request.getParameter("idmonan"));
+			MonAnDAO.Delete_Restore__Product(Integer.valueOf(request.getParameter("idmonan")), "Delete");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -31,12 +31,12 @@ public class ChangePinController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
         try {
-        	String id = request.getParameter("id_user");
+        	Integer ID = Integer.valueOf(request.getParameter("id_user"));
             String pass = request.getParameter("txtPass");
-            String pin = request.getParameter("txtNewPin");
-            AccountModel acc = AccountDAO.getAccountInfo(id, pass);
+            Integer pin = Integer.valueOf(request.getParameter("txtNewPin"));
+            AccountModel acc = AccountDAO.getAccountInfo(ID, null, pass);
             if (acc!=null) {
-            	KhachhangDAO.ChangePin(id, pin);
+            	KhachhangDAO.ChangePin(ID, pin);
             	request.setAttribute("display_form__changepin", "flex");
             	request.setAttribute("notiSuccessNewPin", "flex");
             	request.setAttribute("notiErrorOldPass", "none");

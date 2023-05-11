@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.CanteenDAO;
 import datdocantin.Model.CanteenModel;
+import datdocantin.Model.DiachiModel;
 
 @WebServlet("/SearchCanteen")
 public class SearchCanteenController extends HttpServlet {
@@ -35,17 +36,17 @@ public class SearchCanteenController extends HttpServlet {
 		session.removeAttribute("txtSearchCanteen");
         try {
         	String txtSearch = request.getParameter("txtSearchCanteen"); 
-        	String txtTinh = request.getParameter("txtTinh");  
-        	String txtHuyen = request.getParameter("txtHuyen");
-        	String txtXa = request.getParameter("txtXa");
-        	session.setAttribute("tinh", txtTinh);
-        	session.setAttribute("huyen", txtHuyen);
-        	session.setAttribute("xa", txtXa);
-            List<CanteenModel> canteens = CanteenDAO.SearchCanteen(txtSearch, txtTinh, txtHuyen, txtXa);
+        	int Tinh = Integer.parseInt(request.getParameter("txtTinh"));  
+        	int Huyen = Integer.parseInt(request.getParameter("txtHuyen"));
+        	int Xa = Integer.parseInt(request.getParameter("txtXa"));
+        	session.setAttribute("tinh", Tinh);
+        	session.setAttribute("huyen", Huyen);
+        	session.setAttribute("xa", Xa); 
+            List<CanteenModel> canteens = CanteenDAO.SearchCanteen(txtSearch, new DiachiModel(null, null, Tinh, Huyen, Xa));
             if (canteens.size()!=0) {
 				session.setAttribute("canteenList", canteens);
 			}
-            if (txtTinh.equals("-1")) session.setAttribute("txtSearchCanteen", txtSearch);
+            if (Tinh != -1) session.setAttribute("txtSearchCanteen", txtSearch);
             if (session.getAttribute("khachhang")!=null) session.setAttribute("showcanteen", "flex");
         } catch (Exception e) {
             log("error at login servlet: " + e.toString());

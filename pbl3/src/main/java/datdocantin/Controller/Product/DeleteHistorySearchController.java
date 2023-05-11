@@ -21,7 +21,7 @@ public class DeleteHistorySearchController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
         try {
-        	HistorySearchDAO.deleteSearchHistory(request.getParameter("id"));
+        	HistorySearchDAO.deleteSearchHistory(Integer.valueOf(request.getParameter("id")));
         } catch (Exception e) {
             log("error at login servlet: " + e.toString());
         } 

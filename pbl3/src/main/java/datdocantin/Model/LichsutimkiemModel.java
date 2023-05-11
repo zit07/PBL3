@@ -1,29 +1,30 @@
 package datdocantin.Model;
 
 public class LichsutimkiemModel {
-	String id, idcanteen, noidung;
+	private Integer ID_lichsutimkiem, ID_nguoidung;
+	String noidung;
 	public LichsutimkiemModel() {}
 	
-	public LichsutimkiemModel(String id, String idcaString, String noidung) {
-		this.id = id;
-		this.idcanteen = idcaString;
+	public LichsutimkiemModel(Integer ID_lichsutimkiem, Integer ID_nguoidung, String noidung) {
+		this.ID_lichsutimkiem = ID_lichsutimkiem;
+		this.ID_nguoidung = ID_nguoidung;
 		this.noidung = noidung;
 	}
 
-	public String getId() {
-		return id;
+	public int getID_lichsutimkiem() {
+		return ID_lichsutimkiem;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setID_lichsutimkiem(Integer iD_lichsutimkiem) {
+		ID_lichsutimkiem = iD_lichsutimkiem;
 	}
 
-	public String getIdcanteen() {
-		return idcanteen;
+	public int getID_nguoidung() {
+		return ID_nguoidung;
 	}
 
-	public void setIdcanteen(String idcanteen) {
-		this.idcanteen = idcanteen;
+	public void setID_nguoidung(Integer iD_nguoidung) {
+		ID_nguoidung = iD_nguoidung;
 	}
 
 	public String getNoidung() {

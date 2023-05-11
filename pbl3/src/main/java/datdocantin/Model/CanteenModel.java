@@ -1,26 +1,37 @@
 package datdocantin.Model;
 
 public class CanteenModel {
-	private String id,ten,sodienthoai,email,tinh,huyen,xa,PIN;
+	private Integer ID_canteen,ID_diachi,PIN;
+	private String ten,sodienthoai,email;
 	byte[] avatar;
 	public CanteenModel() {
 	}
-	public CanteenModel(String id, String ten,String sodienthoai,String email,String tinh,String huyen,String xa,String PIN, byte[] avatar) {
-		this.id=id;
+	public CanteenModel(Integer ID_canteen, String ten,String sodienthoai,String email, Integer ID_diachi,Integer PIN, byte[] avatar) {
+		this.ID_canteen=ID_canteen;
 		this.ten=ten;
 		this.sodienthoai=sodienthoai;
 		this.email=email;
-		this.tinh=tinh;
-		this.huyen=huyen;
-		this.xa=xa;
+		this.ID_diachi=ID_diachi;
 		this.PIN=PIN;
 		this.avatar=avatar;
 	}
-	public String getId() {
-		return id;
+	public Integer getID_canteen() {
+		return ID_canteen;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setID_canteen(Integer iD_canteen) {
+		ID_canteen = iD_canteen;
+	}
+	public Integer getID_diachi() {
+		return ID_diachi;
+	}
+	public void setID_diachi(Integer iD_diachi) {
+		ID_diachi = iD_diachi;
+	}
+	public Integer getPIN() {
+		return PIN;
+	}
+	public void setPIN(Integer pIN) {
+		PIN = pIN;
 	}
 	public String getTen() {
 		return ten;
@@ -40,35 +51,10 @@ public class CanteenModel {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getTinh() {
-		return tinh;
-	}
-	public void setTinh(String tinh) {
-		this.tinh = tinh;
-	}
-	public String getHuyen() {
-		return huyen;
-	}
-	public void setHuyen(String huyen) {
-		this.huyen = huyen;
-	}
-	public String getXa() {
-		return xa;
-	}
-	public void setXa(String xa) {
-		this.xa = xa;
-	}
-	public String getPIN() {
-		return PIN;
-	}
-	public void setPIN(String pIN) {
-		PIN = pIN;
-	}
 	public byte[] getAvatar() {
 		return avatar;
 	}
 	public void setAvatar(byte[] avatar) {
 		this.avatar = avatar;
 	}
-	
 }

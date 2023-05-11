@@ -10,10 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.CanteenDAO;
+import datdocantin.Dao.CartDAO;
+import datdocantin.Dao.DiachiDAO;
 import datdocantin.Dao.GiohoatdongDAO;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Model.AccountModel;
 import datdocantin.Model.CanteenModel;
+import datdocantin.Model.CartModel;
+import datdocantin.Model.DiachiModel;
 import datdocantin.Model.KhachHangModel;
 import datdocantin.Service.getNewIDforTable;
 import datdocantin.Util.PasswordEncoder;
@@ -35,27 +39,29 @@ public class SignUpController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
-        try {
-        	String ten = request.getParameter("txtHoten");
-        	String sdt = request.getParameter("txtSdt");
-            String password = PasswordEncoder.encode(request.getParameter("txtPassword"));
-            String typeUser = request.getParameter("typeUser");
-            if (AccountDAO.CheckAccountNotExist(sdt)) {
-            	String id = getNewIDforTable.getNewID("account");
-            	AccountDAO.addAccount(new AccountModel(id, sdt, password, typeUser));
-            	if (typeUser.equals("customer")) {
-                	KhachhangDAO.addKhachhang(new KhachHangModel(id,ten,null,"","","",sdt,"","","","",null));
-            	}
+        try { 
+        	String Ten = request.getParameter("txtHoten");
+        	String SDT = request.getParameter("txtSdt");
+            String Password = PasswordEncoder.encode(request.getParameter("txtPassword"));
+            String TypeUser = request.getParameter("typeUser");
+            if (AccountDAO.CheckAccountNotExist(SDT)) {
+            	int ID = getNewIDforTable.getNewID("account");
+            	AccountDAO.addAccount(new AccountModel(ID, SDT, Password, TypeUser));
+            	if (TypeUser.equals("customer")) {
+                	KhachhangDAO.addKhachhang(new KhachHangModel(ID,Ten,null,null,null,null,SDT,null,null,null,null,null));
+                	CartDAO.AddtoCart(new CartModel(getNewIDforTable.getNewID("carts"), ID));            	}
             	else {
-            		CanteenDAO.addCanteen(new CanteenModel(id,ten,sdt,"","","","","",null));
-            		GiohoatdongDAO.Addgiohoatdong(Integer.valueOf(getNewIDforTable.getNewID("giohoatdong")), id);
+            		int ID_diachi = getNewIDforTable.getNewID("diachi");
+            		CanteenDAO.addCanteen(new CanteenModel(ID,Ten,SDT,null,ID_diachi,null,null));
+            		GiohoatdongDAO.Addgiohoatdong(Integer.valueOf(getNewIDforTable.getNewID("giohoatdong")), ID);
+            		DiachiDAO.AddDiachi(new DiachiModel(ID_diachi,ID,-1,-1,-1));
 				}
             	response.sendRedirect(request.getContextPath());
             }
             else {
             	request.setAttribute("display_form__signup", "flex");
             	request.setAttribute("display_noti__signup", "flex");
-            	request.setAttribute("sdt", sdt);
+            	request.setAttribute("sdt", SDT);
             	request.getRequestDispatcher("view/homepage.jsp").forward(request, response);
             }
         } catch (Exception e) {

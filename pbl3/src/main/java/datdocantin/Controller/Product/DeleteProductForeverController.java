@@ -23,7 +23,7 @@ public class DeleteProductForeverController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
 		try {
-			MonAnDAO.DeleteForever(request.getParameter("idmonan"));
+			MonAnDAO.Delete_Restore__Product(Integer.valueOf(request.getParameter("idmonan")), "DeleteForever");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

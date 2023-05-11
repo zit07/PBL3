@@ -1,3 +1,5 @@
+<%@page import="datdocantin.Model.LoaithucanModel"%>
+<%@page import="datdocantin.Model.DiachiModel"%>
 <%@page import="datdocantin.Model.LichsutimkiemModel"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -14,6 +16,8 @@
 	List<LichsutimkiemModel> searchHistory = (List<LichsutimkiemModel>)session.getAttribute("searchHistory");  
 	List<GiohoatdongModel> giohoatdongList = (List<GiohoatdongModel>) session.getAttribute("listGiohoatdong");
 	String danhmuc = (String)request.getAttribute("danhmuc"); 
+	DiachiModel diachi = (DiachiModel) session.getAttribute("diachi");
+	List<LoaithucanModel> loaithucan = (List<LoaithucanModel>) session.getAttribute("loaithucan");
 %>
 <!DOCTYPE html>
 <html>
@@ -99,7 +103,7 @@
 	                        </a>
 	                    </div>
 	                    
-	                    <form class="header__search" method="POST" action="./search?id_user=${canteen.getId()}">
+	                    <form class="header__search" method="POST" action="./search?id_user=${canteen.getID_canteen()}">
                         <div class="header__search-input-wrap">
                             <input type="text" class="header__search-input" placeholder="Tìm kiếm món ăn" name="txtSearch" value="${txtSearch}">
                             <div class="header__search-history">
@@ -107,8 +111,8 @@
                                 <ul class="header__search-history-list">
 	                            	<c:forEach items="${searchHistory}" var="lichsu">
 								    	<li class="header__search-history-item">
-	                                    	<a class="header__search-history-item-link" href="./search?id_user=${canteen.getId()}&txtSearch=${lichsu.getNoidung()}" >${lichsu.getNoidung()}</a>
-	                                    	<a class="btn-del-history" href="./delHistorySearch?id=${lichsu.getId()}">
+	                                    	<a class="header__search-history-item-link" href="./search?id_user=${canteen.getID_canteen()}&txtSearch=${lichsu.getNoidung()}" >${lichsu.getNoidung()}</a>
+	                                    	<a class="btn-del-history" href="./delHistorySearch?id=${lichsu.getID_lichsutimkiem()}">
                                             	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                                                 	<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
                                                 </svg>
@@ -214,15 +218,15 @@
 	                            	<c:set var="MonanList" value="<%=MonanList%>"/>
 	                            	<c:forEach items="${MonanList}" var="monan">
 	                            		<div class="col l-2-4">
-		                                        <a class='home-product-item-link ${monan.getTrangthai().equals("ngung ban") ? "product-deleted" : ""}' href="#">
+		                                        <a class='home-product-item-link ${monan.getTrangthai().equals("0") ? "product-deleted" : ""}' href="#">
 	  	                                            <div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())});"></div>
 	 	                                            <div class="home-product-item__info">
 		                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
 		                                                <div class="home-product-item__price"> 
-			                                                <c:if test="${ Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}">
-			                                                    <p class="home-product-item__price-old">${monan.getGiacu()}VNĐ</p>
+			                                                <c:if test="${ monan.getGiacu() > monan.getGiahientai()}">
+			                                                    <p class="home-product-item__price-old">${String.format("%.3f", monan.getGiacu())} VNĐ</p>
 			                                                </c:if>
-		                                                    <p class="home-product-item__price-new">${monan.getGiahientai()}VNĐ</p>
+		                                                    <p class="home-product-item__price-new">${String.format("%.3f", monan.getGiahientai())} VNĐ</p>
 		                                                </div>
 		                                                <div class="home-product-item__footer">
 		                                                	<div class="home-product-item__save">
@@ -238,7 +242,7 @@
 		                                                    </div>
 		                                                    <div class="home-product-item__saled">Đã bán ${monan.getDaban()}</div>
 		                                                </div>
-		                                                <c:if test="${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}">
+		                                                <c:if test="${monan.getGiacu() > monan.getGiahientai()}">
 															<c:set var="giamgia" value="${Math.round((monan.giacu - monan.giahientai) / monan.giacu * 100)}" />
 		                                                	<div class="home-product-item__sale-off">
 														    	<div class="home-product-item__sale-off-value">${giamgia} %</div>
@@ -264,10 +268,10 @@
 			                                            <div class="home-product-item__info">
 			                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
 			                                                <div class="home-product-item__price">
-			                                                	<c:if test='${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}'>
-																    <p class="home-product-item__price-old">${monan.getGiacu()}đ</p>
+			                                                	<c:if test='${monan.getGiacu() > monan.getGiahientai()}'>
+																    <p class="home-product-item__price-old">${String.format("%.3f", monan.getGiacu())} VNĐ</p>
 																</c:if>
-			                                                    <p class="home-product-item__price-new">${monan.getGiahientai()}đ</p>
+			                                                    <p class="home-product-item__price-new">${String.format("%.3f", monan.getGiahientai())} VNĐ</p>
 			                                                </div>
 			                                                <div class="home-product-item__footer">
 			                                                    <div class="home-product-item__rating-star">
@@ -279,7 +283,7 @@
 			                                                    </div>
 			                                                    <div class="home-product-item__saled">Đã bán ${monan.getDaban()}</div>
 			                                                </div>
-			                                                <c:if test="${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}">
+			                                                <c:if test="${monan.getGiacu() > monan.getGiahientai()}">
 																<c:set var="giamgia" value="${Math.round((monan.giacu - monan.giahientai) / monan.giacu * 100)}" />
 			                                                	<div class="home-product-item__sale-off">
 															    	<div class="home-product-item__sale-off-value">${giamgia} %</div>
@@ -303,18 +307,18 @@
 			                                        <span class="Product-Description">${monan.getNgaytao()}</span>
 			                                    </div>
 			                                    <div class="col l-1 home-product-item">
-			                                        <span class="Product-Description">${monan.getTrangthai().equals("dang ban") ? "Đang bán" : "Ngưng bán"}</span>
+			                                        <span class="Product-Description">${monan.getTrangthai() == 1 ? "Đang bán" : "Ngưng bán"}</span>
 			                                    </div>
 			                                    <div class="col l-1 home-product-item">
 			                                        <span class="Product-Description">
-			                                            <a href="" class="btn btn--primary home-product-btn edit-product" name="link-editproduct" id="${monan.getId()}">Sửa</a>
-			                                            <c:if test='${monan.getTrangthai().equals("dang ban")}'>
-			                                            	<a href="./Editproduct?idmonan=${monan.getId()}&k=ngungban" class="btn btn--primary home-product-btn stop-sold-product">Ngưng bán</a>
+			                                            <a href="" class="btn btn--primary home-product-btn edit-product" name="link-editproduct" id="${monan.getID_monan()}">Sửa</a>
+			                                            <c:if test='${monan.getTrangthai() == 1}'>
+			                                            	<a href="./Editproduct?idmonan=${monan.getID_monan()}&k=ngungban" class="btn btn--primary home-product-btn stop-sold-product">Ngưng bán</a>
 			                                            </c:if>
-			                                            <c:if test='${monan.getTrangthai().equals("ngung ban")}'>
-			                                            	<a href="./Editproduct?idmonan=${monan.getId()}&k=moban" class="btn btn--primary home-product-btn continue-sold-product">Mở bán</a>
+			                                            <c:if test='${monan.getTrangthai() == 0}'>
+			                                            	<a href="./Editproduct?idmonan=${monan.getID_monan()}&k=moban" class="btn btn--primary home-product-btn continue-sold-product">Mở bán</a>
 			                                            </c:if>
-			                                            <a href="./DeleteProduct?idmonan=${monan.getId()}" class="btn btn--primary home-product-btn delete-product">Xoá</a>
+			                                            <a href="./DeleteProduct?idmonan=${monan.getID_monan()}" class="btn btn--primary home-product-btn delete-product">Xoá</a>
 			                                        </span>
 			                                    </div>
 			                                </div>
@@ -333,7 +337,7 @@
 			                                            <div class="home-product-item__info">
 			                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
 			                                                <div class="home-product-item__price">
-			                                                	<c:if test='${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}'>
+			                                                	<c:if test='${monan.getGiacu() > monan.getGiahientai()}'>
 																    <p class="home-product-item__price-old">${monan.getGiacu()}đ</p>
 																</c:if>
 			                                                    <p class="home-product-item__price-new">${monan.getGiahientai()}đ</p>
@@ -348,7 +352,7 @@
 			                                                    </div>
 			                                                    <div class="home-product-item__saled">Đã bán ${monan.getDaban()}</div>
 			                                                </div>
-			                                                <c:if test="${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}">
+			                                                <c:if test="${monan.getGiacu() > monan.getGiahientai()}">
 																<c:set var="giamgia" value="${Math.round((monan.giacu - monan.giahientai) / monan.giacu * 100)}" />
 			                                                	<div class="home-product-item__sale-off">
 															    	<div class="home-product-item__sale-off-value">${giamgia} %</div>
@@ -376,8 +380,8 @@
 			                                    </div>
 			                                    <div class="col l-1 home-product-item">
 			                                        <span class="Product-Description">
-			                                        	<a href="./Restore?idmonan=${monan.getId()}" class="btn btn--primary home-product-btn ">Khôi phục</a>
-			                                            <a href="./DeleteProductForever?idmonan=${monan.getId()}" class="btn btn--primary home-product-btn delete-product">Xoá vĩnh viễn</a>
+			                                        	<a href="./Restore?idmonan=${monan.getID_monan()}" class="btn btn--primary home-product-btn ">Khôi phục</a>
+			                                            <a href="./DeleteProductForever?idmonan=${monan.getID_monan()}" class="btn btn--primary home-product-btn delete-product">Xoá vĩnh viễn</a>
 			                                        </span>
 			                                    </div>
 			                                </div>
@@ -396,7 +400,7 @@
 	    <div class="modal" id="form-info">
 	        <div class="modal__body" >
 	            <!-- authen change info-->
-	            <form action="./ChangeInfo?id_canteen=${canteen.getId()}" method="post" class="form-info" enctype="multipart/form-data">
+	            <form action="./ChangeInfo?id_canteen=${canteen.getID_canteen()}" method="post" class="form-info" enctype="multipart/form-data">
 	                <div class="avatar">
 	                    <c:if test="${canteen.getAvatar()==null}">
 							<img src="./assets/img/avatarDefault.jpg" class="avatar-form__img" id="img-form"/>
@@ -434,9 +438,9 @@
 	                                <input type="email" class="auth-form__input_info" name="txtEmail" value="${canteen.getEmail() }">
 	                            </div>
 	                           	<div style="display: none">
-	                           		<span id="tinh">${canteen.getTinh()}</span>
-	                           		<span id="huyen">${canteen.getHuyen()}</span>
-	                           		<span id="xa">${canteen.getXa()}</span>
+	                           		<span id="tinh">${diachi.getTinh()}</span>
+	                           		<span id="huyen">${diachi.getHuyen()}</span>
+	                           		<span id="xa">${diachi.getXa()}</span>
 	                           	</div>
 	                            <div class="auth-form__title">
 	                                <div class="search-group-title">Địa chỉ</div>
@@ -462,7 +466,7 @@
 	    </div>
         <div class="modal" id="form-changepassword" style="display: ${display_form__changepass}" >
             <div class="modal__body">
-                <form action="./ChangePassword?id_canteen=${canteen.getId()}" method="post" class="formChangePass">
+                <form action="./ChangePassword?id_user=${canteen.getID_canteen()}" method="post" class="formChangePass">
                     <div class="auth-form">
                         <div class="auth-form__container">
                             <div class="auth-form__header">
@@ -504,7 +508,7 @@
         <!-- Change PIN form -->
         <div class="modal" id="form-changepin" style="display: ${display_form__changepin}">
             <div class="modal__body">
-                <form action="./ChangePin?id_canteen=${canteen.getId()}" method="post" class="auth-form">
+                <form action="./ChangePin?id_canteen=${canteen.getID_canteen()}" method="post" class="auth-form">
                     <div class="auth-form">
                         <div class="auth-form__container">
                             <div class="auth-form__header">
@@ -539,7 +543,7 @@
         <div class="modal" id="form-addProduct">
 	        <div class="modal__body" >
 	        <!-- authen change info-->
-	            <form action="./Addproduct?id_canteen=${canteen.getId()}" method="post" class="form__info" enctype="multipart/form-data">
+	            <form action="./Addproduct?id_canteen=${canteen.getID_canteen()}" method="post" class="form__info" enctype="multipart/form-data">
 	                <div class="auth-form__addproduct">
 	                    <div class="auth-form__container">
 	                        <div class="auth-form__header">
@@ -580,13 +584,9 @@
 	                                <div class="auth-form__input_info_row">
 	                                     <select name="txtLoai" id="" class="auth-form__input_info_select" required>
 	                                        <option value="-1"></option>
-	                                        <option value="thit">Món thịt</option>
-	                                        <option value="haisan">Món hải sản</option>
-	                                        <option value="nuoc">Món nước</option>
-	                                        <option value="kho">Món khô</option>
-	                                        <option value="chien">Món chiên</option>
-	                                        <option value="xao">Món xào</option>
-	                                        <option value="chay">Món chay</option>
+	                                        <c:forEach items="${loaithucan}" var="loai"> 
+	                                        	<option value="${loai.getID_loaithucan()}">${loai.getLoaithucan()}</option>
+	                                        </c:forEach>
 	                                    </select>
 	                                </div>
 									<input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: 50000" name="txtGia" value="" pattern="[0-9]+" required>
@@ -617,7 +617,7 @@
 		<div class="modal" id="form-changeTimeOpen" style="display: none;">
 	        <div class="modal__body" >
 	        <!-- authen change info-->
-	            <form action="./ChangeTimeOpen?id_canteen=${canteen.getId()}" method="post" id="form-editTime">
+	            <form action="./ChangeTimeOpen?id_canteen=${canteen.getID_canteen()}" method="post" id="form-editTime">
 	                <div class="auth-form">
 	                    <div class="auth-form__container">
 	                        <div class="auth-form__header">
@@ -685,10 +685,10 @@
 	        </div> 
 	    </div>
 	    <c:forEach items="${MonanList}" var="monan">
-	    	<div class="modal" name="form-editProduct" id="${monan.getId()}">
+	    	<div class="modal" name="form-editProduct" id="${monan.getID_monan()}">
 		        <div class="modal__body" >
 		        <!-- authen change info-->
-		            <form action="./Editproduct?id_monan=${monan.getId()}&giacu=${monan.getGiahientai()}" method="post" class="form__info" enctype="multipart/form-data">
+		            <form action="./Editproduct?id_monan=${monan.getID_monan()}&giacu=${monan.getGiahientai()}" method="post" class="form__info" enctype="multipart/form-data">
 		                <div class="auth-form__addproduct">
 		                    <div class="auth-form__container">
 		                        <div class="auth-form__header">
@@ -729,16 +729,19 @@
 		                                <div class="auth-form__input_info_row">
 		                                     <select name="txtLoaiNew" id="" class="auth-form__input_info_select" required>
 		                                        <option value="-1"></option>
-												<option value="thit" ${monan.getLoaithucan().equals("1") ? "selected" : ""}>Món thịt</option>
+		                                        <c:forEach items="${loaithucan}" var="loai"> 
+		                                        	<option value="${loai.getID_loaithucan()}" ${monan.getID_loaithucan() == loai.getID_loaithucan() ? "selected" : ""}>${loai.getLoaithucan()}</option>
+		                                        </c:forEach>
+												<%-- <option value="thit" ${monan.getLoaithucan().equals("1") ? "selected" : ""}>Món thịt</option>
 												<option value="haisan" ${monan.getLoaithucan().equals("haisan") ? "selected" : ""}>Món hải sản</option>
 												<option value="nuoc" ${monan.getLoaithucan().equals("nuoc") ? "selected" : ""}>Món nước</option>
 												<option value="kho" ${monan.getLoaithucan().equals("kho") ? "selected" : ""}>Món khô</option>
 												<option value="chien" ${monan.getLoaithucan().equals("chien") ? "selected" : ""}>Món chiên</option>
 												<option value="xao" ${monan.getLoaithucan().equals("xao") ? "selected" : ""}>Món xào</option>
-												<option value="chay" ${monan.getLoaithucan().equals("chay") ? "selected" : ""}>Món chay</option>
+												<option value="chay" ${monan.getLoaithucan().equals("chay") ? "selected" : ""}>Món chay</option> --%>
 		                                    </select>
 		                                </div>
-										<input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: 50000" name="txtGiaNew" value="${monan.getGiahientai().replaceAll('\\.', '')}" pattern="[0-9]+" required>
+										<input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: 50000" name="txtGiaNew" value="${Math.round(monan.getGiahientai()*1000)}" pattern="[0-9]+" required>
 		                            </div>
 		                            <div class="auth-form__title">
 		                                <span>Thêm hình ảnh (ít nhất 1 ảnh, ảnh đầu tiên được lấy làm ảnh chính):</span>
@@ -746,11 +749,11 @@
 									<div class="auth-form__group add-product-img">
 										<%for (int i = 1; i <= 8; i++) {%>
 										<div class="img-add-product">
-											<label for="img${monan.getId()}<%=i%>"> 
+											<label for="img${monan.getID_monan()}<%=i%>"> 
 											<% if (i == 1) { %> <img src="data:image/jpeg;base64,<c:out value='${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())}'/>" class="img-add-product__img"/>
 											<% } else { %> <img src="./assets/img/addproduct.png" class="img-add-product__img"/> <% } %>  
 											</label> 
-											<input class="img-add-product__input" type="file" name="img<%=i%>New" id="img${monan.getId()}<%=i%>"/>
+											<input class="img-add-product__input" type="file" name="img<%=i%>New" id="img${monan.getID_monan()}<%=i%>"/>
 										</div> 
 										<% } %>
 									</div>

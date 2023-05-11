@@ -1,24 +1,25 @@
 package datdocantin.Model;
 
 public class AccountModel {
-	private String id, sdt, pass, type_User;
+	private Integer ID_account;
+	private String sdt, pass, type_User;
 
     public AccountModel() {
     }
     
-    public AccountModel(String id, String sdt, String pass, String type_User) {
-    	this.id = id;
+    public AccountModel(Integer ID_account, String sdt, String pass, String type_User) {
+    	this.ID_account = ID_account;
     	this.sdt = sdt;
     	this.pass = pass;
     	this.type_User = type_User;
     }
-
-	public String getid() {
-		return id;
+    
+	public int getID_account() {
+		return ID_account;
 	}
 
-	public void setid(String id) {
-		this.id = id;
+	public void setID_account(Integer iD_account) {
+		ID_account = iD_account;
 	}
 
 	public String getSdt() {

@@ -2,6 +2,8 @@ package datdocantin.Controller.ChangeInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -14,8 +16,10 @@ import javax.servlet.http.Part;
 
 import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.CanteenDAO;
+import datdocantin.Dao.DiachiDAO;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Model.CanteenModel;
+import datdocantin.Model.DiachiModel;
 import datdocantin.Model.KhachHangModel;
 
 @WebServlet("/ChangeInfo")
@@ -40,47 +44,48 @@ public class ChangeInfoController extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		try {
 			if (session.getAttribute("khachhang") != null) {
-					String id = request.getParameter("id_user");
+					int ID_khachhang = Integer.valueOf(request.getParameter("id_user"));
 					String hoten = request.getParameter("txtHoten");
-					String ngaysinh = request.getParameter("txtNgaysinh");
+					LocalDate ngaysinh = Date.valueOf(request.getParameter("txtNgaysinh")).toLocalDate();
 					String gioitinh = request.getParameter("txtGioitinh");
-					String chieucao = request.getParameter("txtChieucao");
-					String cannang = request.getParameter("txtCannang");
+					Double chieucao = Double.valueOf(request.getParameter("txtChieucao"));
+					Double cannang = Double.valueOf(request.getParameter("txtCannang"));
 					String sdt = request.getParameter("txtSdt");
 					String email = request.getParameter("txtEmail");
-					String IDcantin = request.getParameter("txtIDCantin");
-					String Monyeuthich = request.getParameter("txtMonyeuthich");
+					String yeuthich = request.getParameter("txtMonyeuthich");
 					Part avatarPart = request.getPart("avatar");
 					InputStream inputStream = avatarPart.getInputStream();
 					byte[] avatarBytes = inputStream.readAllBytes();
-					if (avatarBytes.length == 0)
-						avatarBytes = null;
-					if (id != null) {
-						KhachhangDAO.updateInfo(new KhachHangModel(id, hoten, ngaysinh, gioitinh, chieucao, cannang, sdt, email, IDcantin, Monyeuthich, "", avatarBytes));
-						AccountDAO.ChangeSdt(id, sdt);
-					}	
+					if (avatarBytes.length == 0) avatarBytes = null;
+					if (AccountDAO.CheckAccountNotExist(sdt)) {
+						KhachhangDAO.updateInfo(new KhachHangModel(ID_khachhang, hoten, ngaysinh, gioitinh, chieucao, cannang, sdt, email, null, yeuthich, null, avatarBytes));
+						AccountDAO.ChangeSdt(ID_khachhang, sdt);
+					} else {
+						KhachhangDAO.updateInfo(new KhachHangModel(ID_khachhang, hoten, ngaysinh, gioitinh, chieucao, cannang, null, email, null, yeuthich, null, avatarBytes));
+					}
 			} else if (session.getAttribute("canteen") != null) {
-					String id = request.getParameter("id_canteen");
+					int ID_canteen = Integer.valueOf(request.getParameter("id_canteen"));
 					String ten = request.getParameter("txtTencanteen");
 					String sdt = request.getParameter("txtSodienthoai");
 					String email = request.getParameter("txtEmail");
-					String tinh = request.getParameter("tinh");
-					String huyen = request.getParameter("huyen");
-					String xa = request.getParameter("xa");
+					int tinh = Integer.valueOf(request.getParameter("tinh"));
+					int huyen = Integer.valueOf(request.getParameter("huyen"));
+					int xa = Integer.valueOf(request.getParameter("xa"));
 					Part avatarPart = request.getPart("avatar");
 					InputStream inputStream = avatarPart.getInputStream();
 					byte[] avatarBytes = inputStream.readAllBytes();
-					if (avatarBytes.length == 0)
-						avatarBytes = null;
-					if (id != null) {
-						CanteenDAO.updateInfo(new CanteenModel(id, ten, sdt, email, tinh, huyen, xa, "", avatarBytes));
-						AccountDAO.ChangeSdt(id, sdt);
+					if (avatarBytes.length == 0) avatarBytes = null;
+					if (AccountDAO.CheckAccountNotExist(sdt)) {
+						CanteenDAO.updateInfo(new CanteenModel(ID_canteen, ten, sdt, email, null, null, avatarBytes));
+						AccountDAO.ChangeSdt(ID_canteen, sdt);
+					} else {
+						CanteenDAO.updateInfo(new CanteenModel(ID_canteen, ten, null, email, null, null, avatarBytes));
 					}
+					DiachiDAO.ChangeAddress(new DiachiModel(null, ID_canteen, tinh, huyen, xa));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		response.sendRedirect(request.getContextPath());
 	}
 

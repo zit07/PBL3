@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.CanteenDAO;
+import datdocantin.Dao.DiachiDAO;
 import datdocantin.Dao.GiohoatdongDAO;
 import datdocantin.Dao.HistorySearchDAO;
 import datdocantin.Dao.KhachhangDAO;
+import datdocantin.Dao.LoaithucanDAO;
 import datdocantin.Dao.MonAnDAO;
 import datdocantin.Model.CanteenModel;
 import datdocantin.Model.KhachHangModel;
@@ -35,36 +37,38 @@ public class HomeController extends HttpServlet {
 			//khach hang
 			if (session.getAttribute("khachhang") != null) {
 				KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
-				String ID = khachhang.getIDKH();
-				khachhang = KhachhangDAO.getKhachhangInfo(ID);
+				int ID_khachhang = khachhang.getID_khachhang();
+				khachhang = KhachhangDAO.getKhachhangInfo(ID_khachhang);
 				if (session.getAttribute("txtSearch")!=null) { 
-					session.setAttribute("listMonan", MonAnDAO.getResultSearchforKhach(khachhang.getIDCantin(),(String)session.getAttribute("txtSearch")));
+					session.setAttribute("listMonan", MonAnDAO.KhachhangGetMenu(khachhang.getID_canteen(),(String)session.getAttribute("txtSearch")));
 					request.setAttribute("txtSearch", (String)session.getAttribute("txtSearch"));
 					session.removeAttribute("txtSearch");
 				} else {
-		            session.setAttribute("listMonan", MonAnDAO.getListMonanforKhach(khachhang.getIDCantin()));
+		            session.setAttribute("listMonan", MonAnDAO.KhachhangGetMenu(khachhang.getID_canteen(), null));
 				}
 				session.setAttribute("khachhang", khachhang);
-				session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID));
+				session.setAttribute("TenCanteen", CanteenDAO.getNameCanteen(khachhang.getID_canteen()));
+				session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID_khachhang));
 				request.getRequestDispatcher("view/customer-homepage.jsp").forward(request, response);
 			} 
 			//canteen
 			else if (session.getAttribute("canteen") != null) {
 				CanteenModel canteen = (CanteenModel)session.getAttribute("canteen");
-				String ID = canteen.getId();
+				int ID_canteen = canteen.getID_canteen();
 				if (session.getAttribute("txtSearch")!=null) {
-					session.setAttribute("listMonan", MonAnDAO.getResultSearchforCanteen(ID,(String)session.getAttribute("txtSearch")));
+					session.setAttribute("listMonan", MonAnDAO.CanteenGetMenu(ID_canteen,(String)session.getAttribute("txtSearch")));
 					request.setAttribute("txtSearch", (String)session.getAttribute("txtSearch"));
 					session.removeAttribute("txtSearch");
 				} else {
 					request.setAttribute("danhmuc", (String)session.getAttribute("danhmuc"));
-					session.setAttribute("listMonan", MonAnDAO.getListMonanforCanteen(ID, (String)session.getAttribute("danhmuc")));
+					session.setAttribute("listMonan", MonAnDAO.CanteenGetMenu(ID_canteen, null));
 //					session.removeAttribute("danhmuc");
 				}
-				
-				session.setAttribute("listGiohoatdong", GiohoatdongDAO.getGiohoatdong(ID)); 
-				session.setAttribute("canteen", CanteenDAO.getInfoCanteen(ID));
-				session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID));
+				session.setAttribute("loaithucan", LoaithucanDAO.getListLoaithucan());
+				session.setAttribute("diachi", DiachiDAO.getDiachi(canteen.getID_canteen()));
+				session.setAttribute("listGiohoatdong", GiohoatdongDAO.getGiohoatdong(ID_canteen)); 
+				session.setAttribute("canteen", CanteenDAO.getInfoCanteen(ID_canteen));
+				session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID_canteen));
 				request.getRequestDispatcher("view/cantin-homepage.jsp").forward(request, response);
 			} 
 			//admin

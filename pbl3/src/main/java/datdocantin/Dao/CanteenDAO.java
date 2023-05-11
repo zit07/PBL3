@@ -10,6 +10,7 @@ import java.util.Base64;
 import java.util.List;
 
 import datdocantin.Model.CanteenModel;
+import datdocantin.Model.DiachiModel;
 import datdocantin.Util.connectDB;
 
 public class CanteenDAO {
@@ -17,21 +18,21 @@ public class CanteenDAO {
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
     
-    public static CanteenModel getInfoCanteen(String id) throws SQLException, Exception {
+    public static CanteenModel getInfoCanteen(int ID_canteen) throws SQLException, Exception {
     	CanteenModel result = null;
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT id, ten, sodienthoai, email, tinh, huyen, xa, pin, avatar FROM canteen WHERE id = ?;";
+            	String sql = "SELECT ID_canteen, ten, sodienthoai, email, ID_diachi, pin, avatar FROM canteen WHERE ID_canteen = ?;";
             	stm = conn.prepareStatement(sql);
-            	stm.setString(1, id);
+            	stm.setInt(1, ID_canteen);
             	rs = stm.executeQuery();
                 if (rs.next()) { 
                 	byte[] decodedAvatar = null;
-                	if (rs.getBytes(9)!=null){
-	                	decodedAvatar = Base64.getDecoder().decode(rs.getBytes(9));
+                	if (rs.getBytes(7)!=null){
+	                	decodedAvatar = Base64.getDecoder().decode(rs.getBytes(7));
                 	}
-                	result = new CanteenModel(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), decodedAvatar);
+                	result = new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), decodedAvatar);
                 }
             }
         } catch (Exception e) {
@@ -41,13 +42,32 @@ public class CanteenDAO {
         return result;
     }
 
+    public static String getNameCanteen(int ID_canteen) throws SQLException, Exception {
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+            	String sql = "SELECT ten FROM canteen WHERE ID_canteen = ?;";
+            	stm = conn.prepareStatement(sql);
+            	stm.setInt(1, ID_canteen);
+            	rs = stm.executeQuery();
+                if (rs.next()) { 
+                	return rs.getString(1);
+                }
+            }
+        } catch (Exception e) {
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+        return null;
+    }
+    
     public static void addCanteen(CanteenModel newcanteen) throws SQLException, Exception {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "INSERT INTO canteen(id, ten, sodienthoai) VALUES(?, ?, ?);";
+                String sql = "INSERT INTO canteen(ID_canteen, ten, sodienthoai) VALUES(?, ?, ?);";
                 stm = conn.prepareStatement(sql);
-                stm.setString(1, newcanteen.getId());
+                stm.setInt(1, newcanteen.getID_canteen());
                 stm.setString(2, newcanteen.getTen());
                 stm.setString(3, newcanteen.getSodienthoai());
                 stm.executeUpdate();
@@ -62,25 +82,28 @@ public class CanteenDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "UPDATE canteen SET ten = ?, sodienthoai = ?, email = ?, tinh = ?, huyen = ?, xa = ?";
+                String sql = "UPDATE canteen SET ten = ?, email = ?";
                 if (canteen.getAvatar() != null) {
                     sql += ", avatar = ?";
                 }
-                sql += " WHERE id = ?;";
+                sql += " WHERE ID_canteen = ?;";
                 stm = conn.prepareStatement(sql);
                 stm.setString(1, canteen.getTen());
-                stm.setString(2, canteen.getSodienthoai());
-                stm.setString(3, canteen.getEmail());
-                stm.setString(4, canteen.getTinh());
-                stm.setString(5, canteen.getHuyen());
-                stm.setString(6, canteen.getXa());
+                stm.setString(2, canteen.getEmail());
                 if (canteen.getAvatar() != null) {	
-                    stm.setString(7, Base64.getEncoder().encodeToString(canteen.getAvatar()));
-                    stm.setString(8, canteen.getId());
+                    stm.setString(3, Base64.getEncoder().encodeToString(canteen.getAvatar()));
+                    stm.setInt(4, canteen.getID_canteen());
                 } else {
-                    stm.setString(7, canteen.getId());
+                    stm.setInt(3, canteen.getID_canteen());
                 }
                 stm.executeUpdate();
+                if (canteen.getSodienthoai() != null) {
+                	sql = "UPDATE canteen SET sodienthoai = ? WHERE ID_canteen = ?;";
+                    stm = conn.prepareStatement(sql);
+                    stm.setString(1, canteen.getSodienthoai());
+                    stm.setInt(2, canteen.getID_canteen());
+                    stm.executeUpdate();
+                }
             }
 
         } catch (Exception e) {
@@ -90,51 +113,51 @@ public class CanteenDAO {
         }
     }
     
-    public static List<CanteenModel> SearchCanteen(String txtSearch, String Tinh, String Huyen, String Xa) throws SQLException, Exception {
+    public static List<CanteenModel> SearchCanteen(String txtSearch, DiachiModel diachi) throws SQLException, Exception {
     	List<CanteenModel> result = new ArrayList<CanteenModel>();
     	if (txtSearch!=null) txtSearch = Normalizer.normalize(txtSearch.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
     	try {
     		conn = connectDB.getConnection();
-			if (conn != null) {
-				if (!Tinh.equals("-1")) {
-					String sql = "SELECT id, ten, sodienthoai, email, tinh, huyen, xa, avatar FROM canteen WHERE tinh = ?" 
-							+ (!Huyen.equals("-1") ? " AND huyen = ?" : "") 
-					        + (!Xa.equals("-1") ? " AND xa = ?" : "")  + ";";
-					stm = conn.prepareStatement(sql);
-					stm.setString(1, Tinh);
-					int index = 2;
-					if (!Huyen.equals("-1")) {
-					    stm.setString(index, Huyen);
-					    index++;
-					}
-					if (!Xa.equals("-1")) {
-					    stm.setString(index, Xa);
-					}
-					rs = stm.executeQuery();
-					while (rs.next()) {
-						byte[] decodedAvatar = null;
-	                	if (rs.getBytes(8)!=null){
-		                	decodedAvatar = Base64.getDecoder().decode(rs.getBytes(8));
-	                	}
-	                	result.add(new CanteenModel(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),"", "", "", "", decodedAvatar));
-					}
-				}
-				else if (!txtSearch.equals("") && txtSearch!=null) {
-					String sql = "SELECT id, ten, sodienthoai, email, tinh, huyen, xa, avatar FROM canteen;";
+    		if (conn != null) {
+				if (!txtSearch.equals("") && txtSearch!=null) {
+					String sql = "SELECT ID_canteen, ten, sodienthoai, email, ID_diachi, avatar FROM canteen;";
 					stm = conn.prepareStatement(sql); 
 	            	rs = stm.executeQuery();
 	                while (rs.next()) {
 	                	byte[] decodedAvatar = null;
-	                	if (rs.getBytes(8)!=null){
+	                	if (rs.getBytes(6)!=null){
 		                	decodedAvatar = Base64.getDecoder().decode(rs.getBytes(8));
 	                	}
 	                	String t = Normalizer.normalize((rs.getString(1)+rs.getString(2)+rs.getString(3)).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
 	                	if (t.contains(txtSearch)) {
-	                		result.add(new CanteenModel(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),"", "", "", "", decodedAvatar));
+	                		result.add(new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), -1, decodedAvatar));
 	                	}
+	                }
+				} else if (diachi.getTinh() != -1) {
+					String sql = "SELECT canteen.* FROM canteen JOIN diachi ON canteen.ID_diachi = diachi.ID_diachi WHERE diachi.tinh = ?"
+							+ (diachi.getHuyen() != -1 ? " AND huyen = ?" : "") 
+					        + (diachi.getXa() != -1  ? " AND xa = ?" : "")  + ";";;
+					stm = conn.prepareStatement(sql); 
+					stm.setInt(1, diachi.getTinh());
+					int index = 2;
+					if (diachi.getHuyen() != -1) {
+					    stm.setInt(index, diachi.getHuyen());
+					    index++;
+					}
+					if (diachi.getXa() != -1) {
+					    stm.setInt(index, diachi.getXa());
+					}
+	            	rs = stm.executeQuery();
+	                while (rs.next()) {
+	                	byte[] decodedAvatar = null;
+	                	if (rs.getBytes(6)!=null){
+		                	decodedAvatar = Base64.getDecoder().decode(rs.getBytes(8));
+	                	}
+	                	result.add(new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), -1, decodedAvatar));
 	                }
 				}
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -146,8 +169,8 @@ public class CanteenDAO {
     
     public static void main(String[] args) {
 		try {
-			List<CanteenModel> result = SearchCanteen("", "48", "490", "20197");
-			System.out.println(result.size());		
+//			List<CanteenModel> result = SearchCanteen("10002", new DiachiModel(-1,-1,-1,-1,-1));
+			System.out.println(getNameCanteen(10003));		
 //			20197
 		} 
 		catch (Exception e) {

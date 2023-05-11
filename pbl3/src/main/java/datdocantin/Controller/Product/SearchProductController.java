@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.HistorySearchDAO;
+import datdocantin.Model.LichsutimkiemModel;
 import datdocantin.Service.getNewIDforTable;
 
 @WebServlet("/search") 
@@ -21,14 +22,14 @@ public class SearchProductController extends HttpServlet {
         super();
 
     }
-
+    
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	try {
+        try {
 			processRequest(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}    
-    }
+		}
+	}
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -41,20 +42,18 @@ public class SearchProductController extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
-	    String id = request.getParameter("id_user");
+	    Integer ID_nguoidung = Integer.valueOf(request.getParameter("id_user"));
 	    String txtSearch = request.getParameter("txtSearch");
 	    if (txtSearch != null && !txtSearch.isEmpty()) {
 	        HttpSession session = request.getSession();
 	        session.setAttribute("txtSearch", txtSearch);
-	        if (id != null && !id.isEmpty()) {
-	            String lastNoidung = HistorySearchDAO.getLastNoidung(id);
+	        if (ID_nguoidung != null) {
+	            String lastNoidung = HistorySearchDAO.getLastNoidung(ID_nguoidung);
 	            if (!txtSearch.equals(lastNoidung)) {
-	                HistorySearchDAO.addSearchHistory(getNewIDforTable.getNewID("lichsutimkiem"), id, txtSearch);
+	                HistorySearchDAO.addSearchHistory(new LichsutimkiemModel(getNewIDforTable.getNewID("lichsutimkiem"), ID_nguoidung, txtSearch));
 	            }
 	        }
 	    }
 	    response.sendRedirect(request.getContextPath());
 	}
-
-
 }

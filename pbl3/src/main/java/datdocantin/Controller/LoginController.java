@@ -13,7 +13,6 @@ import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.CanteenDAO;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Model.AccountModel;
-import datdocantin.Model.KhachHangModel;
 
 @WebServlet("/Login")
 public class LoginController extends HttpServlet {
@@ -38,18 +37,18 @@ public class LoginController extends HttpServlet {
         try {
         	String sdt = request.getParameter("txtSdt");
         	String password = request.getParameter("txtPassword"); 
-            String id = AccountDAO.getIDbySdt(sdt);
-            AccountModel acc = AccountDAO.getAccountInfo(id, password);
-            if (acc!=null) {
-            	String role = acc.getType_User();
+            AccountModel account = AccountDAO.getAccountInfo(null,sdt, password);
+            if (account!=null) {
+            	int ID_account = account.getID_account();
+            	String role = account.getType_User();
                 if (role.equals("admin")) {
                 	session.setAttribute("admin", "admin");
                 }
                 else if (role.equals("cantin")) {
-                	session.setAttribute("canteen", CanteenDAO.getInfoCanteen(id)); 
+                	session.setAttribute("canteen", CanteenDAO.getInfoCanteen(ID_account)); 
                 }
                 else {
-                	session.setAttribute("khachhang", KhachhangDAO.getKhachhangInfo(id));
+                	session.setAttribute("khachhang", KhachhangDAO.getKhachhangInfo(ID_account));
                 } 
                 response.sendRedirect(request.getContextPath());
 			} 

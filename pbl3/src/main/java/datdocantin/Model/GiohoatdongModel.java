@@ -1,32 +1,33 @@
 package datdocantin.Model;
 
 public class GiohoatdongModel {
-	private String id, idcanteen, thu, giomocua, giodongcua;
+	private Integer ID_giohoatdong, ID_canteen, thu;
+	private String giomocua, giodongcua;
 	
 	public GiohoatdongModel() {}
-	public GiohoatdongModel(String id, String idcanteen, String thu, String giomocua, String giodongcua) {
-		this.id = id;
-		this.idcanteen = idcanteen;
+	public GiohoatdongModel(Integer ID_giohoatdong, Integer ID_canteen, Integer thu, String giomocua, String giodongcua) {
+		this.ID_giohoatdong = ID_giohoatdong;
+		this.ID_canteen = ID_canteen;
 		this.thu = thu;
 		this.giomocua = giomocua;
 		this.giodongcua = giodongcua;
 	}
-	public String getId() {
-		return id;
+	public int getID_giohoatdong() {
+		return ID_giohoatdong;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setID_giohoatdong(Integer iD_giohoatdong) {
+		ID_giohoatdong = iD_giohoatdong;
 	}
-	public String getIdcanteen() {
-		return idcanteen;
+	public int getID_canteen() {
+		return ID_canteen;
 	}
-	public void setIdcanteen(String idcanteen) {
-		this.idcanteen = idcanteen;
+	public void setID_canteen(Integer iD_canteen) {
+		ID_canteen = iD_canteen;
 	}
-	public String getThu() {
+	public int getThu() {
 		return thu;
 	}
-	public void setThu(String thu) {
+	public void setThu(Integer thu) {
 		this.thu = thu;
 	}
 	public String getGiomocua() {
@@ -41,5 +42,5 @@ public class GiohoatdongModel {
 	public void setGiodongcua(String giodongcua) {
 		this.giodongcua = giodongcua;
 	}
-	
+
 }

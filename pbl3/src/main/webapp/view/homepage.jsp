@@ -248,7 +248,7 @@
  	                                            <div class="home-product-item__info">
 	                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
 	                                                <div class="home-product-item__price"> 
-		                                                <c:if test="${ Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}">
+		                                                <c:if test="${monan.getGiacu() > monan.getGiahientai()}">
 		                                                    <p class="home-product-item__price-old">${monan.getGiacu()}VNĐ</p>
 		                                                </c:if>
 	                                                    <p class="home-product-item__price-new">${monan.getGiahientai()}VNĐ</p>
@@ -267,7 +267,7 @@
 	                                                    </div>
 	                                                    <div class="home-product-item__saled">Đã bán ${monan.getDaban()}</div>
 	                                                </div>
-	                                                <c:if test="${Double.valueOf(monan.getGiacu()) > Double.valueOf(monan.getGiahientai())}">
+	                                                <c:if test="${monan.getGiacu() > monan.getGiahientai()}">
 														<c:set var="giamgia" value="${Math.round((monan.giacu - monan.giahientai) / monan.giacu * 100)}" />
 		                                               	<div class="home-product-item__sale-off">
 													    	<div class="home-product-item__sale-off-value">${giamgia} %</div>
@@ -283,7 +283,7 @@
                             	<c:set var="canteenList" value="<%=canteenList%>"/>
                             	<c:forEach items="${canteenList}" var="Canteen">
                             		<div class="col l-2-4">
-		                                    <a class="home-product-item-link" href="./Menu?id_canteen=${Canteen.getId()}">
+		                                    <a class="home-product-item-link" href="./Menu?id_canteen=${Canteen.getID_canteen()}">
 		                                    	<c:if test="${Canteen.getAvatar()==null}">
 					                            	<div class="home-product-item__img" style="background-image: url(./assets/img/avatarDefault.jpg);"></div>
 					                            </c:if>

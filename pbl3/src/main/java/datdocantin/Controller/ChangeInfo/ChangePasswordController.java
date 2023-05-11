@@ -31,13 +31,12 @@ public class ChangePasswordController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
         try {
-        	String id = request.getParameter("id_user"); 
-        	if (id==null) id = request.getParameter("id_canteen"); 
+        	Integer ID = Integer.valueOf(request.getParameter("id_user")); 
             String oldPass = request.getParameter("txtOldPass");
             String newPass = request.getParameter("txtNewPass");
-            AccountModel acc = AccountDAO.getAccountInfo(id, oldPass);
+            AccountModel acc = AccountDAO.getAccountInfo(ID, null, oldPass);
             if (acc!=null) {
-            	AccountDAO.ChangePassword(id, newPass);
+            	AccountDAO.ChangePassword(ID, newPass);
             	request.setAttribute("display_form__changepass", "flex");
             	request.setAttribute("notiSuccessNewPass", "flex");
             	request.setAttribute("notiErrorOldPass", "none");
@@ -47,7 +46,7 @@ public class ChangePasswordController extends HttpServlet {
             	request.setAttribute("display_form__changepass", "flex");
             	request.setAttribute("notiSuccessNewPass", "none");
             	request.setAttribute("notiErrorOldPass", "flex");
-            	request.getRequestDispatcher("view/homepage.jsp").forward(request, response);
+            	request.getRequestDispatcher("view/customer-homepage.jsp").forward(request, response);
             }
         } catch (Exception e) {
             log("error at login servlet: " + e.toString());

@@ -30,14 +30,14 @@ public class ChangeTimeOpenController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
 		try {
-			String id = request.getParameter("id_canteen");
-			List<GiohoatdongModel> giohoatdongList = new ArrayList<GiohoatdongModel>();
-			for (int i = 2; i <= 8; i++) {
-				String timeOpen = request.getParameter("txtTimeOpen" + i);
-				String timeClose = request.getParameter("txtTimeClose" + i);
+			Integer ID_canteen = Integer.valueOf(request.getParameter("id_canteen"));
+			List<GiohoatdongModel> giohoatdongList = new ArrayList<GiohoatdongModel>(); ;
+			for (int thu = 2; thu <= 8; thu++) {
+				String timeOpen = request.getParameter("txtTimeOpen" + thu);
+				String timeClose = request.getParameter("txtTimeClose" + thu);
 				timeOpen = "-1".equals(timeOpen) ? null : timeOpen;
 				timeClose = "-1".equals(timeClose) ? null : timeClose;
-				giohoatdongList.add(new GiohoatdongModel("", id, String.valueOf(i), timeOpen, timeClose));
+				giohoatdongList.add(new GiohoatdongModel(null, ID_canteen, thu, timeOpen, timeClose));
 			}
 			GiohoatdongDAO.Changegiohoatdong(giohoatdongList);
 		} catch (Exception e) {

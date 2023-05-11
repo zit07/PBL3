@@ -14,19 +14,19 @@ public class GiohoatdongDAO {
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
     
-    public static List<GiohoatdongModel> getGiohoatdong(String idcanteen) throws Exception {
-        List<GiohoatdongModel> giohoatdongList = new ArrayList<GiohoatdongModel>();
+    public static List<GiohoatdongModel> getGiohoatdong(int ID_canteen) throws Exception {
+        List<GiohoatdongModel> giohoatdong_List = new ArrayList<GiohoatdongModel>();
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "SELECT id, idcanteen, thu, giomocua, giodongcua FROM giohoatdong WHERE idcanteen = ?";
+                String sql = "SELECT ID_giohoatdong, ID_canteen, thu, giomocua, giodongcua FROM giohoatdong WHERE ID_canteen = ?";
                 stm = conn.prepareStatement(sql);
-                stm.setString(1, idcanteen);
+                stm.setInt(1, ID_canteen);
                 rs = stm.executeQuery();
                 while (rs.next()) {
                 	String giomocua = rs.getString(4) != null ? rs.getString(4).substring(0, rs.getString(4).length()-3) : "-1";
                 	String giodongcua = rs.getString(5) != null ? rs.getString(5).substring(0, rs.getString(5).length()-3) : "-1";
-                	giohoatdongList.add(new GiohoatdongModel(rs.getString(1),rs.getString(2),rs.getString(3),giomocua, giodongcua));
+                	giohoatdong_List.add(new GiohoatdongModel(rs.getInt(1),rs.getInt(2),rs.getInt(3),giomocua, giodongcua));
                 }
             }
         } catch (Exception e) {
@@ -34,55 +34,55 @@ public class GiohoatdongDAO {
         } finally {
             connectDB.closeConnection(conn, stm, rs);
         }
-        return giohoatdongList;
+        return giohoatdong_List;
     }
     
-    public static void Addgiohoatdong(int newid, String idcanteen) throws Exception {
-    	for (int i=2; i<=8; i++) {
-    		try {
-                conn = connectDB.getConnection();
-                if (conn != null) {
-                	String sql = "INSERT INTO giohoatdong(id, idcanteen, thu, giomocua, giodongcua) VALUES(?, ?, ?, ?, ?);";
+    public static void Addgiohoatdong(int ID_giohoatdong, int ID_canteen) throws Exception {
+		try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+            	for (int i=2; i<=8; i++) {
+                	String sql = "INSERT INTO giohoatdong(ID_giohoatdong, ID_canteen, thu, giomocua, giodongcua) VALUES(?, ?, ?, ?, ?);";
                     stm = conn.prepareStatement(sql);
-                    stm.setInt(1, newid + i - 2);
-                    stm.setString(2, idcanteen);
+                    stm.setInt(1, ID_giohoatdong + i - 2);
+                    stm.setInt(2, ID_canteen);
                     stm.setInt(3, i);
                     stm.setString(4, null);
                     stm.setString(5, null);
                     stm.executeUpdate();
-                }
-            } catch (Exception e) {
-            } finally {
-                connectDB.closeConnection(conn, stm, rs);
+            	}
             }
-    	} 
-    }
+        } catch (Exception e) {
+        } finally {
+            connectDB.closeConnection(conn, stm, rs);
+        }
+	} 
     	
-    public static void Changegiohoatdong(List<GiohoatdongModel> giohoatdongList) throws Exception {
-    	for (int i = 0; i < giohoatdongList.size(); i++) {
-    		try {
-                conn = connectDB.getConnection();
-                if (conn != null) {
-                	String sql = "UPDATE giohoatdong SET giomocua=?, giodongcua=? WHERE idcanteen=? AND thu=?;";
+    public static void Changegiohoatdong(List<GiohoatdongModel> giohoatdong_List) throws Exception {
+		try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+            	for (int i = 0; i < giohoatdong_List.size(); i++) {
+                	String sql = "UPDATE giohoatdong SET giomocua=?, giodongcua=? WHERE ID_canteen=? AND thu=?;";
                     stm = conn.prepareStatement(sql);
-                    stm.setString(1, giohoatdongList.get(i).getGiomocua());
-                    stm.setString(2, giohoatdongList.get(i).getGiodongcua());
-                    stm.setString(3, giohoatdongList.get(i).getIdcanteen());
-                    stm.setString(4, giohoatdongList.get(i).getThu());
+                    stm.setString(1, giohoatdong_List.get(i).getGiomocua());
+                    stm.setString(2, giohoatdong_List.get(i).getGiodongcua());
+                    stm.setInt(3, giohoatdong_List.get(i).getID_canteen());
+                    stm.setInt(4, giohoatdong_List.get(i).getThu());
                     stm.executeUpdate();
-                }
-            } catch (Exception e) {
-            	e.printStackTrace();
-            } finally {
-                connectDB.closeConnection(conn, stm, rs);
+            	}
             }
-    	} 
-    }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        } finally {
+            connectDB.closeConnection(conn, stm, rs);
+        }
+	} 
     
     public static void main(String[] args) {
 		try {
 			List<GiohoatdongModel> giohoatdongList = new ArrayList<GiohoatdongModel>();
-			giohoatdongList = getGiohoatdong("10003");System.out.println(giohoatdongList.size());
+			giohoatdongList = getGiohoatdong(10002);System.out.println(giohoatdongList.size());
 			for (int i = 0; i < giohoatdongList.size(); i++) {
 			    String num = giohoatdongList.get(i).getGiomocua();
 			    System.out.println(num+"-"+giohoatdongList.get(i).getGiodongcua());

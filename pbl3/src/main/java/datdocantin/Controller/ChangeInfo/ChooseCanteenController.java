@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.KhachhangDAO;
-import datdocantin.Model.KhachHangModel;
 
 
 @WebServlet("/ChooseCanteen")
@@ -24,11 +23,10 @@ public class ChooseCanteenController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
 		HttpSession session = request.getSession(true);
-		String id = request.getParameter("id_user");
-		String idcanteen = request.getParameter("id_canteen");
+		Integer ID_khachhang = Integer.valueOf(request.getParameter("id_user"));
+		Integer ID_canteen = Integer.valueOf(request.getParameter("id_canteen"));
 		try {
-			KhachhangDAO.ChangeCanteen(id, idcanteen);
-			KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
+			KhachhangDAO.ChangeCanteen(ID_khachhang, ID_canteen);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

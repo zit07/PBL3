@@ -13,43 +13,50 @@ public class AccountDAO {
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
     
-    public static AccountModel getAccountInfo(String id, String pass) throws SQLException, Exception {
+    public static AccountModel getAccountInfo(Integer ID_account, String sdt, String pass) throws SQLException, Exception {
     	AccountModel result = null;
         try {
-            conn = connectDB.getConnection();
-            if (conn != null) {
-            	String sql = "SELECT id, sdt, pass, typeUser FROM account WHERE id = ? AND pass = ?;";
-            	stm = conn.prepareStatement(sql);
-            	stm.setString(1, id); 
-            	stm.setString(2, PasswordEncoder.encode(pass));
-            	rs = stm.executeQuery();
-                if (rs.next()) {
-                    result = new AccountModel(rs.getString("id"), rs.getString("sdt"), rs.getString("pass"), rs.getString("typeUser"));
-                }
-            }
+        	conn = connectDB.getConnection();
+        	if (conn != null) {
+        	    String sql = "SELECT ID_account, sdt, pass, typeUser FROM account WHERE pass = ? AND " 
+        	                    + (ID_account != null ? "ID_account = ?;" : "sdt = ?;");
+        	    stm = conn.prepareStatement(sql);
+        	    stm.setString(1, PasswordEncoder.encode(pass));
+        	    if (ID_account != null) {
+        	        stm.setInt(2, ID_account); 
+        	    } else {
+        	        stm.setString(2, sdt); 
+        	    }
+        	    rs = stm.executeQuery();
+        	    if (rs.next()) {
+        	        result = new AccountModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+        	    }
+        	}
         } catch (Exception e) {
+        	e.printStackTrace();
         } finally {
         	connectDB.closeConnection(conn, stm, rs);
         }
         return result;
     }
     
-    public static String getIDbySdt(String sdt) throws SQLException, Exception {
-        String result = null;
+    public static AccountModel getsdt(String sdt, String pass) throws SQLException, Exception {
+    	AccountModel result = null;
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "SELECT id FROM account WHERE sdt = ?;";
-                stm = conn.prepareStatement(sql);
-                stm.setString(1, sdt);
-                rs = stm.executeQuery();
+            	String sql = "SELECT ID_account, sdt, pass, typeUser FROM account WHERE sdt = ? AND pass = ?;";
+            	stm = conn.prepareStatement(sql);
+            	stm.setString(1, sdt); 
+            	stm.setString(2, PasswordEncoder.encode(pass));
+            	rs = stm.executeQuery();
                 if (rs.next()) {
-                    result = rs.getString("id");
+                    result = new AccountModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
                 }
             }
         } catch (Exception e) {
         } finally {
-            connectDB.closeConnection(conn, stm, rs);
+        	connectDB.closeConnection(conn, stm, rs);
         }
         return result;
     }
@@ -77,9 +84,9 @@ public class AccountDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "INSERT INTO account(id, sdt, pass, typeUser) VALUES(?, ?, ?, ?);";
+                String sql = "INSERT INTO account(ID_account, sdt, pass, typeUser) VALUES(?, ?, ?, ?);";
                 stm = conn.prepareStatement(sql);
-                stm.setString(1, account.getid());
+                stm.setInt(1, account.getID_account());
                 stm.setString(2, account.getSdt());
                 stm.setString(3, account.getPass());
                 stm.setString(4, account.getType_User());
@@ -91,14 +98,14 @@ public class AccountDAO {
         }
     }
     
-    public static void ChangePassword(String id, String pass) throws SQLException, Exception {
+    public static void ChangePassword(int ID_account, String pass) throws SQLException, Exception {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "UPDATE account SET pass=? WHERE id=?";
+                String sql = "UPDATE account SET pass=? WHERE ID_account=?";
                 stm = conn.prepareStatement(sql);
                 stm.setString(1, PasswordEncoder.encode(pass));
-                stm.setString(2, id);
+                stm.setInt(2, ID_account);
                 stm.executeUpdate();
             }
         } catch (Exception e) {
@@ -107,39 +114,21 @@ public class AccountDAO {
         }
     }
     
-    public static void ChangeSdt(String id, String sdt) throws SQLException, Exception {
+    public static void ChangeSdt(int ID_account, String sdt) throws SQLException, Exception {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "UPDATE account SET sdt=? WHERE id=?";
+                String sql = "UPDATE account SET sdt=? WHERE ID_account=?";
                 stm = conn.prepareStatement(sql);
                 stm.setString(1, sdt);
-                stm.setString(2, id);
+                stm.setInt(2, ID_account);
                 stm.executeUpdate();
             }
         } catch (Exception e) {
+        	e.printStackTrace();
         } finally {
         	connectDB.closeConnection(conn, stm, rs);
         }
-    }
-    
-    public static int getLastId() throws SQLException, Exception {
-    	int result = -1;
-        try {
-            conn = connectDB.getConnection();
-            if (conn != null) {
-                String sql = "SELECT * FROM account;";
-                stm = conn.prepareStatement(sql);
-                rs = stm.executeQuery();
-                while (rs.next()) {
-                    result += 1;
-                }
-            }
-        } catch (Exception e) {
-        } finally {
-        	connectDB.closeConnection(conn, stm, rs);
-        }
-        return result+10000;
     }
     
     
@@ -149,7 +138,9 @@ public class AccountDAO {
 //			Test function in here
 			
 //			AccountModel acc = new AccountModel("1002", "333", "333", "admin");
-			System.out.print(AccountDAO.getLastId());
+//			AccountModel result = getAccountInfo(10001, null, "123");
+			AccountModel result = getAccountInfo(null, "123", "1");
+			System.out.println(result.getID_account());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

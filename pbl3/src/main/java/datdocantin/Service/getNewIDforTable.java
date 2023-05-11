@@ -12,12 +12,12 @@ public class getNewIDforTable {
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
     
-    public static String getNewID(String tableName) throws SQLException, Exception {
+    public static int getNewID(String tableName) throws SQLException, Exception {
     	int result = 0;
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT MAX(id) FROM " +tableName;
+            	String sql = "SELECT MAX(ID_"+tableName+") FROM " +tableName;
             	stm = conn.prepareStatement(sql);
                 rs = stm.executeQuery();
                 if (rs.next()) {
@@ -29,12 +29,12 @@ public class getNewIDforTable {
         } finally {
         	connectDB.closeConnection(conn, stm, rs);
         }
-        return String.valueOf(result+1);
+        return result+1;
     }
     
     public static void main(String[] args) {
 		try {
-			System.out.println(getNewID("khachhang"));
+			System.out.println(getNewID("lichsutimkiem"));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

@@ -21,9 +21,9 @@ public class UnchooseCanteenController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
-		String id = request.getParameter("id_user");
+		Integer ID_khachhang = Integer.valueOf(request.getParameter("id_user"));
 		try {
-			KhachhangDAO.ChangeCanteen(id, "null");
+			KhachhangDAO.ChangeCanteen(ID_khachhang, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

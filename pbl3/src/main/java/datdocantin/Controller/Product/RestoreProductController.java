@@ -11,10 +11,10 @@ import datdocantin.Dao.MonAnDAO;
 
 
 @WebServlet("/Restore")
-public class RestoreController extends HttpServlet {
+public class RestoreProductController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public RestoreController() {
+    public RestoreProductController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -23,7 +23,7 @@ public class RestoreController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
 		try {
-			MonAnDAO.Restore(request.getParameter("idmonan"));
+			MonAnDAO.Delete_Restore__Product(Integer.valueOf(request.getParameter("idmonan")), "Restore");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

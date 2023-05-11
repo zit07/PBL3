@@ -35,22 +35,22 @@ public class AddProductController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
         try {
-        	String id = getNewIDforTable.getNewID("monan");
-        	String idcantin = request.getParameter("id_canteen");
+        	Integer ID_monan = Integer.valueOf(getNewIDforTable.getNewID("monan"));
+        	Integer ID_canteen = Integer.valueOf(request.getParameter("id_canteen"));
         	String ten = request.getParameter("txtTenmon");
         	String mota = request.getParameter("txtMota");
         	String thanhphan = request.getParameter("txtThanhphan");
         	String huongvi = request.getParameter("txtHuongvi");
-        	String loai = request.getParameter("txtLoai");
-            String gia = Double.toString(Double.parseDouble(request.getParameter("txtGia")) / 1000);
-        	String today = LocalDate.now().toString();
+        	Integer ID_Loaithucan = Integer.valueOf(request.getParameter("txtLoai"));
+        	Double gia = Double.parseDouble(request.getParameter("txtGia")) / 1000;
+        	LocalDate today = LocalDate.now();
         	byte[] hinhanhchinhBytes = request.getPart("img1").getInputStream().readAllBytes();
         	if (hinhanhchinhBytes.length == 0) hinhanhchinhBytes = null;
-        	MonAnDAO.addNewMonan(new MonAnModel(id,idcantin,ten,mota,thanhphan,huongvi,loai,gia,gia,today,hinhanhchinhBytes,"dang ban","0","0"));
-        	response.sendRedirect(request.getContextPath());
+        	MonAnDAO.addNewMonan(new MonAnModel(ID_monan,ID_canteen,ten,mota,thanhphan,huongvi,ID_Loaithucan,gia,gia,today,hinhanhchinhBytes,1,0,0));
         } catch (Exception e) {
             log("error at login servlet: " + e.toString());
         } 
+        response.sendRedirect(request.getContextPath());
 	}
 
 }

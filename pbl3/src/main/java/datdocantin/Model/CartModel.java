@@ -6,7 +6,7 @@ public class CartModel {
 	public  CartModel() {
 	}
 	
-	public  CartModel(int cart_id, int user_id) {
+	public  CartModel(Integer cart_id, Integer user_id) {
 		this.cart_id = cart_id;
 		this.user_id = user_id;
 	}
@@ -15,7 +15,7 @@ public class CartModel {
 		return cart_id;
 	}
 
-	public void setCart_id(int cart_id) {
+	public void setCart_id(Integer cart_id) {
 		this.cart_id = cart_id;
 	}
 
@@ -23,7 +23,7 @@ public class CartModel {
 		return user_id;
 	}
 
-	public void setUser_id(int user_id) {
+	public void setUser_id(Integer user_id) {
 		this.user_id = user_id;
 	}
 }

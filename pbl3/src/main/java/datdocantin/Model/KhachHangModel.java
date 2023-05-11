@@ -1,115 +1,129 @@
 package datdocantin.Model;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class KhachHangModel {
-	private String IDKH, Hoten, Ngaysinh, Gioitinh, Chieucao, Cannang, Sodienthoai, Email, IDCantin, Monyeuthich, PIN;
-	private byte[] avatar;
+    private Integer ID_khachhang, ID_canteen, PIN;
+    private String hoten, gioitinh, sodienthoai, email, yeuthich;
+    private LocalDate ngaysinh;
+    private Double chieucao, cannang;
+    private byte[] avatar;
 
 	public KhachHangModel() {
 		// TODO Auto-generated constructor stub
 	}
     
-    public KhachHangModel(String IDKH, String Hoten, String Ngaysinh, String Gioitinh, String Chieucao, String Cannang, String Sodienthoai, String Email, String IDCantin, String Monyeuthich,String PIN,byte[] avatar) {
-    	this.IDKH = IDKH;
-    	this.Hoten = Hoten;
-    	this.Ngaysinh = Ngaysinh;
-    	this.Gioitinh = Gioitinh;
-    	this.Chieucao = Chieucao;
-    	this.Cannang = Cannang;
-    	this.Sodienthoai = Sodienthoai;
-    	this.Email = Email;
-    	this.IDCantin = IDCantin;
-    	this.Monyeuthich = Monyeuthich;
+    public KhachHangModel(Integer ID_khachhang, String hoten, LocalDate ngaysinh, String gioitinh, Double chieucao, Double cannang, String sodienthoai, String email, Integer ID_canteen, String yeuthich, Integer PIN,byte[] avatar) {
+    	this.ID_khachhang = ID_khachhang;
+    	this.hoten = hoten;
+    	this.ngaysinh = ngaysinh;
+    	this.gioitinh = gioitinh;
+    	this.chieucao = chieucao;
+    	this.cannang = cannang;
+    	this.sodienthoai = sodienthoai;
+    	this.email = email;
+    	this.ID_canteen = ID_canteen;
+    	this.yeuthich = yeuthich;
     	this.PIN = PIN;
     	this.avatar = avatar;
     }
     
-	public String getIDKH() {
-		return IDKH;
+	public int getID_khachhang() {
+		return ID_khachhang;
 	}
 
-	public void setIDKH(String iDKH) {
-		IDKH = iDKH;
+	public void setID_khachhang(Integer iD_khachhang) {
+		ID_khachhang = iD_khachhang;
 	}
 
-	public String getHoten() {
-		return Hoten;
+	public int getID_canteen() {
+		return ID_canteen;
 	}
 
-	public void setHoten(String hoten) {
-		Hoten = hoten;
+	public void setID_canteen(Integer iD_canteen) {
+		ID_canteen = iD_canteen;
 	}
 
-	public String getNgaysinh() {
-		return Ngaysinh;
-	}
-
-	public void setNgaysinh(String ngaysinh) {
-		Ngaysinh = ngaysinh;
-	}
-
-	public String getGioitinh() {
-		return Gioitinh;
-	}
-
-	public void setGioitinh(String gioitinh) {
-		Gioitinh = gioitinh;
-	}
-
-	public String getChieucao() {
-		return Chieucao;
-	}
-
-	public void setChieucao(String chieucao) {
-		Chieucao = chieucao;
-	}
-
-	public String getCannang() {
-		return Cannang;
-	}
-
-	public void setCannang(String cannang) {
-		Cannang = cannang;
-	}
-
-	public String getSodienthoai() {
-		return Sodienthoai;
-	}
-
-	public void setSodienthoai(String sodienthoai) {
-		Sodienthoai = sodienthoai;
-	}
-
-	public String getEmail() {
-		return Email;
-	}
-
-	public void setEmail(String email) {
-		Email = email;
-	}
-
-	public String getIDCantin() {
-		return IDCantin;
-	}
-
-	public void setIDCantin(String IDCantin) {
-		this.IDCantin = IDCantin;
-	}
-	
-    public String getMonyeuthich() {
-		return Monyeuthich;
-	}
-
-	public void setMonyeuthich(String monyeuthich) {
-		Monyeuthich = monyeuthich;
-	}
-
-	public String getPIN() {
+	public int getPIN() {
 		return PIN;
 	}
 
-	public void setPIN(String PIN) {
-		this.PIN = PIN;
+	public void setPIN(Integer pIN) {
+		PIN = pIN;
+	}
+
+	public String getHoten() {
+		return hoten;
+	}
+
+	public void setHoten(String hoten) {
+		this.hoten = hoten;
+	}
+
+	public String getGioitinh() {
+		return gioitinh;
+	}
+
+	public void setGioitinh(String gioitinh) {
+		this.gioitinh = gioitinh;
+	}
+
+	public String getSodienthoai() {
+		return sodienthoai;
+	}
+
+	public void setSodienthoai(String sodienthoai) {
+		this.sodienthoai = sodienthoai;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getYeuthich() {
+		return yeuthich;
+	}
+
+	public void setYeuthich(String yeuthich) {
+		this.yeuthich = yeuthich;
+	}
+ 
+	public Date getNgaysinh() {
+		if (ngaysinh != null) {
+			return Date.valueOf(ngaysinh);
+	    } else {
+	        return null;
+	    }
+	}
+	
+//	public LocalDate getNgaysinhLocalDate() {
+//		return ngaysinh;
+//	}
+
+	public void setNgaysinh(LocalDate ngaysinh) {
+		this.ngaysinh = ngaysinh;
+	}
+
+	public double getChieucao() {
+		return chieucao;
+	}
+
+	public void setChieucao(Double chieucao) {
+		this.chieucao = chieucao;
+	}
+
+	public double getCannang() {
+		return cannang;
+	}
+
+	public void setCannang(Double cannang) {
+		this.cannang = cannang;
 	}
 
 	public byte[] getAvatar() {
@@ -118,6 +132,13 @@ public class KhachHangModel {
 
 	public void setAvatar(byte[] avatar) {
 		this.avatar = avatar;
+	}
+
+
+	public static void main(String[] args) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate date = LocalDate.parse("30/04/1975", formatter);
+        System.out.println(date);
 	}
 	
 }

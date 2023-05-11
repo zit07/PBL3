@@ -26,9 +26,9 @@ public class GetMenuCanteen extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		session.removeAttribute("Canteen");
 		try {
-			String idcanteen = request.getParameter("id_canteen");
-			session.setAttribute("menu", MonAnDAO.getListMonanforKhach(idcanteen));
-			session.setAttribute("Canteen", CanteenDAO.getInfoCanteen(idcanteen));
+			Integer ID_canteen = Integer.valueOf(request.getParameter("id_canteen"));
+			session.setAttribute("menu", MonAnDAO.KhachhangGetMenu(ID_canteen, null));
+			session.setAttribute("Canteen", CanteenDAO.getInfoCanteen(ID_canteen));
 			response.sendRedirect(request.getContextPath());
 		} catch (Exception e) {
 			e.printStackTrace();
