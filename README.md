@@ -4,7 +4,17 @@ CREATE TABLE `account` (
   `pass` varchar(45) NOT NULL,
   `typeUser` varchar(45) NOT NULL,
   PRIMARY KEY (`ID_account`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+);
+
+CREATE TABLE `diachi` (
+  `ID_diachi` int NOT NULL,
+  `tinh` int DEFAULT NULL,
+  `huyen` int DEFAULT NULL,
+  `xa` int DEFAULT NULL,
+  PRIMARY KEY (`ID_diachi`)
+) ;
+
+
 
 CREATE TABLE `canteen` (
   `ID_canteen` int NOT NULL,
@@ -14,51 +24,9 @@ CREATE TABLE `canteen` (
   `ID_diachi` int DEFAULT NULL,
   `PIN` int DEFAULT NULL,
   `avatar` longblob,
-  PRIMARY KEY (`ID_canteen`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
-CREATE TABLE `cart_items` (
-  `cart_item_id` int NOT NULL,
-  `cart_id` varchar(45) DEFAULT NULL,
-  `monan_id` varchar(45) DEFAULT NULL,
-  `soluong` varchar(45) DEFAULT NULL,
-  `gia` varchar(45) DEFAULT NULL,
-  `cart_itemscol` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`cart_item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
-CREATE TABLE `carts` (
-  `cart_id` int NOT NULL,
-  `user_id` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`cart_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
-CREATE TABLE `diachi` (
-  `ID_diachi` int NOT NULL,
-  `ID_nguoidung` int DEFAULT NULL,
-  `tinh` int DEFAULT NULL,
-  `huyen` int DEFAULT NULL,
-  `xa` int DEFAULT NULL,
-  PRIMARY KEY (`ID_diachi`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
-CREATE TABLE `diachi` (
-  `ID_diachi` int NOT NULL,
-  `ID_nguoidung` int DEFAULT NULL,
-  `tinh` int DEFAULT NULL,
-  `huyen` int DEFAULT NULL,
-  `xa` int DEFAULT NULL,
-  PRIMARY KEY (`ID_diachi`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
-CREATE TABLE `giohoatdong` (
-  `ID_giohoatdong` int NOT NULL,
-  `ID_canteen` int NOT NULL,
-  `thu` int DEFAULT NULL,
-  `giomocua` time DEFAULT NULL,
-  `giodongcua` time DEFAULT NULL,
-  PRIMARY KEY (`ID_giohoatdong`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  PRIMARY KEY (`ID_canteen`),
+  FOREIGN KEY (ID_diachi) REFERENCES diachi(ID_diachi)
+);
 
 CREATE TABLE `khachhang` (
   `ID_khachhang` int NOT NULL,
@@ -73,21 +41,17 @@ CREATE TABLE `khachhang` (
   `yeuthich` varchar(45) DEFAULT NULL,
   `pin` int DEFAULT NULL,
   `avatar` longblob,
-  PRIMARY KEY (`ID_khachhang`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  PRIMARY KEY (`ID_khachhang`),
+  FOREIGN KEY (ID_canteen) REFERENCES  canteen(ID_canteen)
+) ;
 
-CREATE TABLE `Lichsutimkiem` (
-  `ID_lichsutimkiem` int NOT NULL,
-  `ID_nguoidung` int DEFAULT NULL,
-  `noidung` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`ID_lichsutimkiem`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
 
 CREATE TABLE `loaithucan` (
   `ID_loaithucan` int NOT NULL,
   `loaithucan` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID_loaithucan`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+);
 
 CREATE TABLE `monan` (
   `ID_monan` int NOT NULL,
@@ -104,5 +68,44 @@ CREATE TABLE `monan` (
   `trangthai` int DEFAULT NULL,
   `daban` int DEFAULT NULL,
   `xoa` int DEFAULT NULL,
-  PRIMARY KEY (`ID_monan`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  PRIMARY KEY (`ID_monan`),
+  FOREIGN KEY (ID_canteen) REFERENCES  canteen(ID_canteen),
+  FOREIGN KEY (ID_loaithucan) REFERENCES  loaithucan(ID_loaithucan)
+);
+CREATE TABLE `carts` (
+  `cart_id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
+  PRIMARY KEY (`cart_id`),
+  FOREIGN KEY (user_id) REFERENCES khachhang(ID_khachhang)
+) ;
+
+CREATE TABLE `cart_items` (
+  `cart_item_id` int NOT NULL,
+  `cart_id` int DEFAULT NULL,
+  `monan_id` int DEFAULT NULL,
+  `soluong` varchar(45) DEFAULT NULL,
+  `gia` varchar(45) DEFAULT NULL,
+  `cart_itemscol` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`cart_item_id`),
+  FOREIGN KEY (cart_id) REFERENCES carts(cart_id),
+  FOREIGN KEY (monan_id) REFERENCES monan(ID_monan)
+);
+
+CREATE TABLE `giohoatdong` (
+  `ID_giohoatdong` int NOT NULL,
+  `ID_canteen` int NOT NULL,
+  `thu` int DEFAULT NULL,
+  `giomocua` time DEFAULT NULL,
+  `giodongcua` time DEFAULT NULL,
+  PRIMARY KEY (`ID_giohoatdong`),
+    FOREIGN KEY (ID_canteen) REFERENCES  canteen(ID_canteen)
+);
+
+
+CREATE TABLE `Lichsutimkiem` (
+  `ID_lichsutimkiem` int NOT NULL,
+  `ID_nguoidung` int DEFAULT NULL,
+  `noidung` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`ID_lichsutimkiem`),
+    FOREIGN KEY (ID_nguoidung) REFERENCES  account(ID_account)
+) ;
