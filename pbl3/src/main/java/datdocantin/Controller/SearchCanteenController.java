@@ -42,7 +42,7 @@ public class SearchCanteenController extends HttpServlet {
         	session.setAttribute("tinh", Tinh);
         	session.setAttribute("huyen", Huyen);
         	session.setAttribute("xa", Xa); 
-            List<CanteenModel> canteens = CanteenDAO.SearchCanteen(txtSearch, new DiachiModel(null, null, Tinh, Huyen, Xa));
+            List<CanteenModel> canteens = CanteenDAO.SearchCanteen(txtSearch, new DiachiModel(null, Tinh, Huyen, Xa));
             if (canteens.size()!=0) {
 				session.setAttribute("canteenList", canteens);
 			}

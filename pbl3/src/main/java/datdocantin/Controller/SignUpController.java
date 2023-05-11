@@ -54,7 +54,7 @@ public class SignUpController extends HttpServlet {
             		int ID_diachi = getNewIDforTable.getNewID("diachi");
             		CanteenDAO.addCanteen(new CanteenModel(ID,Ten,SDT,null,ID_diachi,null,null));
             		GiohoatdongDAO.Addgiohoatdong(Integer.valueOf(getNewIDforTable.getNewID("giohoatdong")), ID);
-            		DiachiDAO.AddDiachi(new DiachiModel(ID_diachi,ID,-1,-1,-1));
+            		DiachiDAO.AddDiachi(new DiachiModel(ID_diachi,-1,-1,-1));
 				}
             	response.sendRedirect(request.getContextPath());
             }
@@ -67,7 +67,5 @@ public class SignUpController extends HttpServlet {
         } catch (Exception e) {
             log("error at login servlet: " + e.toString());
         } 
-	
 	}
-
 }

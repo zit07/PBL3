@@ -65,7 +65,7 @@ public class HomeController extends HttpServlet {
 //					session.removeAttribute("danhmuc");
 				}
 				session.setAttribute("loaithucan", LoaithucanDAO.getListLoaithucan());
-				session.setAttribute("diachi", DiachiDAO.getDiachi(canteen.getID_canteen()));
+				session.setAttribute("diachi", DiachiDAO.getDiachi(canteen.getID_diachi()));
 				session.setAttribute("listGiohoatdong", GiohoatdongDAO.getGiohoatdong(ID_canteen)); 
 				session.setAttribute("canteen", CanteenDAO.getInfoCanteen(ID_canteen));
 				session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID_canteen));

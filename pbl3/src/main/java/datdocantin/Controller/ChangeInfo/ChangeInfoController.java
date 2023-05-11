@@ -64,13 +64,13 @@ public class ChangeInfoController extends HttpServlet {
 						KhachhangDAO.updateInfo(new KhachHangModel(ID_khachhang, hoten, ngaysinh, gioitinh, chieucao, cannang, null, email, null, yeuthich, null, avatarBytes));
 					}
 			} else if (session.getAttribute("canteen") != null) {
-					int ID_canteen = Integer.valueOf(request.getParameter("id_canteen"));
+					Integer ID_canteen = Integer.valueOf(request.getParameter("id_canteen"));
 					String ten = request.getParameter("txtTencanteen");
 					String sdt = request.getParameter("txtSodienthoai");
 					String email = request.getParameter("txtEmail");
-					int tinh = Integer.valueOf(request.getParameter("tinh"));
-					int huyen = Integer.valueOf(request.getParameter("huyen"));
-					int xa = Integer.valueOf(request.getParameter("xa"));
+					Integer tinh = Integer.valueOf(request.getParameter("tinh"));
+					Integer huyen = Integer.valueOf(request.getParameter("huyen"));
+					Integer xa = Integer.valueOf(request.getParameter("xa"));
 					Part avatarPart = request.getPart("avatar");
 					InputStream inputStream = avatarPart.getInputStream();
 					byte[] avatarBytes = inputStream.readAllBytes();
@@ -81,7 +81,7 @@ public class ChangeInfoController extends HttpServlet {
 					} else {
 						CanteenDAO.updateInfo(new CanteenModel(ID_canteen, ten, null, email, null, null, avatarBytes));
 					}
-					DiachiDAO.ChangeAddress(new DiachiModel(null, ID_canteen, tinh, huyen, xa));
+					DiachiDAO.ChangeAddress(new DiachiModel(CanteenDAO.getIDDiachi(ID_canteen), tinh, huyen, xa));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -61,6 +61,25 @@ public class CanteenDAO {
         return null;
     }
     
+    public static Integer getIDDiachi(int ID_canteen) throws SQLException, Exception {
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+            	String sql = "SELECT ID_diachi FROM canteen WHERE ID_canteen = ?;";
+            	stm = conn.prepareStatement(sql);
+            	stm.setInt(1, ID_canteen);
+            	rs = stm.executeQuery();
+                if (rs.next()) { 
+                	return rs.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+        return null;
+    }
+    
     public static void addCanteen(CanteenModel newcanteen) throws SQLException, Exception {
         try {
             conn = connectDB.getConnection();
@@ -170,7 +189,7 @@ public class CanteenDAO {
     public static void main(String[] args) {
 		try {
 //			List<CanteenModel> result = SearchCanteen("10002", new DiachiModel(-1,-1,-1,-1,-1));
-			System.out.println(getNameCanteen(10003));		
+			System.out.println(getIDDiachi(10002));		
 //			20197
 		} 
 		catch (Exception e) {

@@ -1,12 +1,11 @@
 package datdocantin.Model;
 
 public class DiachiModel {
-	private Integer ID_diachi, ID_nguoidung, tinh, huyen, xa;
+	private Integer ID_diachi, tinh, huyen, xa;
 	
 	public DiachiModel() {}
-	public DiachiModel(Integer ID_diachi, Integer ID_nguoidung, Integer tinh, Integer huyen, Integer xa) {
+	public DiachiModel(Integer ID_diachi, Integer tinh, Integer huyen, Integer xa) {
 		this.ID_diachi = ID_diachi;
-		this.ID_nguoidung = ID_nguoidung;
 		this.tinh = tinh;
 		this.huyen = huyen;
 		this.xa = xa;
@@ -17,12 +16,6 @@ public class DiachiModel {
 	}
 	public void setID_diachi(Integer iD_diachi) {
 		ID_diachi = iD_diachi;
-	}
-	public int getID_nguoidung() {
-		return ID_nguoidung;
-	}
-	public void setID_nguoidung(Integer iD_nguoidung) {
-		ID_nguoidung = iD_nguoidung;
 	}
 	public int getTinh() {
 		return tinh;
