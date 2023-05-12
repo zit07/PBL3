@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import datdocantin.Model.AccountModel;
 import datdocantin.Util.PasswordEncoder;
 import datdocantin.Util.connectDB;
@@ -13,12 +16,69 @@ public class AccountDAO {
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
     
+    public List<AccountModel> getAllAccLock() throws Exception{
+  	   List<AccountModel> list=new ArrayList<>();
+  	   try {
+  			conn = connectDB.getConnection();
+  			if (conn != null) {
+  				String sql = "select ID_account,sdt,typeUser from account where status_lock=?";
+  				stm = conn.prepareStatement(sql);
+  				stm.setInt(1,1 );
+  				rs=stm.executeQuery();
+  				while(rs.next()) {
+  					list.add(new AccountModel(rs.getInt(1),rs.getString(2),"",rs.getString(3), 1));
+  				}
+  				}
+  		} catch (Exception e) {
+  			System.out.println(e.getMessage()); 
+  		} finally {
+  			connectDB.closeConnection(conn, stm, rs);
+  		}
+  	   return list;
+     }
+     public void MoKhoaTK(String id) throws Exception {
+  	   try {
+  		  conn = connectDB.getConnection();
+ 			if (conn != null) {
+ 				String sql = "Update account set status_lock=? where ID_account=?";
+ 				stm = conn.prepareStatement(sql);
+ 				stm.setInt(1, 0);
+ 				stm.setString(2,id);
+ 				stm.executeUpdate();
+ 				System.out.println("Active account!");
+ 			}
+ 		} catch (Exception e) {
+ 			System.out.println(e.getMessage());
+ 		} finally {
+ 			connectDB.closeConnection(conn, stm, rs);
+ 		}
+     }
+     public void KhoaAccountByID(String id) throws Exception {
+     	try {
+  			conn = connectDB.getConnection();
+  			if (conn != null) {
+  				String sql = "Update account set status_lock=? where ID_account=?";
+  				stm = conn.prepareStatement(sql);
+  				stm.setInt(1, 1);
+  				stm.setString(2,id);
+  				stm.executeUpdate();
+  				System.out.println("suceessfully locked acount ");
+  			}
+  		} catch (Exception e) {
+  			System.out.println(e.getMessage());
+  		}
+  		 finally {
+   			connectDB.closeConnection(conn, stm, rs);
+   		}
+     }
+     
+    
     public static AccountModel getAccountInfo(Integer ID_account, String sdt, String pass) throws SQLException, Exception {
     	AccountModel result = null;
         try {
         	conn = connectDB.getConnection();
         	if (conn != null) {
-        	    String sql = "SELECT ID_account, sdt, pass, typeUser FROM account WHERE pass = ? AND " 
+        	    String sql = "SELECT ID_account, sdt, pass, typeUser,status_lock FROM account WHERE pass = ? AND " 
         	                    + (ID_account != null ? "ID_account = ?;" : "sdt = ?;");
         	    stm = conn.prepareStatement(sql);
         	    stm.setString(1, PasswordEncoder.encode(pass));
@@ -29,7 +89,7 @@ public class AccountDAO {
         	    }
         	    rs = stm.executeQuery();
         	    if (rs.next()) {
-        	        result = new AccountModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+        	        result = new AccountModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getInt(5));
         	    }
         	}
         } catch (Exception e) {
@@ -45,13 +105,13 @@ public class AccountDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT ID_account, sdt, pass, typeUser FROM account WHERE sdt = ? AND pass = ?;";
+            	String sql = "SELECT ID_account, sdt, pass, typeUser,status_lock FROM account WHERE sdt = ? AND pass = ?;";
             	stm = conn.prepareStatement(sql);
             	stm.setString(1, sdt); 
             	stm.setString(2, PasswordEncoder.encode(pass));
             	rs = stm.executeQuery();
                 if (rs.next()) {
-                    result = new AccountModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+                    result = new AccountModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getInt(5));
                 }
             }
         } catch (Exception e) {
@@ -84,12 +144,13 @@ public class AccountDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "INSERT INTO account(ID_account, sdt, pass, typeUser) VALUES(?, ?, ?, ?);";
+                String sql = "INSERT INTO account(ID_account, sdt, pass, typeUser,status_lock) VALUES(?, ?, ?, ?,?);";
                 stm = conn.prepareStatement(sql);
                 stm.setInt(1, account.getID_account());
                 stm.setString(2, account.getSdt());
                 stm.setString(3, account.getPass());
                 stm.setString(4, account.getType_User());
+                stm.setInt(5,account.getStatus_lock());
                 stm.executeUpdate();
             }
         } catch (Exception e) {

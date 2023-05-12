@@ -3,17 +3,27 @@ package datdocantin.Model;
 public class AccountModel {
 	private Integer ID_account;
 	private String sdt, pass, type_User;
+	private int status_lock;
 
     public AccountModel() {
     }
     
-    public AccountModel(Integer ID_account, String sdt, String pass, String type_User) {
-    	this.ID_account = ID_account;
-    	this.sdt = sdt;
-    	this.pass = pass;
-    	this.type_User = type_User;
-    }
-    
+    public int getStatus_lock() {
+		return status_lock;
+	}
+
+	public void setStatus_lock(int status_lock) {
+		this.status_lock = status_lock;
+	}
+	public AccountModel(Integer iD_account, String sdt, String pass, String type_User, int status_lock) {
+		super();
+		ID_account = iD_account;
+		this.sdt = sdt;
+		this.pass = pass;
+		this.type_User = type_User;
+		this.status_lock = status_lock;
+	}
+
 	public int getID_account() {
 		return ID_account;
 	}
