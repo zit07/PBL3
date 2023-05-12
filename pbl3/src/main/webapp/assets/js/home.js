@@ -18,14 +18,8 @@ const Signupform = document.getElementById("form-signup"),
 	}
 	Signuplink.addEventListener("click", (event) => showForm(Signupform, event));
 	Loginlink.addEventListener("click", (event) => showForm(Loginform, event));
-	Signuplink2.addEventListener("click", (event) => {
-	    showForm(Signupform, event);
-	    Loginform.style.display = "none";
-	});
-	Loginlink2.addEventListener("click", (event) => {
-	    Signupform.style.display = "none";
-	    showForm(Loginform, event);
-	});
+	Signuplink2.addEventListener("click", (event) => showForm(Signupform, event));
+	Loginlink2.addEventListener("click", (event) => showForm(Loginform, event));
 
 // Show noti
 	const shownotisdt = document.getElementById('notiSignupsdt');

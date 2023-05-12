@@ -945,6 +945,7 @@ border-color: red green blue yellow */
 .container {
     background-color: var(--contain-color);
     padding-top: 24px;
+    min-height: 780px;
 }
 
 .category{
@@ -1675,10 +1676,6 @@ border-color: red green blue yellow */
     background-color: #9d9999;
 }
 
-.product-deleted {
-	background-color: #ff9999;
-}
-
 .btn-add-product {
     color: var(--text-color);
     text-decoration: none;
@@ -1698,8 +1695,12 @@ border-color: red green blue yellow */
     max-height: 600px; 
     overflow-y: scroll;
 }
-
+ 
 .result-search-user {
     max-height: 320px; 
     overflow-y: scroll;
+}
+
+.ngungban {
+	filter: grayscale(100%);
 }

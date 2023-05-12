@@ -56,13 +56,18 @@ public class HomeController extends HttpServlet {
 				CanteenModel canteen = (CanteenModel)session.getAttribute("canteen");
 				int ID_canteen = canteen.getID_canteen();
 				if (session.getAttribute("txtSearch")!=null) {
-					session.setAttribute("listMonan", MonAnDAO.CanteenGetMenu(ID_canteen,(String)session.getAttribute("txtSearch")));
-					request.setAttribute("txtSearch", (String)session.getAttribute("txtSearch"));
+					session.setAttribute("ResultSearch", MonAnDAO.CanteenGetMenu(ID_canteen,(String)session.getAttribute("txtSearch")));
+					request.setAttribute("Search", (String)session.getAttribute("txtSearch"));
 					session.removeAttribute("txtSearch");
 				} else {
+					session.removeAttribute("txtSearch");
+					session.removeAttribute("ResultSearch");
+					List<MonAnModel> listMonan = MonAnDAO.CanteenGetMenu(ID_canteen, null);
 					request.setAttribute("danhmuc", (String)session.getAttribute("danhmuc"));
-					session.setAttribute("listMonan", MonAnDAO.CanteenGetMenu(ID_canteen, null));
-//					session.removeAttribute("danhmuc");
+					session.setAttribute("listMonan", MonAnDAO.getListMonanByTag(listMonan, "tat ca"));
+					session.setAttribute("listMonan_dangban", MonAnDAO.getListMonanByTag(listMonan, "dang ban"));
+					session.setAttribute("listMonan_ngungban", MonAnDAO.getListMonanByTag(listMonan, "ngung ban"));
+					session.setAttribute("listMonan_daxoa", MonAnDAO.getListMonanByTag(listMonan, "da xoa"));
 				}
 				session.setAttribute("loaithucan", LoaithucanDAO.getListLoaithucan());
 				session.setAttribute("diachi", DiachiDAO.getDiachi(canteen.getID_diachi()));

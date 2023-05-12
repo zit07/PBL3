@@ -54,7 +54,8 @@ public class MonAnDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT ID_monan, tenmon, mota, thanhphan, huongvi, ID_loaithucan, giacu, giahientai, hinhanhchinh, daban FROM monan WHERE ID_canteen = ? AND trangthai = '1';";            	stm = conn.prepareStatement(sql);
+            	String sql = "SELECT ID_monan, tenmon, mota, thanhphan, huongvi, ID_loaithucan, giacu, giahientai, hinhanhchinh, daban FROM monan WHERE ID_canteen = ? AND trangthai = '1';";            	
+            	stm = conn.prepareStatement(sql);
             	stm.setInt(1, ID_canteen);
             	rs = stm.executeQuery();
                 while (rs.next()) {
@@ -75,7 +76,28 @@ public class MonAnDAO {
         }
         return result;
     }
-
+    
+    public static List<MonAnModel> getListMonanByTag(List<MonAnModel> ListMonan, String tag) throws SQLException, Exception {
+    	List<MonAnModel> result = new ArrayList<MonAnModel>(); 
+			if (tag.equals("tat ca")) {
+				for (MonAnModel monan : ListMonan) {
+					if (monan.getXoa() == 0) result.add(monan);
+				}
+			} else if (tag.equals("dang ban")) {
+    			for (MonAnModel monan : ListMonan) {
+					if (monan.getTrangthai() == 1 && monan.getXoa() == 0) result.add(monan);
+				}
+    		} else if (tag.equals("ngung ban")) {
+    			for (MonAnModel monan : ListMonan) {
+					if (monan.getTrangthai() == 0 && monan.getXoa() == 0) result.add(monan);
+				}
+    		} else if (tag.equals("da xoa")) {
+    			for (MonAnModel monan : ListMonan) {
+					if (monan.getXoa() == 1) result.add(monan);
+				}
+    		}
+    	return result;
+    }
     
     public static void addNewMonan(MonAnModel newMonan) throws SQLException, Exception {
         try {
@@ -105,7 +127,6 @@ public class MonAnDAO {
         	connectDB.closeConnection(conn, stm, rs);
         }
     }
-    
     
     public static void EditMonan(MonAnModel monan) throws SQLException, Exception {
         try {
@@ -178,6 +199,8 @@ public class MonAnDAO {
         	connectDB.closeConnection(conn, stm, rs);
         }
     }
+    
+    
 //    public static void Delete(Integer ID_monan) throws SQLException, Exception {
 //        try {
 //            conn = connectDB.getConnection();
@@ -228,7 +251,7 @@ public class MonAnDAO {
     
     
     public static void main(String[] args) throws SQLException, Exception {
-    	List<MonAnModel> listMonAn = MonAnDAO.KhachhangGetMenu(10002, "y");
+    	List<MonAnModel> listMonAn = getListMonanByTag(CanteenGetMenu(10002, null), "da xoa");
     	for (MonAnModel monAn : listMonAn) {
     	    System.out.println("ID món ăn: " + monAn.getID_monan());
     	    System.out.println("Tên món ăn: " + monAn.getTenmon());

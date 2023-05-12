@@ -17,9 +17,6 @@ const ChangePassform = document.getElementById("form-changepassword"),
 	ChangePasslink.addEventListener("click", (event) => showForm(ChangePassform, event));
 	ListCuslink.addEventListener("click", (event) => showForm(ListCusform, event));
 
-
-
-
 // Show noti
 	const shownotiChangePassConfirm = document.getElementById('notiChangePassConfirm');
 	const notiErrorOldPass = document.getElementById('notiErrorOldPass');

@@ -24,14 +24,8 @@ const ChangePassform = document.getElementById("form-changepassword"),
 	}
 	ChangePasslink.addEventListener("click", (event) => showForm(ChangePassform, event));
 	ChangePINlink.addEventListener("click", (event) => showForm(ChangePINform, event));
-	ChangePasslink2.addEventListener("click", (event) => {
-	    showForm(ChangePassform, event);
-	    ChangePINform.style.display = "none";
-	});
-	ChangePINlink2.addEventListener("click", (event) => {
-	    ChangePassform.style.display = "none";
-	    showForm(ChangePINform, event);
-	});
+	ChangePasslink2.addEventListener("click", (event) => showForm(ChangePassform, event));
+	ChangePINlink2.addEventListener("click", (event) => showForm(ChangePINform, event));
 	Infolink.addEventListener("click", (event) => showForm(Infoform, event));
 	ChoosecanteenLink.addEventListener("click", (event) => showForm(ChoosecanteenForm, event));
 

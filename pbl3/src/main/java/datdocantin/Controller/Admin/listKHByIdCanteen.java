@@ -1,4 +1,4 @@
-package datdoancantin.Controller.Admin;
+package datdocantin.Controller.Admin;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Model.KhachHangModel;
 
-
+ 
 @WebServlet("/khach-hang")
 public class listKHByIdCanteen extends HttpServlet {
 	private static final long serialVersionUID = 1L;

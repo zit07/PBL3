@@ -29,24 +29,12 @@ const ChangePassform = document.getElementById("form-changepassword"),
 	}
 	ChangePasslink.addEventListener("click", (event) => showForm(ChangePassform, event));
 	ChangePINlink.addEventListener("click", (event) => showForm(ChangePINform, event));
-	ChangePasslink2.addEventListener("click", (event) => {
-	    showForm(ChangePassform, event);
-	    ChangePINform.style.display = "none";
-	});
-	ChangePINlink2.addEventListener("click", (event) => {
-	    ChangePassform.style.display = "none";
-	    showForm(ChangePINform, event);
-	});
+	ChangePasslink2.addEventListener("click", (event) => showForm(ChangePassform, event));
+	ChangePINlink2.addEventListener("click", (event) => showForm(ChangePINform, event));
 	Infolink.addEventListener("click", (event) => showForm(Infoform, event));
     ChangeTimeOpenlink.addEventListener("click", (event) => showForm(ChangeTimeOpenform, event));
-    Infolink2.addEventListener("click", (event) => {
-	    showForm(Infoform, event);
-	    ChangeTimeOpenform.style.display = "none";
-	});
-    ChangeTimeOpenlink2.addEventListener("click", (event) => {
-	    showForm(ChangeTimeOpenform, event);
-	    Infoform.style.display = "none";
-	});
+    Infolink2.addEventListener("click", (event) => showForm(Infoform, event));
+    ChangeTimeOpenlink2.addEventListener("click", (event) => showForm(ChangeTimeOpenform, event));
     AddProductlink.addEventListener("click", (event) => showForm(AddProductform, event));
     
     const historyLinks = document.querySelectorAll('.header__search-history-item-link');
@@ -72,6 +60,59 @@ const ChangePassform = document.getElementById("form-changepassword"),
 	    event.preventDefault(); 
 	  }
 	});
+ 
+
+// link to show content
+const TatcamonanLink = document.getElementById("link-product_tatca"),
+      ListDangbanLink = document.getElementById("link-product_dangban"),
+      ListNgungbanLink = document.getElementById("link-product_ngungban"),
+      ListDaxoaLink = document.getElementById("link-product_daxoa");
+
+// form to show content
+const Tatcamonan = document.getElementById("list-product_tatca"),
+      MonanDangban = document.getElementById("list-product_dangban"),
+      MonanNgungban = document.getElementById("list-product_ngungban"),
+      MonanDaxoa = document.getElementById("list-product_daxoa"),
+      ListMonanTitle = document.getElementById("list-product__title");
+
+// Function to show content
+const showContent = (content, event) => {
+  event.preventDefault(); 
+  Tatcamonan.style.display = "none";
+  MonanDangban.style.display = "none";
+  MonanNgungban.style.display = "none";
+  MonanDaxoa.style.display = "none";
+  ListMonanTitle.style.display = "block";
+  content.style.display = "block";
+}
+
+const NotshowTitleMonan = (title) => {
+  title.style.display = "none";
+}
+const changeBG = (link) => {
+	TatcamonanLink.classList.remove("choose");
+	ListDangbanLink.classList.remove("choose");
+	ListNgungbanLink.classList.remove("choose");
+	ListDaxoaLink.classList.remove("choose");
+	link.classList.add("choose");
+}
+TatcamonanLink.addEventListener("click", (event) => {
+  showContent(Tatcamonan, event);
+  NotshowTitleMonan(ListMonanTitle);
+  changeBG(TatcamonanLink);
+});
+ListDangbanLink.addEventListener("click", (event) => {
+    showContent(MonanDangban, event);
+    changeBG(ListDangbanLink);
+});
+ListNgungbanLink.addEventListener("click", (event) => {
+    showContent(MonanNgungban, event);
+    changeBG(ListNgungbanLink);
+});
+ListDaxoaLink.addEventListener("click", (event) => {
+    showContent(MonanDaxoa, event);
+    changeBG(ListDaxoaLink);
+});
 
 
 const avatar = document.getElementById("img-form"),

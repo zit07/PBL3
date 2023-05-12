@@ -99,27 +99,6 @@ public class AccountDAO {
         }
         return result;
     }
-    
-    public static AccountModel getsdt(String sdt, String pass) throws SQLException, Exception {
-    	AccountModel result = null;
-        try {
-            conn = connectDB.getConnection();
-            if (conn != null) {
-            	String sql = "SELECT ID_account, sdt, pass, typeUser,status_lock FROM account WHERE sdt = ? AND pass = ?;";
-            	stm = conn.prepareStatement(sql);
-            	stm.setString(1, sdt); 
-            	stm.setString(2, PasswordEncoder.encode(pass));
-            	rs = stm.executeQuery();
-                if (rs.next()) {
-                    result = new AccountModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getInt(5));
-                }
-            }
-        } catch (Exception e) {
-        } finally {
-        	connectDB.closeConnection(conn, stm, rs);
-        }
-        return result;
-    }
 	
     public static boolean CheckAccountNotExist(String sdt) throws SQLException, Exception {
         try {

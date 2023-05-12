@@ -45,8 +45,8 @@ public class SignUpController extends HttpServlet {
             String Password = PasswordEncoder.encode(request.getParameter("txtPassword"));
             String TypeUser = request.getParameter("typeUser");
             if (AccountDAO.CheckAccountNotExist(SDT)) {
-            	int ID = getNewIDforTable.getNewID("account");
-            	AccountDAO.addAccount(new AccountModel(ID, SDT, Password, TypeUser));
+            	Integer ID = getNewIDforTable.getNewID("account");
+            	AccountDAO.addAccount(new AccountModel(ID, SDT, Password, TypeUser, 0));
             	if (TypeUser.equals("customer")) {
                 	KhachhangDAO.addKhachhang(new KhachHangModel(ID,Ten,null,null,null,null,SDT,null,null,null,null,null));
                 	CartDAO.AddtoCart(new CartModel(getNewIDforTable.getNewID("carts"), ID));            	}

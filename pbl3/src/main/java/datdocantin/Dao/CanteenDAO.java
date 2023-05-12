@@ -19,7 +19,7 @@ public class CanteenDAO {
     private static ResultSet rs = null;
     public static List<CanteenModel> getAllCanteenActive() throws Exception{
     	List<CanteenModel> ketQua=new ArrayList<>();
-    	 try {
+    	 try { 
              conn = connectDB.getConnection();
                 if (conn != null) {
                  	String sql = "Select ID_canteen,ten,sodienthoai,email,ID_diachi from canteen left join account on canteen.ID_canteen=account.ID_account where account.status_lock=0";
