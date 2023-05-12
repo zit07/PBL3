@@ -5,8 +5,11 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.Normalizer;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 import datdocantin.Model.KhachHangModel;
 import datdocantin.Util.connectDB;
@@ -15,6 +18,79 @@ public class KhachhangDAO {
 	private static Connection conn = null;
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
+    
+    public List<KhachHangModel> getAllKHActive() throws Exception{
+    	List<KhachHangModel> ketQua=new ArrayList<>();
+    	 try {
+             conn = connectDB.getConnection();
+             if (conn != null) {
+            	 String sql="SELECT ID_khachhang,hoten,gioitinh,sodienthoai,email FROM khachhang"
+            	 		+ "+left join account on khachhang.ID_khachhang=account.ID_account where account.status_lock=?";
+             	stm = conn.prepareStatement(sql);
+             	stm.setInt(1, 0);
+             	rs = stm.executeQuery();
+             	while (rs.next()) {
+                 	 ketQua.add(new KhachHangModel(rs.getInt("ID_khachhang"), rs.getString("hoten"), null,
+                 			 rs.getString("gioitinh"), null, null, rs.getString("sodienthoai"), rs.getString("email"), 
+                 			 null, "", null, null));
+                 }
+             }
+         } catch (Exception e) {
+        	 System.out.println(e.getMessage());
+         } finally {
+         	connectDB.closeConnection(conn, stm, rs);
+         }
+        return ketQua;
+    }
+     public List<KhachHangModel> getAllKHActiveByIdCanteen(String idcanteen) throws Exception{
+        	List<KhachHangModel> ketQua=new ArrayList<>();
+        	 try {
+                 conn = connectDB.getConnection();
+                 if (conn != null) {
+                	 String sql="SELECT ID_khachhang,hoten,gioitinh,sodienthoai,email FROM khachhang "
+                	 		+ "left join account on khachhang.ID_khachhang=account.ID_account where account.status_lock=?"
+                	 		+ " and ID_canteen=?";
+                 	stm = conn.prepareStatement(sql);
+                 	stm.setInt(1,0);
+                 	stm.setString(2,idcanteen);
+                 	rs = stm.executeQuery();
+                     while (rs.next()) {
+                    	 ketQua.add(new KhachHangModel(rs.getInt("ID_khachhang"), rs.getString("hoten"), null,
+                     			 rs.getString("gioitinh"), null, null, rs.getString("sodienthoai"), rs.getString("email"), 
+                     			 null, "", null, null));
+                     }
+                 }
+             } catch (Exception e) {
+            	 System.out.println(e.getMessage());
+             } finally {
+             	connectDB.closeConnection(conn, stm, rs);
+             }
+            return ketQua;
+        }
+        public List<KhachHangModel> searchByName(String txtSearch) throws SQLException, Exception {
+        	List<KhachHangModel> result = new ArrayList<>();
+        	txtSearch = Normalizer.normalize(txtSearch.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+            try {
+                conn = connectDB.getConnection();
+                if (conn != null) {
+                	String sql = "SELECT ID_khachhang, hoten, gioitinh, sodienthoai, email,ID_canteen  FROM khachhang WHERE hoten like  ?";
+                	stm = conn.prepareStatement(sql);
+                	stm.setString(1, "%"+txtSearch+"%");
+                	rs = stm.executeQuery();
+                    while (rs.next()) {
+                    	result.add(new KhachHangModel(rs.getInt("ID_khachhang"), rs.getString("hoten"), null,
+                    			 rs.getString("gioitinh"), null, null, rs.getString("sodienthoai"), rs.getString("email"), 
+                     			 rs.getInt("ID_canteen"), "", null, null));
+                     }
+                    }
+             } catch (Exception e) {
+            } finally {
+            	connectDB.closeConnection(conn, stm, rs);
+            }
+            return result;
+        }
+        
+    
     
     public static KhachHangModel getKhachhangInfo(int ID_khachhang) throws SQLException, Exception {
     	KhachHangModel result = null;
