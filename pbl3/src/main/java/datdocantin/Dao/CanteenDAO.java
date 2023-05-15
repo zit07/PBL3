@@ -8,7 +8,9 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
+import datdocantin.Model.AccountModel;
 import datdocantin.Model.CanteenModel;
 import datdocantin.Model.DiachiModel;
 import datdocantin.Util.connectDB;
@@ -17,6 +19,46 @@ public class CanteenDAO {
 	private static Connection conn = null;
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
+    
+    public static List<CanteenModel> getListCanteenByTag(List<CanteenModel> canteens, List<AccountModel> accounts,String tag){
+   	 List<CanteenModel> result=new ArrayList<CanteenModel>();
+   	 int status_lock= tag.equalsIgnoreCase("active") ? 0 : 1;
+    	for(AccountModel account: accounts) {
+    			if(account.getType_User().equals("cantin") && account.getStatus_lock()== status_lock) {
+    				Optional<CanteenModel> rs=canteens.stream()
+    						.filter(khachhang -> khachhang.getID_canteen() == account.getID_account())
+    						.findFirst();
+    				rs.ifPresent(result::add);
+    			}
+    	}
+    	return result;
+   }
+   
+   public static List<CanteenModel> getAllCanteen() throws Exception{
+   	List<CanteenModel> ketQua=new ArrayList<>();
+   	 try { 
+            conn = connectDB.getConnection();
+               if (conn != null) {
+                	String sql = "Select ID_canteen, ten, sodienthoai, email, ID_diachi, pin, avatar from canteen ";
+                	stm = conn.prepareStatement(sql);
+                	rs = stm.executeQuery();
+                	while(rs.next()) {
+                		ketQua.add(new CanteenModel(rs.getInt(1),
+                    			rs.getString(2), rs.getString(3),
+                    			rs.getString(4), rs.getInt(5), 
+                    			rs.getInt(6), null));
+                		
+                    }
+                }
+            }
+   	  catch (Exception e) {
+   		  System.out.println(e.getMessage());
+            } finally {
+            	connectDB.closeConnection(conn, stm, rs);
+            }
+       return ketQua;
+   } 
+    
     public static List<CanteenModel> getAllCanteenActive() throws Exception{
     	List<CanteenModel> ketQua=new ArrayList<>();
     	 try { 

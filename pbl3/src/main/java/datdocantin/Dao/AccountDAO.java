@@ -16,6 +16,26 @@ public class AccountDAO {
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
     
+    public static List<AccountModel> getListAccount() throws Exception{
+   	   List<AccountModel> list=new ArrayList<>();
+   	   try {
+   			conn = connectDB.getConnection();
+   			if (conn != null) {
+   				String sql = "select * from account ";
+   				stm = conn.prepareStatement(sql);
+   				rs=stm.executeQuery();
+   				while(rs.next()) {
+   					list.add(new AccountModel(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4), rs.getInt(5)));
+   				}
+   				}
+   		} catch (Exception e) {
+   			System.out.println(e.getMessage()); 
+   		} finally {
+   			connectDB.closeConnection(conn, stm, rs);
+   		}
+   	   return list;
+      }
+    
     public List<AccountModel> getAllAccLock() throws Exception{
   	   List<AccountModel> list=new ArrayList<>();
   	   try {

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.CanteenDAO;
 import datdocantin.Dao.DiachiDAO;
 import datdocantin.Dao.GiohoatdongDAO;
@@ -17,6 +18,7 @@ import datdocantin.Dao.HistorySearchDAO;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Dao.LoaithucanDAO;
 import datdocantin.Dao.MonAnDAO;
+import datdocantin.Model.AccountModel;
 import datdocantin.Model.CanteenModel;
 import datdocantin.Model.KhachHangModel;
 import datdocantin.Model.MonAnModel;
@@ -78,6 +80,28 @@ public class HomeController extends HttpServlet {
 			} 
 			//admin
 			else if (session.getAttribute("admin") != null) {
+				//Trả về sanh sách tất cả các tài khoản
+				List<AccountModel> listAccount=AccountDAO.getListAccount();
+				//Trả về danh sách tất cả các thông tin canteen
+				List<CanteenModel> listCanteen=CanteenDAO.getAllCanteen();
+				//Trả về danh sách tất cả các tài khoản khách hàng
+				List<KhachHangModel> listKhachHang=KhachhangDAO.getAllKhachHang();
+				
+				
+				//trả về danh sách các canteen còn hoạt động dựa vao danh sách listAccount va listCanteen
+				session.setAttribute("listCanteen", CanteenDAO.getListCanteenByTag(listCanteen,listAccount,"active"));
+				
+				//trả về danh sách khách hàng của canteen 
+				//hàm getListKhachHangOfCanteen trả về kiêu List<List<KhachHangModel>>
+				session.setAttribute("listKhachHangOfCanteen", KhachhangDAO.getListKhachHangOfCanteen(listKhachHang,listCanteen));
+				//trả về sánh sách khách hàng đang hoạt động
+				session.setAttribute("listKhachHang", KhachhangDAO.getListKhachhangByTag(listKhachHang,listAccount,"active"));
+				
+				//trả về danh sách các canteen bị khóa dựa vao danh sách listAccount va listCanteen
+				session.setAttribute("listCanteen", CanteenDAO.getListCanteenByTag(listCanteen,listAccount,"locked"));
+				//trả về sánh sách khách hàng bị khóa
+				session.setAttribute("listKhachHang", KhachhangDAO.getListKhachhangByTag(listKhachHang,listAccount,"locked"));
+				
 				request.getRequestDispatcher("view/admin-homepage.jsp").forward(request, response);
 			}
 			//trang chu
