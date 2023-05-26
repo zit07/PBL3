@@ -9,6 +9,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import datdocantin.Dao.MonAnDAO;
 import datdocantin.Model.MonAnModel;
 import datdocantin.Service.getNewIDforTable;
@@ -33,10 +35,11 @@ public class AddProductController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
-		request.setCharacterEncoding("utf-8");
-        try {
+		request.setCharacterEncoding("utf-8"); 
+		HttpSession session = request.getSession(true);
+		try {
+			int ID_canteen = (int)session.getAttribute("ID_canteen");
         	Integer ID_monan = Integer.valueOf(getNewIDforTable.getNewID("monan"));
-        	Integer ID_canteen = Integer.valueOf(request.getParameter("id_canteen"));
         	String ten = request.getParameter("txtTenmon");
         	String mota = request.getParameter("txtMota");
         	String thanhphan = request.getParameter("txtThanhphan");

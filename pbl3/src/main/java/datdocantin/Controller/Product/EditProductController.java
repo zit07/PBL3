@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.MonAnDAO;
 import datdocantin.Model.MonAnModel;
@@ -28,15 +29,22 @@ public class EditProductController extends HttpServlet {
 //		Chỉnh sửa trạng thái ngưng bán/mở bán
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
+		HttpSession session = request.getSession(true); 
 		try {
+			int ID_canteen = (int)session.getAttribute("ID_canteen");
 			Integer ID_monan = Integer.valueOf(request.getParameter("idmonan"));
 			String k = request.getParameter("k");
-			if (k.equals("ngungban")) {
-				MonAnDAO.EditTrangthai(ID_monan, 0);
+			if (MonAnDAO.CheckProduct(ID_monan, ID_canteen)) {
+				if (k.equals("ngungban")) {
+					MonAnDAO.EditTrangthai(ID_monan, 0);
+					response.sendRedirect(request.getContextPath() + "/monandangban");
+				} else {
+					MonAnDAO.EditTrangthai(ID_monan, 1);
+					response.sendRedirect(request.getContextPath() + "/monanngungban");
+				}
 			} else {
-				MonAnDAO.EditTrangthai(ID_monan, 1);
+				response.sendRedirect(request.getContextPath());
 			}
-			response.sendRedirect(request.getContextPath());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -46,8 +54,10 @@ public class EditProductController extends HttpServlet {
 //		Chỉnh sửa thông tin món ăn
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
-        try {
-        	Integer ID_monan = Integer.valueOf(request.getParameter("id_monan"));
+		HttpSession session = request.getSession(true);
+		try {
+			int ID_canteen = (int)session.getAttribute("ID_canteen");
+			int ID_monan = Integer.valueOf(request.getParameter("id_monan"));
         	String ten = request.getParameter("txtTenmonNew");
         	String mota = request.getParameter("txtMotaNew");
         	String thanhphan = request.getParameter("txtThanhphanNew");
@@ -57,7 +67,7 @@ public class EditProductController extends HttpServlet {
         	Double giamoi = Double.parseDouble(request.getParameter("txtGiaNew")) / 1000;
             byte[] hinhanhchinhBytes = request.getPart("img1New").getInputStream().readAllBytes();
         	if (hinhanhchinhBytes.length == 0) hinhanhchinhBytes = null;
-        	MonAnDAO.EditMonan(new MonAnModel(ID_monan,null,ten,mota,thanhphan,huongvi,ID_loaithucan,giacu,giamoi,null,hinhanhchinhBytes,null,null,null));
+        	MonAnDAO.EditMonan(new MonAnModel(ID_monan,ID_canteen,ten,mota,thanhphan,huongvi,ID_loaithucan,giacu,giamoi,null,hinhanhchinhBytes,null,null,null));
         	response.sendRedirect(request.getContextPath());
         } catch (Exception e) {
             log("ecit: " + e.toString()); 

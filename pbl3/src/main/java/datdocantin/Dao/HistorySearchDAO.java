@@ -67,13 +67,14 @@ public class HistorySearchDAO {
         }
     }
     
-    public static void deleteSearchHistory(int ID_lichsutimkiem) throws SQLException, Exception {
+    public static void deleteSearchHistory(int ID_lichsutimkiem, int ID_nguoidung) throws SQLException, Exception {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "DELETE FROM lichsutimkiem WHERE ID_lichsutimkiem = ?";
+                String sql = "DELETE FROM lichsutimkiem WHERE ID_lichsutimkiem = ? AND ID_nguoidung = ?";
                 stm = conn.prepareStatement(sql);
                 stm.setInt(1, ID_lichsutimkiem);
+                stm.setInt(1, ID_nguoidung);
                 stm.executeUpdate();   
             }
         } catch (Exception e) {

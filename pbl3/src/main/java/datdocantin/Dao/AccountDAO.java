@@ -17,15 +17,36 @@ public class AccountDAO {
     private static ResultSet rs = null;
     
     public static List<AccountModel> getListAccount() throws Exception{
+    	   List<AccountModel> list=new ArrayList<>();
+    	   try {
+    			conn = connectDB.getConnection();
+    			if (conn != null) {
+    				String sql = "select * from account ";
+    				stm = conn.prepareStatement(sql); 
+    				rs=stm.executeQuery();
+    				while(rs.next()) {
+    					list.add(new AccountModel(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4), rs.getInt(5)));
+    				}
+    				}
+    		} catch (Exception e) {
+    			System.out.println(e.getMessage()); 
+    		} finally {
+    			connectDB.closeConnection(conn, stm, rs);
+    		}
+    	   return list;
+       }
+     
+     public List<AccountModel> getAllAccLock() throws Exception{
    	   List<AccountModel> list=new ArrayList<>();
    	   try {
    			conn = connectDB.getConnection();
    			if (conn != null) {
-   				String sql = "select * from account ";
+   				String sql = "select ID_account,sdt,typeUser from account where status_lock=?";
    				stm = conn.prepareStatement(sql);
+   				stm.setInt(1,1 );
    				rs=stm.executeQuery();
    				while(rs.next()) {
-   					list.add(new AccountModel(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4), rs.getInt(5)));
+   					list.add(new AccountModel(rs.getInt(1),rs.getString(2),"",rs.getString(3), 1));
    				}
    				}
    		} catch (Exception e) {
@@ -35,62 +56,41 @@ public class AccountDAO {
    		}
    	   return list;
       }
-    
-    public List<AccountModel> getAllAccLock() throws Exception{
-  	   List<AccountModel> list=new ArrayList<>();
-  	   try {
-  			conn = connectDB.getConnection();
-  			if (conn != null) {
-  				String sql = "select ID_account,sdt,typeUser from account where status_lock=?";
-  				stm = conn.prepareStatement(sql);
-  				stm.setInt(1,1 );
-  				rs=stm.executeQuery();
-  				while(rs.next()) {
-  					list.add(new AccountModel(rs.getInt(1),rs.getString(2),"",rs.getString(3), 1));
-  				}
-  				}
-  		} catch (Exception e) {
-  			System.out.println(e.getMessage()); 
-  		} finally {
-  			connectDB.closeConnection(conn, stm, rs);
-  		}
-  	   return list;
-     }
-     public void MoKhoaTK(String id) throws Exception {
-  	   try {
-  		  conn = connectDB.getConnection();
- 			if (conn != null) {
- 				String sql = "Update account set status_lock=? where ID_account=?";
- 				stm = conn.prepareStatement(sql);
- 				stm.setInt(1, 0);
- 				stm.setString(2,id);
- 				stm.executeUpdate();
- 				System.out.println("Active account!");
- 			}
- 		} catch (Exception e) {
- 			System.out.println(e.getMessage());
- 		} finally {
- 			connectDB.closeConnection(conn, stm, rs);
- 		}
-     }
-     public void KhoaAccountByID(String id) throws Exception {
-     	try {
-  			conn = connectDB.getConnection();
+      public void MoKhoaTK(String id) throws Exception {
+   	   try {
+   		  conn = connectDB.getConnection();
   			if (conn != null) {
   				String sql = "Update account set status_lock=? where ID_account=?";
   				stm = conn.prepareStatement(sql);
-  				stm.setInt(1, 1);
+  				stm.setInt(1, 0);
   				stm.setString(2,id);
   				stm.executeUpdate();
-  				System.out.println("suceessfully locked acount ");
+  				System.out.println("Active account!");
   			}
   		} catch (Exception e) {
   			System.out.println(e.getMessage());
+  		} finally {
+  			connectDB.closeConnection(conn, stm, rs);
   		}
-  		 finally {
-   			connectDB.closeConnection(conn, stm, rs);
+      }
+      public void KhoaAccountByID(String id) throws Exception {
+      	try {
+   			conn = connectDB.getConnection();
+   			if (conn != null) {
+   				String sql = "Update account set status_lock=? where ID_account=?";
+   				stm = conn.prepareStatement(sql);
+   				stm.setInt(1, 1);
+   				stm.setString(2,id);
+   				stm.executeUpdate();
+   				System.out.println("suceessfully locked acount ");
+   			}
+   		} catch (Exception e) {
+   			System.out.println(e.getMessage());
    		}
-     }
+   		 finally {
+    			connectDB.closeConnection(conn, stm, rs);
+    		}
+      }
      
     
     public static AccountModel getAccountInfo(Integer ID_account, String sdt, String pass) throws SQLException, Exception {

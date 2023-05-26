@@ -1,3 +1,4 @@
+<%@page import="datdocantin.Model.CartModel"%>
 <%@page import="datdocantin.Model.LichsutimkiemModel"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
@@ -13,6 +14,7 @@
 	List<LichsutimkiemModel> searchHistory = (List<LichsutimkiemModel>)session.getAttribute("searchHistory"); 
 	List<MonAnModel> MonanList = (List<MonAnModel>)session.getAttribute("listMonan");
 	List<CanteenModel> canteenList = (List<CanteenModel>)session.getAttribute("canteenList");
+	List<CartModel> carts = (List<CartModel>)session.getAttribute("carts");
 %>
 <!DOCTYPE html>
 <html>
@@ -138,7 +140,7 @@
 		                                    <a href="">Tài khoản của tôi</a>
 		                                </li>
 		                                <li class="header__nav-user-item">
-		                                    <a href="#">Đơn đã mua</a>
+		                                    <a href="./Donhangdamua">Đơn đã mua</a>
 		                                </li>
 		                                <li class="header__nav-user-item" id="changepass-link">
 		                                    <a href="./Changepassword">Đổi mật khẩu</a>
@@ -162,7 +164,7 @@
                         </a>
                     </div>
                     
-                    <form class="header__search" method="POST" action="./search?id_user=${khachhang.getID_khachhang()}">
+                    <form class="header__search" method="POST" action="./search">
                         <div class="header__search-input-wrap">
                             <input type="text" class="header__search-input" placeholder="Tìm kiếm món ăn" name="txtSearch" value="${txtSearch}">
                             <div class="header__search-history">
@@ -172,7 +174,7 @@
                             	<c:set var="lichsutimkiem" value="<%=searchHistory%>"/>
 	                            	<c:forEach items="${lichsutimkiem}" var="lichsu">
 								    	<li class="header__search-history-item">
-	                                    	<a class="header__search-history-item-link" href="./search?id_user=${khachhang.getID_khachhang()}&txtSearch=${lichsu.getNoidung()}" >${lichsu.getNoidung()}</a>
+	                                    	<a class="header__search-history-item-link" href="./search?txtSearch=${lichsu.getNoidung()}" >${lichsu.getNoidung()}</a>
 	                                    	<a class="btn-del-history" href="./delHistorySearch?id=${lichsu.getID_lichsutimkiem()}">
                                             	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                                                 	<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
@@ -191,134 +193,53 @@
                     <!-- header__cart--no-cart --><!-- header__cart--has-cart -->
 	                    <div class="header__cart header__cart--has-cart">
 	                        <i class="header__cart-icon fas fa-shopping-cart"></i>
-	                        <div class="header__cart-count">7</div>
-	                        
-	                        <!-- <div class="header__cart-list no-cart">
-	                            <img src="./assets/img/sp/no-cart.png" class="header__no-cart-img">
-	                            <p class="header__no-cart-text">Chưa có sản phẩm</p>
-	                        </div> -->
+	                        <div class="header__cart-count">${soluonggiohang}</div>
 	                        <!-- Giỏ hàng -->
 	                        <div class="header__cart-list has-cart">
-	                            <h4 class="header__cart-heading">Sản phẩm đã chọn</h4>
-	                            <ul class="header__cart-list-item">
-	                                <li class="header__cart-item">
-	                                    <img src="./assets/img/buy/1.png" class="header__cart-item-img">
-	                                    <div class="header__cart-item-info">
-	                                        <div class="header__cart-item-heading">
-	                                            <h3 class="header__cart-item-name">Bánh tráng</h3>
-	                                            <p class="header__cart-item-price">100.000đ</p>
-	                                        </div>
-	                                        <div class="header__cart-item-body">
-	                                            <p class="header__cart-item-number">x 2</p>
-	                                            <div class="header__cart-item-close">
-	                                                Xoá
-	                                                <i class="fas fa-times"></i>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                </li>
-	                                <li class="header__cart-item">
-	                                    <img src="./assets/img/buy/2.png" class="header__cart-item-img">
-	                                    <div class="header__cart-item-info">
-	                                        <div class="header__cart-item-heading">
-	                                            <h3 class="header__cart-item-name">Bánh mỳ</h3>
-	                                            <p class="header__cart-item-price">15.000đ</p>
-	                                        </div>
-	                                        <div class="header__cart-item-body">
-	                                            <p class="header__cart-item-number">x 1</p>
-	                                            <div class="header__cart-item-close">
-	                                                Xoá
-	                                                <i class="fas fa-times"></i>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                </li>
-	                                <li class="header__cart-item">
-	                                    <img src="./assets/img/buy/3.png" class="header__cart-item-img">
-	                                    <div class="header__cart-item-info">
-	                                        <div class="header__cart-item-heading">
-	                                            <h3 class="header__cart-item-name">Cơm tấm</h3>
-	                                            <p class="header__cart-item-price">35.000đ</p>
-	                                        </div>  
-	                                        <div class="header__cart-item-body">
-	                                            <p class="header__cart-item-number">x 1</p>
-	                                            <div class="header__cart-item-close">
-	                                                Xoá
-	                                                <i class="fas fa-times"></i>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                </li>
-	                                <li class="header__cart-item">
-	                                    <img src="./assets/img/buy/4.png" class="header__cart-item-img">
-	                                    <div class="header__cart-item-info">
-	                                        <div class="header__cart-item-heading">
-	                                            <h3 class="header__cart-item-name">Cơm gà</h3>
-	                                            <p class="header__cart-item-price">30.000đ</p>
-	                                        </div>  
-	                                        <div class="header__cart-item-body">
-	                                            <p class="header__cart-item-number">x 3</p>
-	                                            <div class="header__cart-item-close">
-	                                                Xoá
-	                                                <i class="fas fa-times"></i>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                </li>
-	                                <li class="header__cart-item">
-	                                    <img src="./assets/img/buy/5.png" class="header__cart-item-img">
-	                                    <div class="header__cart-item-info">
-	                                        <div class="header__cart-item-heading">
-	                                            <h3 class="header__cart-item-name"> Cơm gà chiên mắm</h3>
-	                                            <p class="header__cart-item-price">35.000đ</p>
-	                                        </div>
-	                                        <div class="header__cart-item-body">
-	                                            <p class="header__cart-item-number">x 2</p>
-	                                            <div class="header__cart-item-close">
-	                                                Xoá
-	                                                <i class="fas fa-times"></i>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                </li>
-	                                <li class="header__cart-item">
-	                                    <img src="./assets/img/buy/4.png" class="header__cart-item-img">
-	                                    <div class="header__cart-item-info">
-	                                        <div class="header__cart-item-heading">
-	                                            <h3 class="header__cart-item-name">Cơm gà xối mỡ</h3>
-	                                            <p class="header__cart-item-price">150.000đ</p>
-	                                        </div>  
-	                                        <div class="header__cart-item-body">
-	                                            <p class="header__cart-item-number">x 3</p>
-	                                            <div class="header__cart-item-close">
-	                                                Xoá
-	                                                <i class="fas fa-times"></i>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                </li>
-	                                <li class="header__cart-item">
-	                                    <img src="./assets/img/buy/5.png" class="header__cart-item-img">
-	                                    <div class="header__cart-item-info">
-	                                        <div class="header__cart-item-heading">
-	                                            <h3 class="header__cart-item-name"> Cơm gà chiên mắm</h3>
-	                                            <p class="header__cart-item-price">100.000đ</p>
-	                                        </div>
-	                                        <div class="header__cart-item-body">
-	                                            <p class="header__cart-item-number">x 2</p>
-	                                            <div class="header__cart-item-close">
-	                                                Xoá
-	                                                <i class="fas fa-times"></i>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                </li>
-	                            </ul>
-	                            <div class="header__cart-footer">
-	                                <a href="#" class="btn btn--primary header__cart-see-cart">Xem giỏ hàng</a>
-	                            </div>
-	                        </div>
-	                    </div>
+	                        
+	                        <c:set var="carts" value="<%=carts%>"/>
+	                        <c:if test="${carts.size() == 0}">
+	                        	<img src="./assets/img/sp/no-cart.png" class="header__no-cart-img">
+		                        <p class="header__no-cart-text">Chưa có sản phẩm</p>
+		                    </c:if>
+		                    
+		                    <c:if test="${carts.size() > 0}">
+		                            <h4 class="header__cart-heading">Sản phẩm đã chọn</h4>
+		                            <ul class="header__cart-list-item">
+			                        <c:forEach items="${carts}" var="cart">
+			                        	<li class="header__cart-item">
+		                                    <img class="header__cart-item-img" src="data:image/jpeg;base64, ${Base64.getEncoder().encodeToString(cart.getHinhanhchinh())}">
+		                                    <div class="header__cart-item-info">
+		                                        <div class="header__cart-item-heading">
+		                                            <h3 class="header__cart-item-name">${cart.getTenmon()}</h3>
+		                                            <p class="header__cart-item-price">${String.format("%.3f", cart.getGia())} x ${cart.getSoluong()} = ${String.format("%.3f", cart.getSoluong()*cart.getGia())} VNĐ</p>
+		                                        </div>
+		                                        <div class="header__cart-item-body">
+	                                              <div class="header__cart-item-number">
+	                                                Số lượng: ${cart.getSoluong()}
+	                                              </div>
+	                                              <a class="header__cart-item-close" href="./ChangCart?id_cart=${cart.getID_cart()}&type=giam&page=home">
+	                                              	Giảm <i class="fa-solid fa-minus"></i>
+	                                              </a>
+	                                              <div class="header__cart-item-number">|</div>
+		                                          <a class="header__cart-item-close" href="./ChangCart?id_cart=${cart.getID_cart()}&type=tang&page=home">
+		                                          	Tăng <i class="fa-solid fa-plus"></i>
+		                                          </a>
+	                                              <div class="header__cart-item-number">|</div>
+	                                              <a class="header__cart-item-close" href="./ChangCart?id_cart=${cart.getID_cart()}&type=xoa&page=home">
+	                                                Xoá <i class="fas fa-times"></i>
+	                                              </a>
+		                                        </div>
+		                                    </div>
+		                                </li>
+			                        </c:forEach>
+		                            </ul>
+		                            <div class="header__cart-footer">
+		                                <a href="./cart" class="btn btn--primary header__cart-see-cart">Xem giỏ hàng</a>
+		                            </div>
+		                        </div>
+	                    </c:if>
+	            	</div>
                 </div>
             </div>
         </header>
@@ -555,7 +476,7 @@
 													</c:if>
 	                                            </div>
 	                                        </a>
-	                                       <a class="home-product-item-footer" href="./addtocart?id_monan=${monan.getID_monan()}&id_user=${khachhang.getID_khachhang()}">Thêm vào giỏ hàng </a>
+	                                       <a class="home-product-item-footer" href="./addtocart?id_monan=${monan.getID_monan()}">Thêm vào giỏ hàng </a>
 	                                    </div>
                             	</c:forEach>
                             <%}%> 
@@ -573,7 +494,7 @@
     
 		<div class="modal" id="form-changepassword" style="display: ${display_form__changepass}" >
 	        <div class="modal__body">
-	            <form action="./ChangePassword?id_user=${khachhang.getID_khachhang()}" method="post" class="formChangePass">
+	            <form action="./ChangePassword" method="post" class="formChangePass">
 	                <div class="auth-form">
 	                    <div class="auth-form__container">
 	                        <div class="auth-form__header">
@@ -603,7 +524,7 @@
 	                            </div>
 	                        </div>
 	                        <div class="auth-form__control">
-	                            <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+	                            <a class="btn auth-form__back" href="./">QUAY LẠI</a>
 	                            <button class="btn btn--primary" type="submit">Xác nhận</button>
 	                        </div>
 	                    </div>
@@ -614,7 +535,7 @@
 		<!-- Change PIN form -->
 	    <div class="modal" id="form-changepin" style="display: ${display_form__changepin}">
 	        <div class="modal__body">
-	            <form action="./ChangePin?id_user=${khachhang.getID_khachhang()}" method="post" class="auth-form">
+	            <form action="./ChangePin" method="post" class="auth-form">
 	                <div class="auth-form">
 	                    <div class="auth-form__container">
 	                        <div class="auth-form__header">
@@ -638,7 +559,7 @@
 	                            </div>
 	                        </div>
 	                        <div class="auth-form__control">
-	                            <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+	                            <a class="btn auth-form__back" href="./">QUAY LẠI</a>
 	                            <button class="btn btn--primary" type="submit">Xác nhận</button>
 	                        </div>
 	                    </div>
@@ -650,7 +571,7 @@
 	    <div class="modal" id="form-info">
 	        <div class="modal__body" >
             <!-- authen change info-->
-				<form action="./ChangeInfo?id_user=${khachhang.getID_khachhang()}" method="post" class="form-info" enctype="multipart/form-data">
+				<form action="./ChangeInfo" method="post" class="form-info" enctype="multipart/form-data">
 					<div class="avatar">
 						<c:if test="${khachhang.getAvatar()==null}">
 							<img src="./assets/img/avatarDefault.jpg" class="avatar-form__img" id="img-form"/>
@@ -719,9 +640,14 @@
 									<span>Cantin:</span>
 								</div>
 								<div class="auth-form__group form-group-choosecanteen">
-									<input type="text" class="auth-form__input_info input-chooseCantin" name="txtIDCantin" value="${TenCanteen}" readonly>
-									<a class="btn btn--primary btn-ChooseCantin" href="./" id="choosecanteen">Chọn Cantin</a>
-									<a class="btn btn--primary btn-ChooseCantin stop-sold-product" href="./UnchooseCanteen?id_user=${khachhang.getID_khachhang()}">Huỷ chọn Cantin</a>
+									<input type="text" class="auth-form__input_info name-canteen" name="txtIDCantin" value="${TenCanteen}" readonly>
+									<c:if test="${TenCanteen == null}">
+										<a class="btn btn--primary btn-ChooseCantin" id="choosecanteen">Chọn Cantin</a>
+									</c:if>
+									<c:if test="${TenCanteen != null}">
+										<div id="choosecanteen"></div>
+										<a class="btn btn--primary btn-ChooseCantin stop-sold-product" href="./ChangeCanteen">Huỷ chọn Cantin</a>
+									</c:if>
 								</div>
 								<div class="auth-form__title">
 									<span>Món yêu thích:</span>
@@ -731,7 +657,7 @@
 								</div>
 							</div>
 							<div class="auth-form__control_info">
-								<a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+								<a class="btn auth-form__back" href="./">QUAY LẠI</a>
 								<button class="btn btn--primary" type="submit">Lưu</button>
 							</div>
 						</div>
@@ -740,7 +666,7 @@
 			</div> 
 	    </div>
 		
-		<div class="modal" id="form-chosseCantin" style="display: ${showcanteen}">
+		<div class="modal  ${showcanteen == 'flex' ? 'display-flex' : ''}" id="form-chosseCantin">
 			<div class="modal__body">
 				<form class="auth-form list__custumer" method="POST" action="./SearchCanteen">
 					<div class="auth-form__container">
@@ -772,11 +698,12 @@
 							</div>
 						</div>
 						<div class="search-group">
+							<div class="row sm-gutter">
 							<%if (canteenList!=null){ %> 
                             	<c:set var="canteenList" value="<%=canteenList%>"/>
                             	<c:forEach items="${canteenList}" var="Canteen">
                             		<div class="col l-2-4">
-		                                    <a class="home-product-item-link" href="./ChooseCanteen?id_canteen=${Canteen.getID_canteen()}&id_user=${khachhang.getID_khachhang()}">
+		                                    <a class="home-product-item-link" href="./ChangeCanteen?id_canteen=${Canteen.getID_canteen()}">
 		                                    	<c:if test="${Canteen.getAvatar()==null}">
 					                            	<div class="home-product-item__img" style="background-image: url(./assets/img/avatarDefault.jpg);"></div>
 					                            </c:if>
@@ -804,9 +731,10 @@
 		                                </div>
                             	</c:forEach>
                             <%}%>
+                            </div>
 						</div>
 						<div class="auth-form__control">
-							<a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+							<a class="btn auth-form__back" href="./">QUAY LẠI</a>
 							<button class="btn btn--primary" type="submit">TÌM KIẾM</button>
 						</div>
 					</div>

@@ -363,7 +363,7 @@
 		                        </div>
 		                    </div>
 		                    <div class="auth-form__control">
-		                        <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+		                        <a class="btn auth-form__back" href="./">QUAY LẠI</a>
 		                        <button class="btn btn--primary" type="submit">ĐĂNG KÝ</button>
 		                    </div>
 		                </div>
@@ -403,7 +403,7 @@
 		                    <a href="#" class="auth-form__help-link">Cần trợ giúp?</a>
 		                </div>
 		                <div class="auth-form__control">
-		                    <a class="btn auth-form__back" href="./">TRANG CHỦ</a>
+		                    <a class="btn auth-form__back" href="./">QUAY LẠI</a>
 		                    <button class="btn btn--primary" type="submit">ĐĂNG NHẬP</button>
 		                </div>
 		            </div>

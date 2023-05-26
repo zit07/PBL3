@@ -200,5 +200,8 @@ td{
 	display: none;
 }
 
+.display-flex {
+	display: flex;
+}
 
 

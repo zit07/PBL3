@@ -1,12 +1,12 @@
 package datdocantin.Model;
 
 public class CanteenModel {
-	private Integer ID_canteen,ID_diachi,PIN;
-	private String ten,sodienthoai,email;
+	private Integer ID_canteen, ID_diachi,PIN, ID_bank_info;
+	private String ten, sodienthoai, email;
 	byte[] avatar;
 	public CanteenModel() {
 	}
-	public CanteenModel(Integer ID_canteen, String ten,String sodienthoai,String email, Integer ID_diachi,Integer PIN, byte[] avatar) {
+	public CanteenModel(Integer ID_canteen, String ten,String sodienthoai,String email, Integer ID_diachi,Integer PIN, byte[] avatar, Integer ID_bank_info) {
 		this.ID_canteen=ID_canteen;
 		this.ten=ten;
 		this.sodienthoai=sodienthoai;
@@ -14,6 +14,7 @@ public class CanteenModel {
 		this.ID_diachi=ID_diachi;
 		this.PIN=PIN;
 		this.avatar=avatar;
+		this.ID_bank_info=ID_bank_info;
 	}
 	public Integer getID_canteen() {
 		return ID_canteen;
@@ -57,4 +58,11 @@ public class CanteenModel {
 	public void setAvatar(byte[] avatar) {
 		this.avatar = avatar;
 	}
+	public Integer getID_bank_info() {
+		return ID_bank_info;
+	}
+	public void setID_bank_info(Integer iD_bank_info) {
+		ID_bank_info = iD_bank_info;
+	}
+	
 }

@@ -4,6 +4,7 @@ const ChangePasslink = document.getElementById("changepass-link"),
       ChangePINlink = document.getElementById("changepin-link"),
 	  ChangePasslink2 = document.getElementById("changepass-link2"),
 	  ChangePINlink2 = document.getElementById("changepin-link2"),
+	  ChangeBanklink = document.getElementById("changeinfoBank-link"),
 	  Infolink = document.getElementById("info-link"),
       Infolink2 = document.getElementById("info-link2"),
       ChangeTimeOpenlink = document.getElementById("changeTimeOpen-link"),
@@ -14,6 +15,7 @@ const ChangePasslink = document.getElementById("changepass-link"),
 const ChangePassform = document.getElementById("form-changepassword"),
 	  ChangePINform = document.getElementById("form-changepin"),
 	  Infoform = document.getElementById("form-info"),
+	  ChangeBankform = document.getElementById("form-infobank"),
       AddProductform = document.getElementById("form-addProduct"),
       ChangeTimeOpenform = document.getElementById("form-changeTimeOpen");
       
@@ -25,6 +27,7 @@ const ChangePassform = document.getElementById("form-changepassword"),
 	    AddProductform.style.display = "none";
         Infoform.style.display = "none";
         ChangeTimeOpenform.style.display = "none";
+        ChangeBankform.style.display = "none";
 	    form.style.display = "flex";
 	}
 	ChangePasslink.addEventListener("click", (event) => showForm(ChangePassform, event));
@@ -36,7 +39,8 @@ const ChangePassform = document.getElementById("form-changepassword"),
     Infolink2.addEventListener("click", (event) => showForm(Infoform, event));
     ChangeTimeOpenlink2.addEventListener("click", (event) => showForm(ChangeTimeOpenform, event));
     AddProductlink.addEventListener("click", (event) => showForm(AddProductform, event));
-    
+    ChangeBanklink.addEventListener("click", (event) => showForm(ChangeBankform, event));
+ 	   
     const historyLinks = document.querySelectorAll('.header__search-history-item-link');
 	historyLinks.forEach(link => {
 	  link.addEventListener('mousedown', (event) => {
@@ -44,8 +48,41 @@ const ChangePassform = document.getElementById("form-changepassword"),
 	  });
 	});
 
+const forms = document.querySelectorAll('div[name="form-editProduct"]'); // Lấy tất cả các phần tử có name="form-editProduct"
+const links = document.querySelectorAll('a[name="link-editproduct"]'); // Lấy tất cả các thẻ a có name="linkeditproduct"
+
+links.forEach((link) => {
+  link.addEventListener("click", (event) => {
+	const idlink = link.getAttribute('id')
+	forms.forEach((form) => {
+      const idform = form.getAttribute('id');
+	  event.preventDefault(); 
+	  form.style.display = "none";
+	  if (idform === idlink) {
+		form.style.display = 'flex';
+	  }
+	});
+  });
+});
 
 
+const HideForm = (event) => {
+	event.preventDefault();
+	ChangePassform.style.display = "none";
+	ChangePINform.style.display = "none";
+	AddProductform.style.display = "none";
+    Infoform.style.display = "none";
+    ChangeTimeOpenform.style.display = "none";
+    ChangeBankform.style.display = "none";
+    forms.forEach((form) => {
+      form.style.display = "none";
+	});
+}
+
+var goback = document.querySelectorAll('.auth-form__back');
+for(var i = 0; i < goback.length; i++) {
+    goback[i].addEventListener("click", (event) => HideForm(event));
+}
 
 // Show noti
 	const shownotiChangePassConfirm = document.getElementById('notiChangePassConfirm');
@@ -60,66 +97,14 @@ const ChangePassform = document.getElementById("form-changepassword"),
 	    event.preventDefault(); 
 	  }
 	});
- 
 
-// link to show content
-const TatcamonanLink = document.getElementById("link-product_tatca"),
-      ListDangbanLink = document.getElementById("link-product_dangban"),
-      ListNgungbanLink = document.getElementById("link-product_ngungban"),
-      ListDaxoaLink = document.getElementById("link-product_daxoa");
-
-// form to show content
-const Tatcamonan = document.getElementById("list-product_tatca"),
-      MonanDangban = document.getElementById("list-product_dangban"),
-      MonanNgungban = document.getElementById("list-product_ngungban"),
-      MonanDaxoa = document.getElementById("list-product_daxoa"),
-      ListMonanTitle = document.getElementById("list-product__title");
-
-// Function to show content
-const showContent = (content, event) => {
-  event.preventDefault(); 
-  Tatcamonan.style.display = "none";
-  MonanDangban.style.display = "none";
-  MonanNgungban.style.display = "none";
-  MonanDaxoa.style.display = "none";
-  ListMonanTitle.style.display = "block";
-  content.style.display = "block";
-}
-
-const NotshowTitleMonan = (title) => {
-  title.style.display = "none";
-}
-const changeBG = (link) => {
-	TatcamonanLink.classList.remove("choose");
-	ListDangbanLink.classList.remove("choose");
-	ListNgungbanLink.classList.remove("choose");
-	ListDaxoaLink.classList.remove("choose");
-	link.classList.add("choose");
-}
-TatcamonanLink.addEventListener("click", (event) => {
-  showContent(Tatcamonan, event);
-  NotshowTitleMonan(ListMonanTitle);
-  changeBG(TatcamonanLink);
-});
-ListDangbanLink.addEventListener("click", (event) => {
-    showContent(MonanDangban, event);
-    changeBG(ListDangbanLink);
-});
-ListNgungbanLink.addEventListener("click", (event) => {
-    showContent(MonanNgungban, event);
-    changeBG(ListNgungbanLink);
-});
-ListDaxoaLink.addEventListener("click", (event) => {
-    showContent(MonanDaxoa, event);
-    changeBG(ListDaxoaLink);
-});
-
-
-const avatar = document.getElementById("img-form"),
-	  inputIMG = document.getElementById("input-img-form");
-	inputIMG.addEventListener("change", ()=>{
-		avatar.src = URL.createObjectURL(inputIMG.files[0]);
-	});
+const img = document.querySelectorAll('.avatar-form__img');
+const input_img = document.querySelectorAll('.avatar-form__input');
+    for (let i = 0; i < img.length; i++) {
+      input_img[i].addEventListener('change', () => {
+        img[i].src = URL.createObjectURL(input_img[i].files[0]);
+      });
+    }
 	
 const imgElements = document.querySelectorAll('.img-add-product__img');
 const imgInputs = document.querySelectorAll('.img-add-product__input');
@@ -201,24 +186,6 @@ $(function () {
 });
 
 
-
-const forms = document.querySelectorAll('div[name="form-editProduct"]'); // Lấy tất cả các phần tử có name="form-editProduct"
-const links = document.querySelectorAll('a[name="link-editproduct"]'); // Lấy tất cả các thẻ a có name="linkeditproduct"
-
-links.forEach((link) => {
-  link.addEventListener("click", (event) => {
-	const idlink = link.getAttribute('id')
-	forms.forEach((form) => {
-      const idform = form.getAttribute('id');
-	  event.preventDefault(); 
-	  form.style.display = "none";
-	  if (idform === idlink) {
-		form.style.display = 'flex';
-	  }
-	});
-  });
-});
-
 const formEditTime = document.getElementById("form-editTime");
 formEditTime.addEventListener("submit", (event) => {
 	    event.defaultPrevented;
@@ -228,7 +195,6 @@ formEditTime.addEventListener("submit", (event) => {
 	        const openValue = parseInt(openSelect.value.replace(":", ""));
 	        const closeValue = parseInt(closeSelect.value.replace(":", ""));
 	        if (openValue >= closeValue && openValue !== -1 && closeValue !== -1) {
-				console.log(closeValue+openValue);
 	            alert(`Thời gian đóng cửa phải sau thời gian mở cửa của thứ ${i}`);
 	            event.preventDefault();
 	            break; // Dừng kiểm tra nếu có ít nhất một ngay làm việc không hợp lệ
@@ -242,4 +208,31 @@ const btnDelhistoryLinks = document.querySelectorAll('.btn-del-history');
 	    event.preventDefault(); 
 	  });
 	});
+
+const formscartdetails = document.querySelectorAll('div[name="form-cart-detail"]'); 
+const linkcartdetails = document.querySelectorAll('a[name="link-cart-detail"]'); 
+linkcartdetails.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const idlink = link.getAttribute('id')
+    formscartdetails.forEach((form) => {
+      const idform = form.getAttribute('id');
+      event.preventDefault(); 
+      form.style.display = "none";
+      if (idform === idlink) {
+        form.style.display = 'flex';
+      }
+    });
+  });
+});
+
+const HideFormCart = (event) => {
+	event.preventDefault();
+	formscartdetails.forEach((form) => {
+      form.style.display = "none";
+  });
+}
+goback = document.querySelectorAll('.auth-form__back');
+for(var i = 0; i < goback.length; i++) {
+    goback[i].addEventListener("click", (event) => HideFormCart(event));
+}
 

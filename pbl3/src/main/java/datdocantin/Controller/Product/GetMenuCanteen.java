@@ -31,7 +31,7 @@ public class GetMenuCanteen extends HttpServlet {
 			session.setAttribute("Canteen", CanteenDAO.getInfoCanteen(ID_canteen));
 			response.sendRedirect(request.getContextPath());
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 	}
 

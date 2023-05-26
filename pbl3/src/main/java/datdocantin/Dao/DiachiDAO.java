@@ -31,16 +31,13 @@ public class DiachiDAO {
     	return null;
     }
     
-    public static void AddDiachi(DiachiModel diachi) throws Exception {
+    public static void AddDiachi(int ID_diachi) throws Exception {
     	try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "INSERT INTO diachi(ID_diachi, tinh, huyen, xa) VALUES(?, ?, ?, ?);";
+            	String sql = "INSERT INTO diachi(ID_diachi, tinh, huyen, xa) VALUES(?, -1, -1, -1);";
                 stm = conn.prepareStatement(sql);
-                stm.setInt(1, diachi.getID_diachi());
-                stm.setInt(2, diachi.getTinh());
-                stm.setInt(3, diachi.getHuyen());
-                stm.setInt(4, diachi.getXa());
+                stm.setInt(1, ID_diachi);
                 stm.executeUpdate();
             }
         } catch (Exception e) {

@@ -34,7 +34,7 @@ public class getNewIDforTable {
     
     public static void main(String[] args) {
 		try {
-			System.out.println(getNewID("lichsutimkiem"));
+			System.out.println(getNewID("cart"));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

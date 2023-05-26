@@ -29,6 +29,20 @@ const ChangePassform = document.getElementById("form-changepassword"),
 	Infolink.addEventListener("click", (event) => showForm(Infoform, event));
 	ChoosecanteenLink.addEventListener("click", (event) => showForm(ChoosecanteenForm, event));
 
+const HideForm = (event) => {
+	event.preventDefault();
+	ChangePassform.style.display = "none";
+	ChangePINform.style.display = "none";
+	Infoform.style.display = "none";
+	ChoosecanteenForm.style.display = "none";
+}
+
+var goback = document.querySelectorAll('.auth-form__back');
+for(var i = 0; i < goback.length; i++) {
+    console.log(goback[i].className);
+    goback[i].addEventListener("click", (event) => HideForm(event));
+}
+
 
 // Show noti
  shownotiChangePassConfirm = document.getElementById('notiChangePassConfirm');
@@ -136,6 +150,5 @@ const btnDelhistoryLinks = document.querySelectorAll('.btn-del-history');
 	    event.preventDefault(); 
 	  });
 	});
+	
 
-	  
-	  
