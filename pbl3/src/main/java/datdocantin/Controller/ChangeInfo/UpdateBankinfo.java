@@ -43,7 +43,8 @@ public class UpdateBankinfo extends HttpServlet {
 				String hoten = request.getParameter("txthoten");
 				byte[] maQR = request.getPart("maQR").getInputStream().readAllBytes();
 				if (maQR.length == 0) maQR = null;
-				BankDAO.updateBank(new BankModel(canteen.getID_bank_info(), nganhang, stk, hoten, maQR));
+				int ID_bank_info= BankDAO.getBank(canteen.getID_canteen()).getID_bank_info();
+				BankDAO.updateBank(new BankModel(ID_bank_info, nganhang, stk, hoten,canteen.getID_canteen(), maQR));
 			}
 		} catch (Exception e) {
 			log("error at login servlet: " + e.toString());

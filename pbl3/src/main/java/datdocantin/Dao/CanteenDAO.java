@@ -46,13 +46,13 @@ public class CanteenDAO {
                    		ketQua.add(new CanteenModel(rs.getInt(1),
                        			rs.getString(2), rs.getString(3),
                        			rs.getString(4), rs.getInt(5), 
-                       			rs.getInt(6), null, null));
+                       			rs.getInt(6), null));
                    		
                        }
                    }
                }
       	  catch (Exception e) {
-      		  System.out.println(e.getMessage());
+      		  e.printStackTrace();
                } finally {
                	connectDB.closeConnection(conn, stm, rs);
                }
@@ -71,7 +71,7 @@ public class CanteenDAO {
                            ketQua.add(new CanteenModel(rs.getInt(1),
                         			rs.getString(2), rs.getString(3),
                         			rs.getString(4), rs.getInt(5), 
-                        			null, null, null));
+                        			null, null));
                         }
                     }
                 }
@@ -88,7 +88,7 @@ public class CanteenDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT ID_canteen, ten, sodienthoai, email, ID_diachi, pin, avatar, ID_bank_info FROM canteen WHERE ID_canteen = ?;";
+            	String sql = "SELECT ID_canteen, ten, sodienthoai, email, ID_diachi, pin, avatar FROM canteen WHERE ID_canteen = ?;";
             	stm = conn.prepareStatement(sql);
             	stm.setInt(1, ID_canteen);
             	rs = stm.executeQuery();
@@ -97,7 +97,7 @@ public class CanteenDAO {
                 	if (rs.getBytes(7)!=null){
 	                	decodedAvatar = Base64.getDecoder().decode(rs.getBytes(7));
                 	}
-                	result = new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), decodedAvatar, rs.getInt(8));
+                	result = new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), decodedAvatar);
                 }
             }
         } catch (Exception e) {
@@ -130,16 +130,16 @@ public class CanteenDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) {
-                String sql = "INSERT INTO canteen(ID_canteen, ten, sodienthoai, ID_diachi, ID_bank_info) VALUES(?, ?, ?, ?, ?);";
+                String sql = "INSERT INTO canteen(ID_canteen, ten, sodienthoai, ID_diachi) VALUES(?, ?,?,?);";
                 stm = conn.prepareStatement(sql);
                 stm.setInt(1, newcanteen.getID_canteen());
                 stm.setString(2, newcanteen.getTen());
                 stm.setString(3, newcanteen.getSodienthoai());
-                stm.setInt(4, newcanteen.getID_diachi());
-                stm.setInt(5, newcanteen.getID_bank_info());
+                stm.setInt(4,newcanteen.getID_diachi());
                 stm.executeUpdate();
             }
         } catch (Exception e) {
+        	e.printStackTrace();
         } finally {
         	connectDB.closeConnection(conn, stm, rs);
         }
@@ -197,7 +197,7 @@ public class CanteenDAO {
 	                	}
 	                	String t = Normalizer.normalize((rs.getString(1)+rs.getString(2)+rs.getString(3)).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
 	                	if (t.contains(txtSearch)) {
-	                		result.add(new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), null, decodedAvatar, null));
+	                		result.add(new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), null, decodedAvatar));
 	                	}
 	                }
 				}  
@@ -231,7 +231,7 @@ public class CanteenDAO {
 	                		}
 	                    }
 	                	if (check) {
-		                	result.add(new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), null, decodedAvatar, null));
+		                	result.add(new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), null, decodedAvatar));
 						}
 	                }
 				}
@@ -248,9 +248,14 @@ public class CanteenDAO {
     
     public static void main(String[] args) {
 		try {
-			List<CanteenModel> result = SearchCanteen("10002", new DiachiModel(-1,49,-1,-1));
-			System.out.println(result.size());		
+			//List<CanteenModel> result = SearchCanteen("111", new DiachiModel(-1,49,-1,-1));
+			//System.out.println(result.size());		
 //			20197
+			addCanteen(new CanteenModel(5,"Be Da","098123987",null,2,null,null));
+			List<CanteenModel> list=getAllCanteen();
+			for(CanteenModel i : list){
+				System.out.println(i);
+			}
 		} 
 		catch (Exception e) {
 			

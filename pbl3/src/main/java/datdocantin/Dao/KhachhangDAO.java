@@ -10,9 +10,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import datdocantin.Model.AccountModel;
+import datdocantin.Model.CanteenModel;
 import datdocantin.Model.KhachHangModel;
 import datdocantin.Util.connectDB;
 
@@ -20,6 +23,61 @@ public class KhachhangDAO {
 	private static Connection conn = null;
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
+    
+    public static List<KhachHangModel> getListKhachhangByTag(List<KhachHangModel> khachhangs,List<AccountModel> accounts,String tag){
+    	List<KhachHangModel> result=new ArrayList<KhachHangModel>();
+    	int status_lock= tag.equalsIgnoreCase("active") ? 0 : 1;
+    	for(AccountModel account: accounts) {
+    			if(account.getType_User().equals("customer") && account.getStatus_lock()== status_lock) {
+    				Optional<KhachHangModel> rs=khachhangs.stream()
+    						.filter(khachhang -> khachhang.getID_khachhang() == account.getID_account())
+    						.findFirst();
+    				rs.ifPresent(result::add);
+    			}
+    	}
+    	return result;
+    }
+    
+    public static List<List<KhachHangModel>> getListKhachHangOfCanteen(List<KhachHangModel> khachhangs, List<CanteenModel> canteens) {
+        Map<Integer, List<KhachHangModel>> mapKhachHangs = khachhangs.stream()
+            .collect(Collectors.groupingBy(KhachHangModel::getID_canteen));
+        List<List<KhachHangModel>> results = new ArrayList<>();
+        for (CanteenModel canteen : canteens) {
+            List<KhachHangModel> khachHangsOfCanteen = mapKhachHangs.getOrDefault(canteen.getID_canteen(), new ArrayList<>());
+            results.add(khachHangsOfCanteen);
+        }
+        return results;
+    }
+    
+    public static List<KhachHangModel> getAllKhachHang() throws Exception{
+    	List<KhachHangModel> ketQua=new ArrayList<>();
+    	 try {
+    		 conn = connectDB.getConnection();
+             if (conn != null) {
+    		 String sql = "SELECT ID_khachhang, hoten, ngaysinh, gioitinh, chieucao, cannang, sodienthoai, email, ID_canteen, yeuthich, avatar FROM khachhang";
+         	stm = conn.prepareStatement(sql);
+         	rs = stm.executeQuery();
+             while (rs.next()) {
+					/*
+					 * byte[] decodedAvatar = null; if (rs.getBytes(11)!=null){ decodedAvatar =
+					 * Base64.getDecoder().decode(rs.getBytes(11)); }
+					 */
+             	Date date = rs.getDate(3);
+             	LocalDate ngaysinh = (date != null) ? date.toLocalDate() : null;
+             	ketQua.add(new KhachHangModel(rs.getInt(1), rs.getString(2), ngaysinh, rs.getString(4), rs.getDouble(5),
+             			rs.getDouble(6), rs.getString(7), rs.getString(8), rs.getInt(9), rs.getString(10), -1, null));
+                 	 
+                 }
+             }
+         } catch (Exception e) {
+        	 System.out.println(e.getMessage());
+         } finally {
+         	connectDB.closeConnection(conn, stm, rs);
+         }
+        return ketQua;
+    }
+    
+    
     
     public List<KhachHangModel> getAllKHActive() throws Exception{
     	List<KhachHangModel> ketQua=new ArrayList<>();
@@ -217,17 +275,7 @@ public class KhachhangDAO {
         }
     }
     
-    public static List<KhachHangModel> getListKhachhangByTag(List<KhachHangModel> khachhangs, List<AccountModel> accounts, String tag) {
-        List<KhachHangModel> result = new ArrayList<KhachHangModel>();
-        int status_lock = tag.equals("chua khoa") ? 0 : 1;
-        for (AccountModel account : accounts) {
-            if (account.getType_User().equals("khachhang") && account.getStatus_lock() == status_lock) {
-                Optional<KhachHangModel> rs = khachhangs.stream().filter(khachHang -> khachHang.getID_khachhang() == account.getID_account()) .findFirst();
-                rs.ifPresent(result::add);
-            }
-        }
-        return result;    
-    }
+   
 
     
     

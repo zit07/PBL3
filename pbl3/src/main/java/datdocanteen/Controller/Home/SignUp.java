@@ -51,10 +51,11 @@ public class SignUp extends HttpServlet {
             	else {
             		int ID_diachi = getNewIDforTable.getNewID("diachi");
             		int ID_bank = getNewIDforTable.getNewID("bank_info");
-            		CanteenDAO.addCanteen(new CanteenModel(ID,Ten,SDT,null,ID_diachi,null,null,ID_bank));
-            		BankDAO.AddBank(ID_bank);
-            		GiohoatdongDAO.Addgiohoatdong(Integer.valueOf(getNewIDforTable.getNewID("giohoatdong")), ID);
             		DiachiDAO.AddDiachi(ID_diachi);
+            		CanteenDAO.addCanteen(new CanteenModel(ID,Ten,SDT,null,ID_diachi,null,null));
+            		BankDAO.AddBank(ID_bank,ID);
+            		GiohoatdongDAO.Addgiohoatdong(Integer.valueOf(getNewIDforTable.getNewID("giohoatdong")), ID);
+            		
 				}
             	response.sendRedirect(request.getContextPath());
             }

@@ -1,4 +1,4 @@
-<%@page import="javax.servlet.jsp.tagext.Tag"%>
+
 <%@page import="datdocantin.Model.BankModel"%>
 <%@page import="datdocantin.Model.LoaithucanModel"%>
 <%@page import="datdocantin.Model.DiachiModel"%>

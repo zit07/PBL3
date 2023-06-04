@@ -1,17 +1,20 @@
 package datdocantin.Model;
 
+import java.util.Arrays;
+
 public class BankModel {
-	private int ID_bank_info;
+	private int ID_bank_info,ID_canteen;
 	private String tennganhang, stk, hovaten;
 	private byte[] maQR;
 	
 	public BankModel() {}
 	
-	public BankModel(int ID_bank_info, String tennganhang, String stk, String hovaten, byte[] maQR) {
+	public BankModel(int ID_bank_info, String tennganhang, String stk, String hovaten,int ID_canteen, byte[] maQR) {
 		this.ID_bank_info = ID_bank_info;
 		this.tennganhang = tennganhang;
 		this.stk = stk;
 		this.hovaten = hovaten;
+		this.ID_canteen=ID_canteen;
 		this.maQR = maQR;
 	}
 
@@ -54,4 +57,23 @@ public class BankModel {
 	public void setMaQR(byte[] maQR) {
 		this.maQR = maQR;
 	}
+
+	
+	@Override
+	public String toString() {
+		return "BankModel [ID_bank_info=" + ID_bank_info + ", ID_canteen=" + ID_canteen + ", tennganhang=" + tennganhang
+				+ ", stk=" + stk + ", hovaten=" + hovaten + ", maQR=" + Arrays.toString(maQR) + "]";
+	}
+
+	public int getID_canteen() {
+		return ID_canteen;
+	}
+
+	public void setID_canteen(int iD_canteen) {
+		ID_canteen = iD_canteen;
+	}
+
+	
+	
+	
 }
