@@ -67,17 +67,10 @@ public class ChangeInfo extends HttpServlet {
 					Integer tinh = Integer.valueOf(request.getParameter("tinh"));
 					Integer huyen = Integer.valueOf(request.getParameter("huyen"));
 					Integer xa = Integer.valueOf(request.getParameter("xa"));
-					
 					byte[] avatarBytes = request.getPart("avatar").getInputStream().readAllBytes();
-					
-					//get ID_diachi by tinh , huyen xa; Không lấy được vì có thể có nhiều canteen cùng một tỉnh, huyện xã.
-					// Liệu bỏ Null ở đó thì Canteen DAO có thể lưu địa chỉ được không.
-					// Được vì ID_diachi của nó không đổi, lúc đăng ký đã đăng ký một ID_diachi đính kèm với canteen.
-					// ID_bank thì sao?
 					if (avatarBytes.length == 0) avatarBytes = null;
 					if (AccountDAO.CheckAccountNotExist(sdt)) {
 						CanteenDAO.updateInfo(new CanteenModel(canteen.getID_canteen(), ten, sdt, email, null, null, avatarBytes));
-						//Cập nhật địa chỉ ? tại sao địa chỉ ở đây là null thì làm sao lưu lại được
 						AccountDAO.ChangeSdt(canteen.getID_canteen(), sdt);
 					} else {
 						CanteenDAO.updateInfo(new CanteenModel(canteen.getID_canteen(), ten, null, email, null, null, avatarBytes));

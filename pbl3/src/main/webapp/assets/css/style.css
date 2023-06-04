@@ -600,8 +600,9 @@ border-color: red green blue yellow */
 }
 
 .header__logo-img {
-    width: 162px;
-    height: 50px;
+    width: 180px;
+    height: 80px;
+    border-radius: 45px;
 }
 
 .header__logo-link {
@@ -1098,7 +1099,7 @@ border-color: red green blue yellow */
 }
 
 .category-group-filter-input {
-    width: 76px;
+    width: 94px;
     height: 24px;
     outline: none;
     border: 1px solid #999;
@@ -1796,7 +1797,7 @@ border-color: red green blue yellow */
 
 .input_date {
     height: 34px;
-    width: 110px;
+    width: 120px;
     font-size: 1.4rem;
     margin: 0 24px;
 }
@@ -1807,4 +1808,17 @@ border-color: red green blue yellow */
 } 
 .cangiua { 
 	margin: auto;
+}
+
+.input__checkbox {
+    font-size: 1.4rem;
+    display: flex;
+    flex-wrap: wrap; 
+}
+
+.auth-form-input__checkbox{
+    height: 20px;
+    width: 20px;
+    margin-left: 14px;
+    margin-top: 10px;
 }

@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.HistorySearchDAO;
+import datdocantin.Dao.MonAnDAO;
+import datdocantin.Model.KhachHangModel;
 import datdocantin.Model.LichsutimkiemModel;
 import datdocantin.Service.getNewIDforTable;
 
@@ -44,20 +46,29 @@ public class SearchProduct extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		HttpSession session = request.getSession(true);
 	    String txtSearch = request.getParameter("txtSearch");
-	    Integer ID_nguoidung = null;
     	if (session.getAttribute("khachhang") != null) {
-    		ID_nguoidung = (int)session.getAttribute("ID_khachhang");
-    	} else if (session.getAttribute("canteen") != null) {
-    		ID_nguoidung = (int)session.getAttribute("ID_canteen");
+    		KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
+        	if (txtSearch != null && !txtSearch.isEmpty()) {
+    	        if (!txtSearch.equals(HistorySearchDAO.getLastNoidung(khachhang.getID_khachhang()))) {
+    	            HistorySearchDAO.addSearchHistory(new LichsutimkiemModel(getNewIDforTable.getNewID("lichsutimkiem"), khachhang.getID_khachhang(), txtSearch));
+    	        }
+    	        session.setAttribute("listMonan", MonAnDAO.SortMonanByTag(khachhang.getID_canteen(),txtSearch,"moinhat",null));
+    	        session.setAttribute("txtSearch", txtSearch);
+    	        session.setAttribute("tag", "moinhat");
+    			session.removeAttribute("LoaithucanSelect");
+            	session.removeAttribute("ThanhphanSelect");
+            	session.removeAttribute("HuongviSelect");
+            	session.removeAttribute("giabatdau");
+            	session.removeAttribute("giaketthuc");
+            	request.getRequestDispatcher("view/customer-homepage.jsp").forward(request, response);
+    	    }
+    	} else if (session.getAttribute("ID_canteen") != null) {
+    		int ID_canteen = (int)session.getAttribute("ID_canteen"); 
+    		session.setAttribute("listMonan", MonAnDAO.CanteenGetMenu(ID_canteen,(String)session.getAttribute("txtSearch")));
+			request.setAttribute("Search", (String)session.getAttribute("txtSearch"));
+			session.removeAttribute("txtSearch");
+		} else {
+		    response.sendRedirect(request.getContextPath());
 		}
-	    if (txtSearch != null && !txtSearch.isEmpty()) {
-	        session.setAttribute("txtSearch", txtSearch);
-	        if (ID_nguoidung != null) {
-	            if (!txtSearch.equals(HistorySearchDAO.getLastNoidung(ID_nguoidung))) {
-	                HistorySearchDAO.addSearchHistory(new LichsutimkiemModel(getNewIDforTable.getNewID("lichsutimkiem"), ID_nguoidung, txtSearch));
-	            }
-	        }
-	    }
-	    response.sendRedirect(request.getContextPath());
 	}
 }

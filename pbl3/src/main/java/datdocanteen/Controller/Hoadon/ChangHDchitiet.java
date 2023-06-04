@@ -34,10 +34,9 @@ public class ChangHDchitiet extends HttpServlet {
             		HoadonDAO.changeTongtien(ID_hoadon, HoadonchitietDAO.getTongtien(ID_hoadon));
             	} else if (type.equals("xoa")){
             		HoadonchitietDAO.XoaHDChitiet(ID_hoadonchitiet);
+            		HoadonDAO.changeTongtien(ID_hoadon, HoadonchitietDAO.getTongtien(ID_hoadon));
             		if (HoadonchitietDAO.ChecksoluongHDCT(ID_hoadon) == false) {
             			HoadonDAO.XoaHoadon(ID_hoadon);
-            			HoadonDAO.changeTongtien(ID_hoadon, HoadonchitietDAO.getTongtien(ID_hoadon));
-            			
 					}
     			}
 			}

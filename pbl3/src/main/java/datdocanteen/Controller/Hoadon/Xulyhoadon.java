@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.HoadonDAO;
+import datdocantin.Dao.HoadonchitietDAO;
+import datdocantin.Dao.MonAnDAO;
 
 @WebServlet("/Xulyhoadon")
 public class Xulyhoadon extends HttpServlet {
@@ -34,12 +36,15 @@ public class Xulyhoadon extends HttpServlet {
         		int ID_hoadon = Integer.valueOf(request.getParameter("id_hoadon"));
         		if (HoadonDAO.checkID_hoadon(ID_hoadon, (int)session.getAttribute("ID_canteen"))) {
         			HoadonDAO.changeTrangthai(ID_hoadon, tag);
+        			if (tag.equals("dangchuanbi")) {
+            			MonAnDAO.UpdateSold(HoadonchitietDAO.getHoadonchitiet(ID_hoadon));
+            		}
         		} 
         		if (tag.equals("dangchuanbi")) {
         			tag = "/donchoxacnhan";
         		} else if (tag.equals("daxong")) {
         			tag = "/dondangchuanbi";
-    			}
+    			} 
         		response.sendRedirect(request.getContextPath() + tag);
     		}
         	else {

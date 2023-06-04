@@ -5,26 +5,25 @@ import java.time.LocalDate;
 
 public class MonAnModel {
 	private String tenmon,mota,thanhphan,huongvi;
-	private Integer ID_monan,ID_canteen,ID_loaithucan,trangthai,daban,xoa;
+	private Integer ID_monan,ID_canteen,trangthai,daban,xoa;
 	private Double giacu, giahientai;
 	private LocalDate ngaytao;
 	private byte[] hinhanhchinh;
 	public MonAnModel() {}
 	
-	public MonAnModel(Integer ID_monan,Integer ID_canteen,String tenmon,String mota,String thanhphan,String huongvi,Integer ID_loaithucan,Double giacu,Double giahientai,LocalDate ngaytao,byte[] hinhanhchinh,Integer trangthai,Integer daban,Integer xoa){
+	public MonAnModel(Integer ID_monan,Integer ID_canteen,String tenmon,String mota,String thanhphan,String huongvi,Double giacu,Double giahientai,LocalDate ngaytao,byte[] hinhanhchinh,Integer trangthai,Integer daban,Integer xoa){
 		this.ID_monan = ID_monan;
 		this.ID_canteen = ID_canteen;
 		this.tenmon = tenmon;
 		this.mota = mota;
 		this.thanhphan = thanhphan;
 		this.huongvi = huongvi;
-		this.ID_loaithucan = ID_loaithucan;
 		this.giacu = giacu;
 		this.giahientai = giahientai;
 		this.ngaytao = ngaytao;
 		this.hinhanhchinh = hinhanhchinh;
 		this.trangthai = trangthai;
-		this.daban = daban;
+		this.daban = daban; 
 		this.xoa = xoa;
 	}
 
@@ -74,14 +73,6 @@ public class MonAnModel {
 
 	public void setID_canteen(Integer iD_canteen) {
 		ID_canteen = iD_canteen;
-	}
-
-	public int getID_loaithucan() {
-		return ID_loaithucan;
-	}
-
-	public void setID_loaithucan(Integer ID_loaithucan) {
-		this.ID_loaithucan = ID_loaithucan;
 	}
 
 	public int getTrangthai() {

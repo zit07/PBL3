@@ -45,45 +45,41 @@ public class Home extends HttpServlet {
 				int ID_khachhang = khachhang.getID_khachhang();
 				khachhang = KhachhangDAO.getKhachhangInfo(ID_khachhang);
 				List<CartModel> carts = CartDAO.getCarts(ID_khachhang);
-				if (session.getAttribute("txtSearch")!=null) { 
-					session.setAttribute("listMonan", MonAnDAO.KhachhangGetMenu(khachhang.getID_canteen(),(String)session.getAttribute("txtSearch")));
-					request.setAttribute("txtSearch", (String)session.getAttribute("txtSearch"));
-					session.removeAttribute("txtSearch");
-				} else {
-		            session.setAttribute("listMonan", MonAnDAO.KhachhangGetMenu(khachhang.getID_canteen(), null));
-				}
+		        session.removeAttribute("ListMonanLoc");
+		        session.removeAttribute("LoaithucanSelect");
+               	session.removeAttribute("ThanhphanSelect");
+               	session.removeAttribute("HuongviSelect");
+              	session.removeAttribute("giabatdau");
+               	session.removeAttribute("giaketthuc");
+				session.removeAttribute("txtSearch");
+				session.setAttribute("tag", "moinhat");
+				session.setAttribute("listMonan", MonAnDAO.SortMonanByTag(khachhang.getID_canteen(), null, "moinhat",null));
 				session.setAttribute("khachhang", khachhang);
 				session.setAttribute("TenCanteen", CanteenDAO.getNameCanteen(khachhang.getID_canteen()));
 				session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID_khachhang));
 				session.setAttribute("carts", carts);
 				session.setAttribute("soluonggiohang", CartDAO.getSoluongmon(carts)); 
+				session.setAttribute("loaithucan", LoaithucanDAO.getListLoaithucan(khachhang.getID_canteen()));
 				request.getRequestDispatcher("view/customer-homepage.jsp").forward(request, response);
 			} 
 			//canteen
-			else if (session.getAttribute("canteen") != null) {
+			else if (session.getAttribute("canteen") != null) { 
 				CanteenModel canteen = (CanteenModel)session.getAttribute("canteen");
 				int ID_canteen = canteen.getID_canteen();
-				if (session.getAttribute("txtSearch")!=null) {
-					session.setAttribute("listMonan", MonAnDAO.CanteenGetMenu(ID_canteen,(String)session.getAttribute("txtSearch")));
-					request.setAttribute("Search", (String)session.getAttribute("txtSearch"));
-					session.removeAttribute("txtSearch");
-				} else {
-					session.removeAttribute("txtSearch");
-					session.setAttribute("tag", "tatca");
-					session.setAttribute("listMonan", MonAnDAO.getListMonanByTag(ID_canteen, "tatca"));
-				}
-				session.setAttribute("loaithucan", LoaithucanDAO.getListLoaithucan());
+				session.setAttribute("tag", "tatca");
+				session.setAttribute("listMonan", MonAnDAO.getListMonanByTag(ID_canteen, "tatca"));
+				session.setAttribute("loaithucan", LoaithucanDAO.getListLoaithucan(ID_canteen));
 				session.setAttribute("diachi", DiachiDAO.getDiachi(canteen.getID_diachi()));
 				session.setAttribute("listGiohoatdong", GiohoatdongDAO.getGiohoatdong(ID_canteen)); 
 				session.setAttribute("canteen", CanteenDAO.getInfoCanteen(ID_canteen));
 				session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID_canteen));
 				session.setAttribute("bank", BankDAO.getBank(ID_canteen));
-				request.getRequestDispatcher("view/cantin-quanlymonanpage.jsp").forward(request, response);
+				request.getRequestDispatcher("view/canteen-quanlymonanpage.jsp").forward(request, response);
 			} 
 			//admin
 			else if (session.getAttribute("admin") != null) {
-				//Trả về sanh sách tất cả các tài khoản
-				List<AccountModel> listAccount=AccountDAO.getListAccount();
+				//Trả về sanh sách tất cả các tài khoản 
+				List<AccountModel> listAccount = AccountDAO.getListAccount();
 				//Trả về danh sách tất cả các thông tin canteen
 				List<CanteenModel> listCanteen=CanteenDAO.getAllCanteen();
 				//Trả về danh sách tất cả các tài khoản khách hàng

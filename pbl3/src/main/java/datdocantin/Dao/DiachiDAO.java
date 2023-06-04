@@ -12,31 +12,7 @@ public class DiachiDAO {
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
     
- // Khi nào nên truyền một thông số có kiểu int và khi nào là Integer? không thống nhất
-    // Nếu Integer thì sài từ đầu đến cuối luôn
-    
-    public static Integer getID_diachiByTinhHuyenXa(int tinh,int huyen,int xa) throws Exception {
-    	try {
-            conn = connectDB.getConnection();
-            if (conn != null) {
-            	String sql = "SELECT ID_diachi FROM diachi WHERE tinh = ? , huyen=?, xa=? ;";
-                stm = conn.prepareStatement(sql);
-            	stm.setInt(1, tinh); 
-            	stm.setInt(2, huyen);
-            	stm.setInt(3, xa);
-            	rs = stm.executeQuery();
-                if (rs.next()) {
-                	return rs.getInt("ID_diachi");
-                }
-            }
-        } catch (Exception e) {
-        } finally {
-        	connectDB.closeConnection(conn, stm, rs);
-        }
-    	return null;
-    }
-    
-public static DiachiModel getDiachi(Integer ID_diachi) throws Exception {
+    public static DiachiModel getDiachi(Integer ID_diachi) throws Exception {
     	try {
             conn = connectDB.getConnection();
             if (conn != null) {
@@ -70,8 +46,6 @@ public static DiachiModel getDiachi(Integer ID_diachi) throws Exception {
         }
     }
     
-    
-    
     public static void ChangeAddress(DiachiModel diachi) throws SQLException, Exception {
         try {
             conn = connectDB.getConnection();
@@ -95,10 +69,9 @@ public static DiachiModel getDiachi(Integer ID_diachi) throws Exception {
 		try {
 			
 //			ChangeAddress(new DiachiModel(null, 10002, 48, 490, 20197));
-			//DiachiModel dc = getDiachi(1);
-			//System.out.println(dc.getHuyen());
-			//DiachiDAO.ChangeAddress(new DiachiModel(10002, 48, 1, 1));
-			
+			DiachiModel dc = getDiachi(1);
+			System.out.println(dc.getHuyen());
+			DiachiDAO.ChangeAddress(new DiachiModel(10002, 48, 1, 1));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -169,6 +169,26 @@ public class HoadonDAO {
     	return result;
     }
     
+    public static List<HoadonModel> getHoadondahuya(int ID_khachhang, LocalDate ngay) throws Exception{
+    	List<HoadonModel> result = new ArrayList<HoadonModel>();
+    	try {
+            	conn.prepareStatement("SET NAMES 'UTF8'").execute();
+            	String sql = "SELECT ID_hoadon, ID_canteen, ngaytao, tongtien, trangthai, madon FROM hoadon "
+            			+ "WHERE ID_khachhang = ? AND xoa = 0 AND ngaytao = ? ORDER BY ID_hoadon DESC;";
+                stm = conn.prepareStatement(sql);
+                stm.setInt(1, ID_khachhang);
+                stm.setDate(2, Date.valueOf(ngay));
+				rs = stm.executeQuery();
+				while (rs.next()) {
+					result.add(new HoadonModel(rs.getInt(1), rs.getInt(2), ID_khachhang, rs.getDate(3).toLocalDate(), rs.getDouble(4), rs.getString(5), rs.getString(6), null));
+				}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+        } finally {
+        }
+    	return result;
+    }
+    
     public static HoadonModel getHDchuathanhtoan(int ID_khachhang) throws Exception{
     	try {
             conn = connectDB.getConnection();
@@ -199,13 +219,14 @@ public class HoadonDAO {
 				} else if (tag.equals("dangkiemtra")) {
 					tag = "đang kiểm tra";
 				} else if (tag.equals("damua")) {
-//					tag = "đang chuẩn bị món";
 					return getHoadondamua(ID_khachhang, ngay);
-				}
-            	String sql = "SELECT ID_hoadon, ID_canteen, ngaytao, tongtien, trangthai, madon FROM hoadon WHERE ID_khachhang = ? AND xoa = 1 AND trangthai = ? ";
+				} else if (tag.equals("dahuy")) {
+					return getHoadondahuya(ID_khachhang, ngay);
+				} 
+            	String sql = "SELECT ID_hoadon, ID_canteen, ngaytao, tongtien, trangthai, madon FROM hoadon WHERE ID_khachhang = ? AND xoa = 1 AND trangthai = ?  ORDER BY ID_hoadon DESC;";
                 stm = conn.prepareStatement(sql);
                 stm.setInt(1, ID_khachhang);
-                stm.setString(2, tag);
+                stm.setString(2, tag); 
 				rs = stm.executeQuery();
 				while (rs.next()) {
 					result.add(new HoadonModel(rs.getInt(1), rs.getInt(2), ID_khachhang, rs.getDate(3).toLocalDate(), rs.getDouble(4), rs.getString(5), rs.getString(6), null));
@@ -303,7 +324,7 @@ public class HoadonDAO {
         try {
             conn = connectDB.getConnection();
             if (conn != null) { 
-                String sql = "UPDATE hoadon SET xoa = 0 WHERE ID_hoadon = ?";
+                String sql = "UPDATE hoadon SET xoa = 0, trangthai = 'bạn đã huỷ' WHERE ID_hoadon = ?";
                 stm = conn.prepareStatement(sql);
                 stm.setInt(1, ID_hoadon);
                 stm.executeUpdate();

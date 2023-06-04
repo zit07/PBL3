@@ -30,7 +30,7 @@ public class HistorySearchDAO {
 						if (lichsu.getNoidung().equals(rs.getString(3))) {
 							check = false;
 						}
-					}
+					} 
                     if (check) {
                     	historys.add(new LichsutimkiemModel(rs.getInt(1),rs.getInt(2),rs.getString(3)));
                     }

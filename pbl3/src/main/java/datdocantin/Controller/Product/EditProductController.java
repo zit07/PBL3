@@ -1,6 +1,8 @@
 package datdocantin.Controller.Product;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -11,7 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.MonAnDAO;
+import datdocantin.Dao.Monan_LoaithucanDAO;
 import datdocantin.Model.MonAnModel;
+import datdocantin.Model.Monan_loaithucanModel;
+import datdocantin.Service.getNewIDforTable;
 
 @WebServlet("/Editproduct")
 @MultipartConfig(
@@ -32,7 +37,7 @@ public class EditProductController extends HttpServlet {
 		HttpSession session = request.getSession(true); 
 		try {
 			int ID_canteen = (int)session.getAttribute("ID_canteen");
-			Integer ID_monan = Integer.valueOf(request.getParameter("idmonan"));
+			Integer ID_monan = Integer.valueOf(request.getParameter("idmonan")); 
 			String k = request.getParameter("k");
 			if (MonAnDAO.CheckProduct(ID_monan, ID_canteen)) {
 				if (k.equals("ngungban")) {
@@ -56,21 +61,43 @@ public class EditProductController extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		HttpSession session = request.getSession(true);
 		try {
-			int ID_canteen = (int)session.getAttribute("ID_canteen");
+			Integer ID_canteen = (Integer)session.getAttribute("ID_canteen");
 			int ID_monan = Integer.valueOf(request.getParameter("id_monan"));
-        	String ten = request.getParameter("txtTenmonNew");
-        	String mota = request.getParameter("txtMotaNew");
-        	String thanhphan = request.getParameter("txtThanhphanNew");
-        	String huongvi = request.getParameter("txtHuongviNew");
-        	Integer ID_loaithucan = Integer.valueOf(request.getParameter("txtLoaiNew"));
-        	Double giacu = Double.parseDouble(request.getParameter("giacu"));
-        	Double giamoi = Double.parseDouble(request.getParameter("txtGiaNew")) / 1000;
-            byte[] hinhanhchinhBytes = request.getPart("img1New").getInputStream().readAllBytes();
-        	if (hinhanhchinhBytes.length == 0) hinhanhchinhBytes = null;
-        	MonAnDAO.EditMonan(new MonAnModel(ID_monan,ID_canteen,ten,mota,thanhphan,huongvi,ID_loaithucan,giacu,giamoi,null,hinhanhchinhBytes,null,null,null));
-        	response.sendRedirect(request.getContextPath());
+			if (ID_canteen != null) { 
+				if (MonAnDAO.CheckProduct(ID_monan, ID_canteen)) { 
+					String ten = request.getParameter("txtTenmonNew");
+		        	String mota = request.getParameter("txtMotaNew");
+		        	String thanhphan = request.getParameter("txtThanhphanNew");
+		        	String huongvi = request.getParameter("txtHuongviNew");
+		        	String[] selectedID_loaithucans = request.getParameterValues("loaithucans");
+		        	Double giacu = Double.parseDouble(request.getParameter("giacu"));
+		        	Double giamoi = Double.parseDouble(request.getParameter("txtGiaNew")) / 1000;
+		        	byte[] hinhanhchinhBytes = request.getPart("img1New").getInputStream().readAllBytes();
+		        	if (hinhanhchinhBytes.length == 0) hinhanhchinhBytes = null;  
+		        	if (ten!=null & mota!=null & thanhphan!=null & huongvi!=null & giacu!=null & giamoi!=null & selectedID_loaithucans.length > 0) {	        		
+		        		MonAnDAO.EditMonan(new MonAnModel(ID_monan,ID_canteen,ten,mota,thanhphan,huongvi,giacu,giamoi,null,hinhanhchinhBytes,null,null,null));
+		        		List<Monan_loaithucanModel> loaithucans = new ArrayList<Monan_loaithucanModel>();
+			        	int ID_monan_loaithucan = getNewIDforTable.getNewID("monan_loaithucan");
+			        	for (int i=0; i<selectedID_loaithucans.length; i++) {
+							loaithucans.add(new Monan_loaithucanModel(ID_monan_loaithucan + i, ID_monan, Integer.valueOf(selectedID_loaithucans[i])));
+						}
+			        	Monan_LoaithucanDAO.DeleteMonan_loaithucan(ID_monan);
+			        	Monan_LoaithucanDAO.AddMonan_loaithucan(loaithucans);
+			        	if (session.getAttribute("tag").equals("dangban")) {
+			        		response.sendRedirect(request.getContextPath() + "/monandangban");
+						} else if (session.getAttribute("tag").equals("ngungban")) {
+			        		response.sendRedirect(request.getContextPath() + "/monanngungban");
+						} 
+		        	} else {
+		        		session.setAttribute("tag", "tatca");
+		        		response.sendRedirect(request.getContextPath());
+		        	}
+				}
+			} else {
+				response.sendRedirect(request.getContextPath());
+			}
         } catch (Exception e) {
-            log("ecit: " + e.toString()); 
+            e.printStackTrace();
         } 
 	}
 

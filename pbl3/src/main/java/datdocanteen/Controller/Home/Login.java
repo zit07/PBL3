@@ -57,7 +57,7 @@ public class Login extends HttpServlet {
             else {
             	if (AccountDAO.CheckAccountNotExist(sdt)) {
                 	request.setAttribute("noti_login__ErrorSdt", "flex");
-                	request.setAttribute("noti_login__ErrorPass", "none");
+                	request.setAttribute("noti_login__ErrorPass", "none"); 
             	}
             	else {
                 	request.setAttribute("noti_login__ErrorSdt", "none");

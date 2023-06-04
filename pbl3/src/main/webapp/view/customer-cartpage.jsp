@@ -258,6 +258,7 @@
                           <a class="navbar-link" href="./hoadonchothanhtoan">Đơn hàng chờ thanh toán</a> 
                           <a class="navbar-link" href="./hoadonchoxacnhan">Đơn hàng chờ xác nhận</a> 
                           <a class="navbar-link" href="./Donhangdamua">Xem đơn hàng đã mua</a> 
+                          <a class="navbar-link ${tag == 'dahuy' ? 'choose':''}" href="./Donhangdahuy">Xem đơn hàng đã huỷ</a> 
                         </div>
                       </nav>
                     </div>
@@ -306,9 +307,11 @@
 			                        
 		                          </table>
 		                        </div>
-		                        <div class="btn-container">
-		                          <button class="btn btn--primary" type="submit"> XÁC NHẬN ĐẶT MÓN </button>
-		                      	</div>
+		                        <c:if test="${soluonggiohang > 0}">
+			                        <div class="btn-container">
+			                          <button class="btn btn--primary" type="submit"> XÁC NHẬN ĐẶT MÓN </button>
+			                      	</div>
+			                    </c:if>
                       		</form>
                       		
                       </div>   

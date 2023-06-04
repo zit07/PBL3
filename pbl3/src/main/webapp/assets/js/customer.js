@@ -58,6 +58,56 @@ for(var i = 0; i < goback.length; i++) {
 	  }
 	});
 
+//show content
+const pageNext = document.getElementById("page-next"); 
+const pageBack = document.getElementById("page-back"); 
+
+pageNext.addEventListener("click", (event) => {
+    event.preventDefault();
+    var content = document.querySelector("div.home-product:not(.hide-block)");
+    if (document.getElementById(parseInt(content.id, 10) + 1) !== null) {
+        pageBack.classList.remove("home-filter-page-btn--disable");
+        const pageNow = document.getElementById(content.id);
+        pageNow.classList.add("hide-block");  
+        const NumberNow = document.getElementById("page"+content.id);
+        NumberNow.classList.add("hide-block"); 
+        const pageNextto = document.getElementById(parseInt(content.id, 10) + 1); 
+        if (pageNextto) {
+            pageNextto.classList.remove("hide-block");
+        }
+        const NumberNext = document.getElementById("page"+(parseInt(content.id, 10) + 1));
+        if (NumberNext) {
+            NumberNext.classList.remove("hide-block");
+        }
+        if (document.getElementById(parseInt(content.id, 10) + 2) === null) {
+            pageNext.classList.add("home-filter-page-btn--disable"); 
+        }
+    }
+});
+
+pageBack.addEventListener("click", (event) => {
+    event.preventDefault();
+    pageNext.classList.remove("home-filter-page-btn--disable");
+    var content = document.querySelector("div.home-product:not(.hide-block)");
+    if (content.id !== "1") {
+        const pageNow = document.getElementById(content.id);
+        pageNow.classList.add("hide-block"); 
+        const NumberNow = document.getElementById("page"+content.id);
+        NumberNow.classList.add("hide-block"); 
+        const pageBackto = document.getElementById(parseInt(content.id, 10) - 1); 
+        if (pageBackto) {
+            pageBackto.classList.remove("hide-block");
+        }
+        const NumberNext = document.getElementById("page"+(parseInt(content.id, 10) - 1)); 
+        if (NumberNext) {
+            NumberNext.classList.remove("hide-block");
+        }
+        if (document.getElementById(parseInt(content.id, 10) - 2) === null) {
+            pageBack.classList.add("home-filter-page-btn--disable"); 
+        }
+    }
+});
+
 
 $(function () {
   var district;

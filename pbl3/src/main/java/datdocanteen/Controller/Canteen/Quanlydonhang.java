@@ -32,7 +32,7 @@ public class Quanlydonhang extends HttpServlet {
 		if (ID_canteen != null) {
 			try {
 				String uri = request.getRequestURI().split("/")[request.getRequestURI().split("/").length - 1];
-				String tag = "";
+				String tag = "";  
 				if ((uri.equals("quanlydonhang")) || (uri.equals("donchoxacnhan"))) {
 					tag = "choxacnhan";
 				} else if (uri.equals("dondangchuanbi")) {

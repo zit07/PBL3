@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
 
-import datdocantin.Controller.ChangeInfo.UpdateBankinfo;
 import datdocantin.Model.BankModel;
 import datdocantin.Util.connectDB;
 

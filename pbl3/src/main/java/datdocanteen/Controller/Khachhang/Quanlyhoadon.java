@@ -18,7 +18,7 @@ import datdocantin.Dao.HoadonchitietDAO;
 import datdocantin.Model.HoadonModel;
 import datdocantin.Model.KhachHangModel;
 
-@WebServlet({"/hoadonchothanhtoan", "/hoadonchoxacnhan", "/Donhangdamua"})
+@WebServlet({"/hoadonchothanhtoan", "/hoadonchoxacnhan", "/Donhangdamua", "/Donhangdahuy"})
 public class Quanlyhoadon extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -39,13 +39,15 @@ public class Quanlyhoadon extends HttpServlet {
 					tag = "dangkiemtra";
 				} else if (uri.equals("Donhangdamua")) {
 					tag = "damua";
+				} else if (uri.equals("Donhangdahuy")) {
+					tag = "dahuy";
 				} 
 				int ID_khachhang = khachhang.getID_khachhang();
 				LocalDate ngay = request.getParameter("ngay") != null ? Date.valueOf(request.getParameter("ngay")).toLocalDate() :  LocalDate.now();
 				List<HoadonModel> hoadons = HoadonDAO.getHDforkhachhang(ID_khachhang, tag, ngay);
 				if (hoadons != null) { 
 					session.setAttribute("tag", tag);
-					session.setAttribute("ngayloc", ngay);
+					session.setAttribute("ngayloc", ngay); 
 					session.setAttribute("hoadons", hoadons);
 					session.setAttribute("bank", BankDAO.getBank(khachhang.getID_canteen()));
 					session.setAttribute("hoadonchitiets", HoadonchitietDAO.getHDCTchonhieuHD(hoadons));

@@ -32,7 +32,7 @@ public class DeleteHistorySearch extends HttpServlet {
         	HistorySearchDAO.deleteSearchHistory(Integer.valueOf(request.getParameter("id")), ID_nguoidung);
         } catch (Exception e) {
             log("error at login servlet: " + e.toString());
-        } 
+        }  
         response.sendRedirect(request.getContextPath());
 	}
 

@@ -55,7 +55,6 @@ public class SignUp extends HttpServlet {
             		CanteenDAO.addCanteen(new CanteenModel(ID,Ten,SDT,null,ID_diachi,null,null));
             		BankDAO.AddBank(ID_bank,ID);
             		GiohoatdongDAO.Addgiohoatdong(Integer.valueOf(getNewIDforTable.getNewID("giohoatdong")), ID);
-            		
 				}
             	response.sendRedirect(request.getContextPath());
             }

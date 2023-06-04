@@ -1,4 +1,4 @@
-
+<%@page import="javax.servlet.jsp.tagext.Tag"%>
 <%@page import="datdocantin.Model.BankModel"%>
 <%@page import="datdocantin.Model.LoaithucanModel"%>
 <%@page import="datdocantin.Model.DiachiModel"%>
@@ -8,7 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
 <%@ page import="javax.servlet.http.HttpSession" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.Base64" %> 
+<%@ page import="java.util.Base64" %>
 <%@ page import="datdocantin.Model.CanteenModel"%>
 <%@page import="datdocantin.Model.GiohoatdongModel"%>
 <%@page import="datdocantin.Model.MonAnModel"%> 
@@ -27,7 +27,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8"> 
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đặt đồ ăn cantin</title>
@@ -153,8 +153,9 @@
 								</h3>
 								<div class="navbar">
 									<a class="navbar-link" href="./">Quản lý món ăn</a> 
+									<a class="navbar-link" href="./loaithucan">Quản lý loại thức ăn</a>
 									<a class="navbar-link choose" href="./quanlydonhang">Quản lý đơn hàng</a>
-									<a class="navbar-link" id="link-">                      Xem doanh thu       </a> 
+									<a class="navbar-link" id="link-"> Xem doanh thu </a> 
 								</div>
 							</nav>
 						</div>
@@ -494,29 +495,28 @@
 	                                <input type="text" class="auth-form__input_info" name="txtThanhphan" placeholder="Ví dụ: 500g thịt gà, 1 quả trứng,..." required>
 	                            </div>
 	                            <div class="auth-form__group_row">
-	                                <div class="auth-form__title_row">
-	                                    <span>Hương vị:</span>
-	                                </div>
-	                                <div class="auth-form__title_row">
-	                                    <span>Loại thức ăn:</span>
-	                                </div>
-	                                <div class="auth-form__title_row">
-	                                    <span>Giá:</span>
-	                                </div>
-	                            </div>
-	                            <div class="auth-form__group_row">
-	                                <input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: Chua,cay,mặn,..." name="txtHuongvi" value="" required> 
-	                                <div class="auth-form__input_info_row">
-	                                     <select name="txtLoai" id="" class="auth-form__input_info_select" required>
-	                                        <option value="-1"></option>
-	                                        <c:forEach items="${loaithucan}" var="loai"> 
-	                                        	<option value="${loai.getID_loaithucan()}">${loai.getLoaithucan()}</option>
-	                                        </c:forEach>
-	                                    </select>
-	                                </div>
-									<input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: 50000" name="txtGia" value="" pattern="[0-9]+" required>
-	                            </div>
-	                            <div class="auth-form__title">
+		                       		<div class="auth-form__title_row">
+		                    	        <span>Hương vị:</span>
+		                            </div>
+			                        <div class="auth-form__title_row">
+		    	                        <span>Giá:</span>
+		                            </div>
+		                        </div>
+		                            <div class="auth-form__group_row">
+		                                <input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: Chua,cay,mặn,..." name="txtHuongvi" required> 
+										<input type="text" class="auth-form__input_info_row" placeholder="Ví dụ: 50000" name="txtGia" pattern="[0-9]+" required>
+		                            </div>
+								<div class="auth-form__title">
+		                            <span>Loại thức ăn:</span>
+		                        </div>
+									<div class="auth-form__group input__checkbox">
+										<c:forEach items="${loaithucan}" var="loai"> 
+											<div class="">
+												<input type="checkbox" name="loaithucans" class="auth-form-input__checkbox" value="${loai.getID_loaithucan()}"> ${loai.getLoaithucan()}
+											</div>
+		                                </c:forEach>
+									</div>
+	                            <div class="auth-form__title"> 
 	                                <span>Thêm hình ảnh (ít nhất 1 ảnh, ảnh đầu tiên được lấy làm ảnh chính):</span>
 	                            </div>
 	                            <div class="auth-form__group add-product-img">

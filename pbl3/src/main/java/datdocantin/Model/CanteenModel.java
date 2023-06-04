@@ -14,7 +14,7 @@ public class CanteenModel {
 		this.sodienthoai=sodienthoai;
 		this.email=email;
 		this.ID_diachi=ID_diachi;
-		this.PIN=PIN;
+		this.PIN=PIN; 
 		this.avatar=avatar;
 		//this.ID_bank_info=ID_bank_info;
 	}

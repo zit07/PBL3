@@ -6,9 +6,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.MonAnDAO;
-import datdocantin.Model.MonAnModel;
+import datdocantin.Model.KhachHangModel;
+
 
 
 @WebServlet("/Locmonan")
@@ -17,7 +19,6 @@ public class LocmonanController extends HttpServlet {
 
     public LocmonanController() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,14 +28,30 @@ public class LocmonanController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
-		request.setCharacterEncoding("utf-8");
+		request.setCharacterEncoding("utf-8"); 
+		HttpSession session = request.getSession(true);
         try {
-        	String txtLoaimonan = request.getParameter("txtloaimonan");
-        	System.out.println(txtLoaimonan);
-        	response.sendRedirect(request.getContextPath());
+        	KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
+        	if (khachhang != null) {
+        		String[] Loaithucans = request.getParameterValues("txtloaimonan"); 
+            	String[] Thanhphans  = request.getParameterValues("txtThanhphan");
+            	String[] Huongvis = request.getParameterValues("txtHuongvi");
+            	Double giabatdau = request.getParameter("GiaStart") != "" ? Double.parseDouble(request.getParameter("GiaStart")) / 1000 : null; 
+            	Double giaketthuc = request.getParameter("GiaEnd") != "" ? Double.parseDouble(request.getParameter("GiaEnd")) / 1000 : null; 
+            	if ((Loaithucans != null) || (Thanhphans != null) || (Huongvis != null) || (giabatdau != null) || (giaketthuc != null)) {
+                	session.setAttribute("ListMonanLoc", MonAnDAO.Locmonan(khachhang.getID_canteen(), Loaithucans, Thanhphans, Huongvis, giabatdau, giaketthuc));
+                	session.setAttribute("LoaithucanSelect", Loaithucans);
+                	session.setAttribute("ThanhphanSelect", Thanhphans);
+                	session.setAttribute("HuongviSelect", Huongvis);
+                	session.setAttribute("giabatdau", giabatdau);
+                	session.setAttribute("giaketthuc", giaketthuc);
+                	session.removeAttribute("txtSearch");
+    			}
+			}
+        	response.sendRedirect(request.getContextPath() + "/moinhat");
         } catch (Exception e) {
-            log("ecit: " + e.toString()); 
-        } 
+            e.printStackTrace();
+        }  
 	}
 
 }

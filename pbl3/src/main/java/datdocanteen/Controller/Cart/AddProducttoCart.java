@@ -26,13 +26,13 @@ public class AddProducttoCart extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8"); 
-        try {
+        try { 
         	HttpSession session = request.getSession();
     		KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
     		int ID_khachhang = khachhang.getID_khachhang();
         	int ID_cart = getNewIDforTable.getNewID("cart");
         	int ID_monan =  Integer.valueOf(request.getParameter("id_monan")); 
-        	if (MonAnDAO.CheckProduct(ID_monan, khachhang.getID_canteen())) {
+        	if (MonAnDAO.CheckProduct(ID_monan, khachhang.getID_canteen())) { System.out.println(CartDAO.getSoluong(null, ID_monan, ID_khachhang));
         		CartDAO.AddtoCart(new CartModel(ID_cart, ID_khachhang, ID_monan, null, null, CartDAO.getSoluong(null, ID_monan, ID_khachhang) + 1, null));
 			}
         } catch (Exception e) {

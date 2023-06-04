@@ -46,13 +46,11 @@ public class CartDAO {
             conn = connectDB.getConnection();
             if (conn != null) {
             	String sql = "";
-            	if (cart.getSoluong() > 1) {
-            		sql = "DELETE FROM cart WHERE ID_khachhang = ? AND ID_monan = ?";
-                    stm = conn.prepareStatement(sql);
-                    stm.setInt(1, cart.getID_khachhang());
-                    stm.setInt(2, cart.getID_monan());
-                    stm.executeUpdate();   
-            	}
+            	sql = "DELETE FROM cart WHERE ID_khachhang = ? AND ID_monan = ?";
+                stm = conn.prepareStatement(sql);
+                stm.setInt(1, cart.getID_khachhang());
+                stm.setInt(2, cart.getID_monan());
+                stm.executeUpdate();   
             	sql = "INSERT INTO cart(ID_cart, ID_khachhang, ID_monan, soluong) VALUES(?, ?, ?, ?);";
                 stm = conn.prepareStatement(sql);
                 stm.setInt(1, cart.getID_cart());
@@ -157,7 +155,7 @@ public class CartDAO {
 				if (rs.next()) {
 					return true;
 				}
-            }
+            } 
     	} catch (Exception e) {
     		e.printStackTrace();
         } finally {

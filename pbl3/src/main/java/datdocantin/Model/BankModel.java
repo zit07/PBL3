@@ -47,7 +47,7 @@ public class BankModel {
 	}
 
 	public void setHovaten(String hovaten) {
-		this.hovaten = hovaten;
+		this.hovaten = hovaten; 
 	}
 
 	public byte[] getMaQR() {

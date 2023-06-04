@@ -8,9 +8,9 @@ import java.sql.SQLException;
 
 public class connectDB {
 	public static Connection getConnection() {
-		final String url = "jdbc:mysql://127.0.0.1:3306/dbpbl3";
+		final String url = "jdbc:mysql://localhost:3306/pbl";
 		final String user = "root";
-		final String pass = "";
+		final String pass = "ahihi123";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			try {
@@ -27,7 +27,7 @@ public class connectDB {
     public static void closeConnection(Connection conn, PreparedStatement stm, ResultSet rs) throws Exception {
         if (rs != null) {
             rs.close();
-        }
+        } 
         if (stm != null) {
             stm.close();
         }

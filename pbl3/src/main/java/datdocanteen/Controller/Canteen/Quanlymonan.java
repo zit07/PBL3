@@ -1,6 +1,8 @@
 package datdocanteen.Controller.Canteen;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.MonAnDAO;
+import datdocantin.Dao.Monan_LoaithucanDAO;
+import datdocantin.Model.MonAnModel;
 
 @WebServlet({"/monandangban", "/monanngungban", "/monandaxoa"})
 public class Quanlymonan extends HttpServlet {
@@ -25,7 +29,7 @@ public class Quanlymonan extends HttpServlet {
 		Integer ID_canteen = (Integer)session.getAttribute("ID_canteen");
 		if (ID_canteen != null) {
 			try {
-				String uri = request.getRequestURI();  
+				String uri = request.getRequestURI().split("/")[request.getRequestURI().split("/").length - 1];
 				String tag = "";
 				if (uri.equals("monandangban")) {
 					tag = "dangban";
@@ -34,12 +38,14 @@ public class Quanlymonan extends HttpServlet {
 				} else if (uri.equals("monandaxoa")) {
 					tag = "daxoa";
 				}  
+				List<MonAnModel> monans = MonAnDAO.getListMonanByTag(ID_canteen, tag);
 				session.setAttribute("tag", tag);
-				session.setAttribute("listMonan", MonAnDAO.getListMonanByTag(ID_canteen, tag));
+				session.setAttribute("listMonan", monans);
+				session.setAttribute("loaimonanSelected", Monan_LoaithucanDAO.selectMonan_loaithucan(monans));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			request.getRequestDispatcher("view/cantin-quanlymonanpage.jsp").forward(request, response);
+			request.getRequestDispatcher("view/canteen-quanlymonanpage.jsp").forward(request, response);
 		} else {
 			response.sendRedirect(request.getContextPath());
 		}

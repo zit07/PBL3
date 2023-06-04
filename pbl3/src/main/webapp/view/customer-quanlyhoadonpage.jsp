@@ -1,5 +1,5 @@
 <%@page import="datdocantin.Model.BankModel"%>
-
+<%@page import="javax.servlet.jsp.tagext.Tag"%>
 <%@page import="datdocantin.Model.HoadonchitietModel"%>
 <%@page import="datdocantin.Model.HoadonModel"%>
 <%@page import="datdocantin.Model.CartModel"%>
@@ -264,6 +264,7 @@
 	                      <a class="navbar-link ${tag == 'chuathanhtoan' ? 'choose':''}" href="./hoadonchothanhtoan">Đơn hàng chờ thanh toán</a> 
 	                      <a class="navbar-link ${tag == 'dangkiemtra' ? 'choose':''}" href="./hoadonchoxacnhan">Đơn hàng chờ xác nhận</a> 
                           <a class="navbar-link ${tag == 'damua' ? 'choose':''}" href="./Donhangdamua">Xem đơn hàng đã mua</a> 
+                          <a class="navbar-link ${tag == 'dahuy' ? 'choose':''}" href="./Donhangdahuy">Xem đơn hàng đã huỷ</a> 
                         </div>
                       </nav>
                     </div>
@@ -271,77 +272,79 @@
                     <% if (tag.equals("chuathanhtoan")) { %>
                     	<div class="home-product">
                       		<h3 class="auth-form__heading table-list-user">ĐƠN HÀNG</h3>
-                      		<c:set var="hoadon" value="<%=hoadons%>"/>
-	                       	<div class="result-search-user">
-			                	<table border ="1" width ="100%">
-				                	<tr>
-				                    	<th>Mã đơn hàng</th>
-				                        	<th>Ngày tạo</th>
-				                            <th>Trạng thái</th>
-				                           	<th>Tổng tiền</th>
-				                           	<th>Thao tác</th>
-				                        </tr>
-					                    <c:if test="${hoadon != null}">
-					                    <c:forEach items="${hoadons}" var="hoadon">
-					                        <tr>
-					                          <td>${hoadon.getMadon()}</td>
-					                          <td>${hoadon.getNgaytao()}</td>
-					                          <td>${hoadon.getTrangthai()}</td>
-					                          <td>${String.format("%.3f", hoadon.getTongtien())} VNĐ</td>
-					                          <td> <a href="./Xoahoadon" class="btn btn--primary home-product-btn delete-product">Huỷ đơn</a></td>
+                      		<% if (hoadons.size() > 0) { %>
+	                      		<c:set var="hoadon" value="<%=hoadons%>"/>
+		                       	<div class="result-search-user">
+				                	<table border ="1" width ="100%">
+					                	<tr>
+					                    	<th>Mã đơn hàng</th>
+					                        	<th>Ngày tạo</th>
+					                            <th>Trạng thái</th>
+					                           	<th>Tổng tiền</th>
+					                           	<th>Thao tác</th>
 					                        </tr>
-					                    </c:forEach>
-					                  	</c:if>
-			                      </table>
-		                    </div>
-							<h3 class="auth-form__heading table-list-user">CHI TIẾT ĐƠN HÀNG</h3>
-		                    <div class="result-search-user">
-		                    	<table border ="1" width ="100%">
-			                        <tr>
-			                          	<th>Tên món ăn</th>
-			                          	<th>Số lượng</th>
-			                          	<th>Đơn giá</th>
-			                          	<th>Thành tiền</th>
-		                              	<th>Thao tác</th>
-		                            </tr>                            
-		                            <c:set var="hdchitiet" value="<%=hoadonchitiets.get(0)%>"/>
-				                    <c:if test="${hdchitiet != null}">
-				                       	<c:forEach items="${hdchitiet}" var="hdchitiet">
-					                       	<tr>
-					                           	<td>${hdchitiet.getTenmon()}</td>
-					                          	<td>
-								                  	<a href="./Hoadonchitiet?id_hdchitiet=${hdchitiet.getID_hoadonchitiet()}&type=giam"><i class="fa-solid fa-minus btn-tang-giam"></i></a> 
-								                    ${hdchitiet.getSoluong()}
-								                    <a href="./Hoadonchitiet?id_hdchitiet=${hdchitiet.getID_hoadonchitiet()}&type=tang"><i class="fa-solid fa-plus btn-tang-giam"></i></a>
-							                	</td>
-					                            <td>${String.format("%.3f", hdchitiet.getGia())} VNĐ</td>
-					                            <td>${String.format("%.3f", hdchitiet.getSoluong()*hdchitiet.getGia())} VNĐ</td>
-									            <td> <a href="./Hoadonchitiet?id_hdchitiet=${hdchitiet.getID_hoadonchitiet()}&type=xoa" class="btn btn--primary home-product-btn delete-product">Xoá</a></td>
-									        </tr>
-							            </c:forEach>
+						                    <c:if test="${hoadon != null}">
+						                    <c:forEach items="${hoadons}" var="hoadon">
+						                        <tr>
+						                          <td>${hoadon.getMadon()}</td>
+						                          <td>${hoadon.getNgaytao()}</td>
+						                          <td>${hoadon.getTrangthai()}</td>
+						                          <td>${String.format("%.3f", hoadon.getTongtien())} VNĐ</td>
+						                          <td> <a href="./Xoahoadon" class="btn btn--primary home-product-btn delete-product">Huỷ đơn</a></td>
+						                        </tr>
+						                    </c:forEach>
+						                  	</c:if>
+				                      </table>
+			                    </div>
+								<h3 class="auth-form__heading table-list-user">CHI TIẾT ĐƠN HÀNG</h3>
+			                    <div class="result-search-user">
+			                    	<table border ="1" width ="100%">
+				                        <tr>
+				                          	<th>Tên món ăn</th>
+				                          	<th>Số lượng</th>
+				                          	<th>Đơn giá</th>
+				                          	<th>Thành tiền</th>
+			                              	<th>Thao tác</th>
+			                            </tr>                            
+			                            <c:set var="hdchitiet" value="<%=hoadonchitiets.get(0)%>"/>
+					                    <c:if test="${hdchitiet != null}">
+					                       	<c:forEach items="${hdchitiet}" var="hdchitiet">
+						                       	<tr>
+						                           	<td>${hdchitiet.getTenmon()}</td>
+						                          	<td>
+									                  	<a href="./Hoadonchitiet?id_hdchitiet=${hdchitiet.getID_hoadonchitiet()}&type=giam"><i class="fa-solid fa-minus btn-tang-giam"></i></a> 
+									                    ${hdchitiet.getSoluong()}
+									                    <a href="./Hoadonchitiet?id_hdchitiet=${hdchitiet.getID_hoadonchitiet()}&type=tang"><i class="fa-solid fa-plus btn-tang-giam"></i></a>
+								                	</td>
+						                            <td>${String.format("%.3f", hdchitiet.getGia())} VNĐ</td>
+						                            <td>${String.format("%.3f", hdchitiet.getSoluong()*hdchitiet.getGia())} VNĐ</td>
+										            <td> <a href="./Hoadonchitiet?id_hdchitiet=${hdchitiet.getID_hoadonchitiet()}&type=xoa" class="btn btn--primary home-product-btn delete-product">Xoá</a></td>
+										        </tr>
+								            </c:forEach>
+				                        </c:if>
+			                      	</table>
+			                    </div>
+				 				<c:set var="bank" value="<%=bank%>"/>
+			                    <div class="bank">
+			                        <div class="info-bank">
+			                            <span class="info-bank_title">Vui lòng chuyển khoản vào số tài khoản bên dưới với nội dung "${hoadons.get(0).getMadon()}" với số tiền: ${String.format("%.3f", hoadons.get(0).getTongtien())} VNĐ</span>    
+			                            <span class="info-bank_title">Ngân hàng: ${bank.getTennganhang()}</span>   
+			                            <span class="info-bank_title">Số tài khoản: ${bank.getStk()}</span>      
+			                            <span class="info-bank_title">Họ và tên chủ tài khoản: ${bank.getHovaten()}</span>
+			                        </div>        
+			                        <c:if test="${bank.getMaQR() != null}">
+		                           	<div class="qrcode-bank">
+				                        <span class="info-bank_title">Quét mã QR Code để thanh toán:</span>     
+				                            <div class="qrcode-img">
+				                              <img class="img-qrcode-bank" src="data:image/jpeg;base64, ${Base64.getEncoder().encodeToString(bank.getMaQR())}">
+				                            </div>
+				                        </div>
 			                        </c:if>
-		                      	</table>
-		                    </div>
-			 				<c:set var="bank" value="<%=bank%>"/>
-		                    <div class="bank">
-		                        <div class="info-bank">
-		                            <span class="info-bank_title">Vui lòng chuyển khoản vào số tài khoản bên dưới với nội dung "${hoadons.get(0).getMadon()}" với số tiền: ${String.format("%.3f", hoadons.get(0).getTongtien())} VNĐ</span>    
-		                            <span class="info-bank_title">Ngân hàng: ${bank.getTennganhang()}</span>   
-		                            <span class="info-bank_title">Số tài khoản: ${bank.getStk()}</span>      
-		                            <span class="info-bank_title">Họ và tên chủ tài khoản: ${bank.getHovaten()}</span>
-		                        </div>        
-		                        <c:if test="${bank.getMaQR() != null}">
-	                           	<div class="qrcode-bank">
-			                        <span class="info-bank_title">Quét mã QR Code để thanh toán:</span>     
-			                            <div class="qrcode-img">
-			                              <img class="img-qrcode-bank" src="data:image/jpeg;base64, ${Base64.getEncoder().encodeToString(bank.getMaQR())}">
-			                            </div>
-			                        </div>
-		                        </c:if>
-		                    </div>
-		                    <div class="btn-container">
-		                    	<a class="btn btn--primary" href="./Xulyhoadon?tag=xacnhanthanhtoan">XÁC NHẬN ĐÃ THANH TOÁN</a>
-		                    </div>
+			                    </div>
+			                    <div class="btn-container">
+			                    	<a class="btn btn--primary" href="./Xulyhoadon?tag=xacnhanthanhtoan">XÁC NHẬN ĐÃ THANH TOÁN</a>
+			                    </div>
+		                    <% } %>
                       </div>  
                       <% } else if (tag.equals("dangkiemtra")) { %>
                       <div class="home-product">
@@ -375,6 +378,34 @@
 								<button type="submit" class="btn btn--primary">Lọc</button>
 						  </form>
 				      	  <h3 class="auth-form__heading table-list-user">ĐƠN HÀNG ĐÃ MUA</h3>
+				      	  <div class="list-user">
+					      	<table border ="1" width ="100%">
+						      <tr>
+						          <th>Mã đơn hàng</th>
+				                  <th>Ngày tạo</th>
+					              <th>Trạng thái</th>
+				                  <th>Tổng tiền</th>
+					              <th>Chi tiết</th>
+				              </tr>
+				              <c:forEach items="${hoadons}" var="hoadon"> 
+								  <tr>
+									  <td>${hoadon.getMadon()}</td>
+							          <td>${hoadon.getNgaytao()}</td>
+							          <td>${hoadon.getTrangthai()}</td>
+									  <td>${String.format("%.3f", hoadon.getTongtien())} VNĐ</td>
+									  <td><a class="btn btn--primary home-product-btn" name="link-cart-detail" id="${hoadon.getMadon()}">Xem</a></td>
+								  </tr>
+							   </c:forEach>
+					        </table>
+				         </div>
+			         </div>
+			          <% } else if (tag.equals("dahuy")) { %>
+                      <div class="home-product">
+	                      <form action="./Donhangdamua">
+								<input type="date" class="input_date" id="date_input" name="ngay" value="${ngayloc}">
+								<button type="submit" class="btn btn--primary">Lọc</button>
+						  </form>
+				      	  <h3 class="auth-form__heading table-list-user">ĐƠN HÀNG ĐÃ HUỶ</h3>
 				      	  <div class="list-user">
 					      	<table border ="1" width ="100%">
 						      <tr>
@@ -582,50 +613,52 @@
 	    </div>
 		<div class="modal" id="form-chosseCantin">
 		</div>
-		<% for (int i=0; i<hoadons.size(); i++) {%>
-	    	<div class="modal" name="form-cart-detail" id="<%=hoadons.get(i).getMadon()%>">
-				<div class="modal__body">
-					<div class="auth-form list__custumer">
-						<div class="auth-form__container">
-							<div class="auth-form__form">
-								<h3 class="auth-form__heading table-list-user">CHI TIẾT ĐƠN HÀNG <%=hoadons.get(i).getMadon()%></h3>
-			                        <div class="result-search-user">
-			                          	<table border ="1" width ="100%">
-				                            <tr>
-				                            	<th>Mã món ăn</th>
-				                              	<th>Tên món ăn</th>
-				                              	<th>Số lượng</th>
-				                              	<th>Đơn giá</th>
-				                              	<th>Thành tiền</th>
-				                            </tr>      
-				                            <c:set var="HDchitiets" value="<%=hoadonchitiets.get(i)%>"/>
-	   										<c:forEach items="${HDchitiets}" var="HDchitiet">	
+		<% if (hoadons.size() > 0) { %>
+			<% for (int i=0; i<hoadons.size(); i++) {%>
+		    	<div class="modal" name="form-cart-detail" id="<%=hoadons.get(i).getMadon()%>">
+					<div class="modal__body">
+						<div class="auth-form list__custumer">
+							<div class="auth-form__container">
+								<div class="auth-form__form">
+									<h3 class="auth-form__heading table-list-user">CHI TIẾT ĐƠN HÀNG <%=hoadons.get(i).getMadon()%></h3>
+				                        <div class="result-search-user">
+				                          	<table border ="1" width ="100%">
+					                            <tr>
+					                            	<th>Mã món ăn</th>
+					                              	<th>Tên món ăn</th>
+					                              	<th>Số lượng</th>
+					                              	<th>Đơn giá</th>
+					                              	<th>Thành tiền</th>
+					                            </tr>      
+					                            <c:set var="HDchitiets" value="<%=hoadonchitiets.get(i)%>"/>
+		   										<c:forEach items="${HDchitiets}" var="HDchitiet">	
+			   										<tr>
+			   											<td>${HDchitiet.getID_monan()}</td>
+								                    	<td>${HDchitiet.getTenmon()}</td>
+								                        <td>${HDchitiet.getSoluong()}</td>
+									                    <td>${String.format("%.3f", HDchitiet.getGia())} VNĐ</td>
+									                    <td>${String.format("%.3f", HDchitiet.getGia() * HDchitiet.getSoluong())} VNĐ</td>
+										            </tr> 
+		   										</c:forEach>
 		   										<tr>
-		   											<td>${HDchitiet.getID_monan()}</td>
-							                    	<td>${HDchitiet.getTenmon()}</td>
-							                        <td>${HDchitiet.getSoluong()}</td>
-								                    <td>${String.format("%.3f", HDchitiet.getGia())} VNĐ</td>
-								                    <td>${String.format("%.3f", HDchitiet.getGia() * HDchitiet.getSoluong())} VNĐ</td>
-									            </tr> 
-	   										</c:forEach>
-	   										<tr>
-		   										<td></td>
-							                    <td></td>
-							                    <td></td>
-								                <td><h3>Tổng tiền: </h3></td>
-								                <td><h3><%=String.format("%.3f", hoadons.get(i).getTongtien())%> VNĐ</h3></td>
-									        </tr> 
-			                          	</table>
-			                        </div>
-							</div>
-							<div class="auth-form__control btn-back">
-								<a class="btn auth-form__back " href="./">QUAY LẠI</a>
+			   										<td></td>
+								                    <td></td>
+								                    <td></td>
+									                <td><h3>Tổng tiền: </h3></td>
+									                <td><h3><%=String.format("%.3f", hoadons.get(i).getTongtien())%> VNĐ</h3></td>
+										        </tr> 
+				                          	</table>
+				                        </div>
+								</div>
+								<div class="auth-form__control btn-back">
+									<a class="btn auth-form__back " href="./">QUAY LẠI</a>
+								</div>
 							</div>
 						</div>
-					</div>
-				</div> 
-			</div>
-		<% } %>
+					</div> 
+				</div>
+			<% } %>
+		<% } %> 
     <!-- script js -->
     <!-- <script src="./assets/js/product.js"></script> -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

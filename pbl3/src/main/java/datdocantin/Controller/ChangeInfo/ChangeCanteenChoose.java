@@ -29,7 +29,7 @@ public class ChangeCanteenChoose extends HttpServlet {
 			ID_canteen = Integer.valueOf(request.getParameter("id_canteen"));
 			try { 
 				KhachhangDAO.ChangeCanteen(ID_khachhang, ID_canteen);
-			} catch (Exception e) {
+			} catch (Exception e) { 
 				e.printStackTrace();
 			}
 		}
