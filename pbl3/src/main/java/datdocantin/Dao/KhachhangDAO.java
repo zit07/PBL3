@@ -10,9 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 import datdocantin.Model.AccountModel;
 import datdocantin.Model.CanteenModel;
@@ -38,16 +37,21 @@ public class KhachhangDAO {
     	return result;
     }
     
-    public static List<List<KhachHangModel>> getListKhachHangOfCanteen(List<KhachHangModel> khachhangs, List<CanteenModel> canteens) {
-        Map<Integer, List<KhachHangModel>> mapKhachHangs = khachhangs.stream()
-            .collect(Collectors.groupingBy(KhachHangModel::getID_canteen));
-        List<List<KhachHangModel>> results = new ArrayList<>();
-        for (CanteenModel canteen : canteens) {
-            List<KhachHangModel> khachHangsOfCanteen = mapKhachHangs.getOrDefault(canteen.getID_canteen(), new ArrayList<>());
-            results.add(khachHangsOfCanteen);
-        }
-        return results;
+    public static List<List<KhachHangModel>> getListKhachHangOfCanteen(List<CanteenModel> canteens) throws Exception {
+    	List<KhachHangModel> khachhangs = getAllKhachHang();
+    	List<List<KhachHangModel>> result = new ArrayList<List<KhachHangModel>>();
+    	for (CanteenModel canteen : canteens) {
+    		List<KhachHangModel> khachhangofcanteen = new ArrayList<KhachHangModel>();
+			for (KhachHangModel khachhang : khachhangs) {
+				if (khachhang.getID_canteen() == canteen.getID_canteen()) {
+					khachhangofcanteen.add(khachhang);
+				}
+			}
+			result.add(khachhangofcanteen);
+		}
+        return result;
     }
+    
     
     public static List<KhachHangModel> getAllKhachHang() throws Exception{
     	List<KhachHangModel> ketQua=new ArrayList<>();
@@ -79,75 +83,55 @@ public class KhachhangDAO {
     
     
     
-    public List<KhachHangModel> getAllKHActive() throws Exception{
+    public static List<KhachHangModel> getInfoAll(int status_lock) throws Exception{
     	List<KhachHangModel> ketQua=new ArrayList<>();
     	 try {
              conn = connectDB.getConnection();
              if (conn != null) {
-            	 String sql="SELECT ID_khachhang,hoten,gioitinh,sodienthoai,email FROM khachhang"
-            	 		+ "+left join account on khachhang.ID_khachhang=account.ID_account where account.status_lock=?";
+            	 String sql="SELECT ID_khachhang,hoten,gioitinh,sodienthoai,email,ID_canteen FROM khachhang"
+            	 		+ " left join account on khachhang.ID_khachhang=account.ID_account where account.status_lock = ?";
              	stm = conn.prepareStatement(sql);
-             	stm.setInt(1, 0);
+             	stm.setInt(1, status_lock);
              	rs = stm.executeQuery();
              	while (rs.next()) {
                  	 ketQua.add(new KhachHangModel(rs.getInt("ID_khachhang"), rs.getString("hoten"), null,
                  			 rs.getString("gioitinh"), null, null, rs.getString("sodienthoai"), rs.getString("email"), 
-                 			 null, "", null, null));
+                 			 rs.getInt(6), "", null, null));
                  }
              }
          } catch (Exception e) {
-        	 System.out.println(e.getMessage());
+        	 e.printStackTrace();
          } finally {
          	connectDB.closeConnection(conn, stm, rs);
          }
         return ketQua;
     }
-     public List<KhachHangModel> getAllKHActiveByIdCanteen(String idcanteen) throws Exception{
-        	List<KhachHangModel> ketQua=new ArrayList<>();
-        	 try {
-                 conn = connectDB.getConnection();
-                 if (conn != null) {
-                	 String sql="SELECT ID_khachhang,hoten,gioitinh,sodienthoai,email FROM khachhang "
-                	 		+ "left join account on khachhang.ID_khachhang=account.ID_account where account.status_lock=?"
-                	 		+ " and ID_canteen=?";
-                 	stm = conn.prepareStatement(sql);
-                 	stm.setInt(1,0);
-                 	stm.setString(2,idcanteen);
-                 	rs = stm.executeQuery();
-                     while (rs.next()) {
-                    	 ketQua.add(new KhachHangModel(rs.getInt("ID_khachhang"), rs.getString("hoten"), null,
-                     			 rs.getString("gioitinh"), null, null, rs.getString("sodienthoai"), rs.getString("email"), 
-                     			 null, "", null, null));
-                     }
-                 }
-             } catch (Exception e) {
-            	 System.out.println(e.getMessage());
-             } finally {
-             	connectDB.closeConnection(conn, stm, rs);
-             }
-            return ketQua;
-        }
-        public List<KhachHangModel> searchByName(String txtSearch) throws SQLException, Exception {
+
+        public static List<KhachHangModel> SearchKhachhang(String txtSearch) throws SQLException, Exception {
         	List<KhachHangModel> result = new ArrayList<>();
-        	txtSearch = Normalizer.normalize(txtSearch.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
-            try {
-                conn = connectDB.getConnection();
-                if (conn != null) {
-                	String sql = "SELECT ID_khachhang, hoten, gioitinh, sodienthoai, email,ID_canteen  FROM khachhang WHERE hoten like  ?";
-                	stm = conn.prepareStatement(sql);
-                	stm.setString(1, "%"+txtSearch+"%");
-                	rs = stm.executeQuery();
-                    while (rs.next()) {
-                    	result.add(new KhachHangModel(rs.getInt("ID_khachhang"), rs.getString("hoten"), null,
-                    			 rs.getString("gioitinh"), null, null, rs.getString("sodienthoai"), rs.getString("email"), 
-                     			 rs.getInt("ID_canteen"), "", null, null));
-                     }
-                    }
-             } catch (Exception e) {
-            } finally {
-            	connectDB.closeConnection(conn, stm, rs);
-            }
-            return result;
+        	if (txtSearch != null && !txtSearch.equals("")) {
+        		txtSearch = Normalizer.normalize(txtSearch.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+	            try {
+	                conn = connectDB.getConnection();
+	                if (conn != null) {
+	                	String sql = "SELECT ID_khachhang, hoten, gioitinh, sodienthoai, email,ID_canteen  FROM khachhang";
+	                	stm = conn.prepareStatement(sql);
+	                	rs = stm.executeQuery();
+	                    while (rs.next()) {
+	                    	String t = Normalizer.normalize((rs.getString(1)+rs.getString(2)+rs.getString(4)+rs.getString(5)).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+		                	if (t.contains(txtSearch)) {
+		                		result.add(new KhachHangModel(rs.getInt("ID_khachhang"), rs.getString("hoten"), null,
+		                    			 rs.getString("gioitinh"), null, null, rs.getString("sodienthoai"), rs.getString("email"), 
+		                     			 rs.getInt("ID_canteen"), "", null, null));		                	}
+	                    	
+	                    }
+	                }
+	            } catch (Exception e) {
+	            } finally {
+	            	connectDB.closeConnection(conn, stm, rs);
+	            }
+        	}
+        	return result;
         }
         
     

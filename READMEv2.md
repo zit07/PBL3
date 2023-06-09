@@ -109,3 +109,13 @@ CREATE TABLE `Lichsutimkiem` (
   PRIMARY KEY (`ID_lichsutimkiem`),
     FOREIGN KEY (ID_nguoidung) REFERENCES  account(ID_account)
 ) ;
+
+CREATE TABLE `doanhthu` (
+  `ID_doanhthu` int NOT NULL,
+  `ID_canteen` int DEFAULT NULL,
+  `ngay` date DEFAULT NULL,
+  `soluongdaban` int DEFAULT NULL,
+  `tongdoanhthu` decimal(10,3) DEFAULT NULL,
+  PRIMARY KEY (`ID_doanhthu`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+

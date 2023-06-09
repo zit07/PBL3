@@ -56,40 +56,22 @@ public class AccountDAO {
    		}
    	   return list;
       }
-      public void MoKhoaTK(String id) throws Exception {
-   	   try {
-   		  conn = connectDB.getConnection();
-  			if (conn != null) {
-  				String sql = "Update account set status_lock=? where ID_account=?";
-  				stm = conn.prepareStatement(sql);
-  				stm.setInt(1, 0);
-  				stm.setString(2,id);
-  				stm.executeUpdate();
-  				System.out.println("Active account!");
-  			}
-  		} catch (Exception e) {
-  			System.out.println(e.getMessage());
-  		} finally {
-  			connectDB.closeConnection(conn, stm, rs);
-  		}
-      }
-      public void KhoaAccountByID(String id) throws Exception {
-      	try {
-   			conn = connectDB.getConnection();
-   			if (conn != null) {
-   				String sql = "Update account set status_lock=? where ID_account=?";
-   				stm = conn.prepareStatement(sql);
-   				stm.setInt(1, 1);
-   				stm.setString(2,id);
-   				stm.executeUpdate();
-   				System.out.println("suceessfully locked acount ");
-   			}
-   		} catch (Exception e) {
-   			System.out.println(e.getMessage());
-   		}
-   		 finally {
-    			connectDB.closeConnection(conn, stm, rs);
-    		}
+      public static void Khoa_Mokhoa(int ID_account, String tag) throws Exception {
+	   	   try {
+	   		  conn = connectDB.getConnection();
+	  			if (conn != null) {
+	  				int status_lock = tag.equals("mokhoa") ? 0:1;
+	  				String sql = "Update account set status_lock = ? where ID_account = ?;";
+	  				stm = conn.prepareStatement(sql);
+	  				stm.setInt(1, status_lock);
+	  				stm.setInt(2, ID_account);
+	  				stm.executeUpdate(); 
+	  			}
+	  		} catch (Exception e) {
+	  			e.printStackTrace();
+	  		} finally {
+	  			connectDB.closeConnection(conn, stm, rs);
+	  		}
       }
      
     
@@ -118,6 +100,26 @@ public class AccountDAO {
         	connectDB.closeConnection(conn, stm, rs);
         }
         return result;
+    }
+    
+    public static String getRole(Integer ID_account) throws SQLException, Exception {
+        try {
+        	conn = connectDB.getConnection();
+        	if (conn != null) {
+        	    String sql = "SELECT typeUser FROM account WHERE ID_account = ?;";
+        	    stm = conn.prepareStatement(sql);
+        	    stm.setInt(1, ID_account);
+        	    rs = stm.executeQuery();
+        	    if (rs.next()) {
+        	        return rs.getString(1);
+        	    }
+        	}
+        } catch (Exception e) {
+        	e.printStackTrace();
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+        return null;
     }
 	
     public static boolean CheckAccountNotExist(String sdt) throws SQLException, Exception {

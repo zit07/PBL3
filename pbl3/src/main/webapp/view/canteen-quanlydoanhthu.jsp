@@ -1,3 +1,7 @@
+<%@page import="java.time.YearMonth"%>
+<%@page import="org.apache.jasper.tagplugins.jstl.core.If"%>
+<%@page import="datdocantin.Model.DoanhthuchitietModel"%>
+<%@page import="datdocantin.Model.DoanhthuModel"%>
 <%@page import="javax.servlet.jsp.tagext.Tag"%>
 <%@page import="datdocantin.Model.BankModel"%>
 <%@page import="datdocantin.Model.LoaithucanModel"%>
@@ -19,10 +23,13 @@
 	List<LichsutimkiemModel> searchHistory = (List<LichsutimkiemModel>)session.getAttribute("searchHistory");  
 	List<GiohoatdongModel> giohoatdongList = (List<GiohoatdongModel>) session.getAttribute("listGiohoatdong");
 	DiachiModel diachi = (DiachiModel) session.getAttribute("diachi");
-	List<HoadonModel> hoadons = (List<HoadonModel>) session.getAttribute("hoadons");
-	List<List<HoadonchitietModel>> hdctList = (List<List<HoadonchitietModel>>) session.getAttribute("hoadonchitiets");
 	BankModel bank = (BankModel) session.getAttribute("bank"); 
 	List<LoaithucanModel> loaithucans = (List<LoaithucanModel>) session.getAttribute("loaithucan");
+	List<DoanhthuModel> ListDoanhthu = (List<DoanhthuModel>) session.getAttribute("listDoanhthu");
+	DoanhthuModel tongdoanhthu = (DoanhthuModel) session.getAttribute("tongdoanhthu");
+	List<List<DoanhthuchitietModel>> ListDTCT = (List<List<DoanhthuchitietModel>>) session.getAttribute("ListDTCT");
+	String tag = (String) session.getAttribute("tag");
+	List<YearMonth> listmonth = (List<YearMonth>) session.getAttribute("listmonth");
 %>
 <!DOCTYPE html>
 <html>
@@ -153,39 +160,105 @@
 								</h3>
 								<div class="navbar">
 									<a class="navbar-link" href="./" >Quản lý món ăn</a> 
-									<a class="navbar-link choose" href="./loaithucan">Quản lý loại thức ăn</a>
+									<a class="navbar-link" href="./loaithucan">Quản lý loại thức ăn</a>
 									<a class="navbar-link" href="./quanlydonhang">Quản lý đơn hàng</a>
-									<a class="navbar-link" href="./doanhthungay">Xem doanh thu</a> 
+									<a class="navbar-link choose" href="./doanhthungay">Xem doanh thu</a> 
 								</div>
 							</nav>
 						</div>
 						<div class="col l-10">
+	                        <!-- home filter -->
+							<div class="home-filter">
+								<div class="home-filter-control nav-bar__filter">
+									<div class="">
+										<a class="btn home-filter-btn ${tag == 'doanhthungay' ? 'btn--primary':''}" href="./doanhthungay">Doanh thu ngày</a>
+										<a class="btn home-filter-btn ${tag == 'doanhthuthang' ? 'btn--primary':''}" href="./doanhthuthang">Doanh thu tháng</a>
+									</div> 
+									<% if (tag.equals("doanhthungay")) {%>
+										<div class="">
+											<form action="./doanhthungay" method="GET"> 
+												<span class="ngay-loc">Từ ngày: </span>
+												<input type="date" class="input_date" id="date_input" name="startDate" value="${startDate}">
+												<span class="ngay-loc">Đến ngày: </span>
+												<input type="date" class="input_date" id="date_input" name="endDate" value="${endDate}">
+												<button type="submit" class="btn btn--primary">Lọc</button>
+											</form>
+										</div>
+									<% } else if (tag.equals("doanhthuthang")) { %>
+										<div class="">
+											<form action="./doanhthuthang" method="GET"> 
+												<span class="ngay-loc">Từ tháng: </span>
+												<input type="month" class="input_date" id="date_input" name="startMonth" value="${startMonth}">
+												<span class="ngay-loc">Đến tháng: </span>
+												<input type="month" class="input_date" id="date_input" name="endMonth" value="${endMonth}">
+												<button type="submit" class="btn btn--primary">Lọc</button>
+											</form>
+										</div>
+									<% } %>
+								</div>
+							</div>
 	                        <!-- home product -->
-	                        <div class="home-product">
-								<form class="header__search cangiua" method="POST" action="./loaithucan">
-									<div class="header__search-input-wrap">
-										<input type="text" class="header__search-input" placeholder="Nhập loại món ăn mới" name="txtloaithucan" value="">
-									</div>
-									<button class="btn btn--primary" type="submit">Thêm</button>
-								</form>
-				                <h3 class="auth-form__heading table-list-user">CÁC LOẠI THỨC ĂN MÀ CANTEEN CỦA BẠN ĐANG KINH DOANH</h3>
-					            <div class="list-user">
-				                    <table border ="1" width ="100%">
-					                    <tr>					                   
-					                     	<th>Tên loại thức ăn</th>
-					                      	<th>Xoá</th>
-						                </tr>
-						                <c:set var="loaithucans" value="<%=loaithucans%>"/>
-						                <c:forEach items="${loaithucans}" var="loaithucan"> 
-						                	<tr>
-												<td>${loaithucan.getLoaithucan()}</td>
-												<td> <a href="./xoaloaithucan?id_loaithucan=${loaithucan.getID_loaithucan()}" class="btn btn--primary home-product-btn delete-product">Xoá</a></td>
-											</tr>
-						                </c:forEach>
-					                </table>					              
-				                </div>
-				            </div>
-	                    </div>   
+	                        	<% if (tag.equals("doanhthungay")) {%>
+				                    <div class="home-product">
+				                        <h3 class="auth-form__heading table-list-user">TỔNG DOANH THU</h3>
+					                    <div class="list-user">
+						                    <table border ="1" width ="100%">
+							                    <tr>
+													<th>Ngày</th>
+							                    	<th>Số lượng món ăn đã bán</th>
+					                              	<th>Tổng doanh thu</th>
+													<th>Chi tiết</th>
+					                            </tr>
+					                            <c:set var="ListDoanhthu" value="<%=ListDoanhthu%>"/>
+	                        					<c:forEach items="${ListDoanhthu}" var="doanhthu"> 
+						                            <tr>
+														<td>${doanhthu.getNgay()}</td>
+														<td>${doanhthu.getSoluongdaban()}</td>
+														<td>${String.format("%.3f", doanhthu.getTongdoanhthu())} VNĐ</td>
+														<td><a class="btn btn--primary home-product-btn" name="link-cart-detail" id="${doanhthu.getID_doanhthu()}">Xem</a></td>
+													</tr>
+												</c:forEach>
+												<tr>
+													<td><h3>Tổng</h3></td>
+													<td><h3><%=tongdoanhthu.getSoluongdaban()%></h3></td>
+													<td><h3><%=String.format("%.3f", tongdoanhthu.getTongdoanhthu())%> VNĐ</h3></td>
+													<td></td>
+												</tr>
+						                    </table>
+					                    </div>
+				                    </div>
+				            	<% } else if (tag.equals("doanhthuthang")) { %>
+				            		<div class="home-product">
+				                        <h3 class="auth-form__heading table-list-user">TỔNG DOANH THU</h3>
+					                    <div class="list-user">
+						                    <table border ="1" width ="100%">
+							                    <tr>
+													<th>Tháng</th>
+							                    	<th>Số lượng món ăn đã bán</th>
+					                              	<th>Tổng doanh thu</th>
+													<th>Chi tiết</th>
+					                            </tr>
+	                        					<% for (int i=0; i<listmonth.size(); i++) { %>
+	                        					<c:set var="doanhthu" value="<%=ListDoanhthu.get(i)%>"/>
+						                            <tr>				
+														<td>Tháng ${listmonth.get(i).getMonthValue()}</td>
+														<td>${doanhthu.getSoluongdaban()}</td>
+														<td>${String.format("%.3f", doanhthu.getTongdoanhthu())} VNĐ</td>
+														<td><a class="btn btn--primary home-product-btn" name="link-cart-detail" id="${listmonth.get(i).getMonthValue()}">Xem</a></td>
+													</tr>
+												<% } %>
+												<tr>
+													<td><h3>Tổng</h3></td>
+													<td><h3><%=tongdoanhthu.getSoluongdaban()%></h3></td>
+													<td><h3><%=String.format("%.3f", tongdoanhthu.getTongdoanhthu())%> VNĐ</h3></td>
+													<td></td>
+												</tr>
+						                    </table>
+					                    </div>
+				                    </div>
+				            	<% } %>
+	                        </div>   
+	                    </div>  
 	                </div>
 	            </div>
 	        </div>
@@ -525,9 +598,92 @@
 	            </form>
 	        </div> 
 	    </div>
-	    
-	    	<div class="modal" name="form-cart-detail" >
-			</div>
+	    <% if (tag.equals("doanhthungay")) {%>
+			<% for (int i=0; i<ListDoanhthu.size(); i++) { %>
+				<div class="modal" name="form-cart-detail" id="<%=ListDoanhthu.get(i).getID_doanhthu()%>">
+					<div class="modal__body">
+						<div class="auth-form list__custumer">
+							<div class="auth-form__container">
+								<div class="auth-form__form">
+									<h3 class="auth-form__heading table-list-user">CHI TIẾT DOANH THU NGÀY <%=ListDoanhthu.get(i).getNgay()%></h3>
+				                        <div class="result-search-user">
+				                          	<table border ="1" width ="100%">
+					                            <tr>
+					                              	<th>Tên món ăn</th>
+					                              	<th>Số lượng</th>
+					                              	<th>Đơn giá</th>
+					                              	<th>Thành tiền</th>
+					                            </tr>      
+					                            <c:set var="DTCTs" value="<%=ListDTCT.get(i)%>"/>
+		   										<c:forEach items="${DTCTs}" var="DTCT">	
+			   										<tr>
+								                    	<td>${DTCT.getTenmon()}</td>
+								                        <td>${DTCT.getSoluong()}</td>
+									                    <td>${String.format("%.3f", DTCT.getGia())} VNĐ</td>
+									                    <td>${String.format("%.3f", DTCT.getGia() * DTCT.getSoluong())} VNĐ</td>
+										            </tr> 
+		   										</c:forEach>
+		   										<tr>
+								                    <td></td>
+								                    <td></td>
+									                <td><h3>Tổng tiền: </h3></td>
+									                <td><h3><%=String.format("%.3f", ListDoanhthu.get(i).getTongdoanhthu())%> VNĐ</h3></td>
+										        </tr>  
+				                          	</table>
+				                        </div>
+								</div>
+								<div class="auth-form__control btn-back">
+									<a class="btn auth-form__back " href="./">QUAY LẠI</a>
+								</div>
+							</div>
+						</div>
+					</div> 
+				</div>
+			<% } %>
+		<% } else if (tag.equals("doanhthuthang")) { %>
+			<% for (int i=0; i<ListDoanhthu.size(); i++) { %>
+				<div class="modal" name="form-cart-detail" id="<%=listmonth.get(i).getMonthValue()%>">
+					<div class="modal__body">
+						<div class="auth-form list__custumer">
+							<div class="auth-form__container">
+								<div class="auth-form__form">
+									<h3 class="auth-form__heading table-list-user">CHI TIẾT DOANH THU NGÀY <%=listmonth.get(i).getMonthValue()%></h3>
+				                        <div class="result-search-user">
+				                          	<table border ="1" width ="100%">
+					                            <tr>
+					                              	<th>Tên món ăn</th>
+					                              	<th>Số lượng</th>
+					                              	<th>Đơn giá</th>
+					                              	<th>Thành tiền</th>
+					                            </tr>      
+					                            <c:set var="DTCTs" value="<%=ListDTCT.get(i)%>"/>
+		   										<c:forEach items="${DTCTs}" var="DTCT">	
+			   										<tr>
+								                    	<td>${DTCT.getTenmon()}</td>
+								                        <td>${DTCT.getSoluong()}</td>
+									                    <td>${String.format("%.3f", DTCT.getGia())} VNĐ</td>
+									                    <td>${String.format("%.3f", DTCT.getGia() * DTCT.getSoluong())} VNĐ</td>
+										            </tr> 
+		   										</c:forEach>
+		   										<tr>
+								                    <td></td>
+								                    <td></td>
+									                <td><h3>Tổng tiền: </h3></td>
+									                <td><h3><%=String.format("%.3f", ListDoanhthu.get(i).getTongdoanhthu())%> VNĐ</h3></td>
+										        </tr>  
+				                          	</table>
+				                        </div>
+								</div>
+								<div class="auth-form__control btn-back">
+									<a class="btn auth-form__back " href="./">QUAY LẠI</a>
+								</div>
+							</div>
+						</div>
+					</div> 
+				</div>
+			<% } %>          		
+		<% } %>
+		
 	</c:if>
 	
     <!-- script js -->

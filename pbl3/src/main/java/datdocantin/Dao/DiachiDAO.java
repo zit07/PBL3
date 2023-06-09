@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import datdocantin.Model.CanteenModel;
 import datdocantin.Model.DiachiModel;
 import datdocantin.Util.connectDB;
 
@@ -29,6 +33,28 @@ public class DiachiDAO {
         	connectDB.closeConnection(conn, stm, rs);
         }
     	return null;
+    }
+    
+    public static List<DiachiModel> getListDiachi(List<CanteenModel> canteens) throws Exception {
+    	List<DiachiModel> result = new ArrayList<DiachiModel>();
+    	try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+            	String sql = "SELECT ID_diachi, tinh, huyen, xa FROM diachi WHERE ID_diachi = ?;";
+                stm = conn.prepareStatement(sql);
+                for (CanteenModel canteen : canteens) {
+                	stm.setInt(1, canteen.getID_diachi()); 
+                	rs = stm.executeQuery();
+                    if (rs.next()) {
+                    	result.add(new DiachiModel(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4)));
+                    }
+				}
+            }
+        } catch (Exception e) {
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        } 
+    	return result;
     }
     
     public static void AddDiachi(int ID_diachi) throws Exception {

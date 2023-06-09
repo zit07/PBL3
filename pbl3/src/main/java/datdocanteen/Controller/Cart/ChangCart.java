@@ -6,7 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.HttpSession;
 
 import datdocantin.Dao.CartDAO;
 
@@ -23,13 +23,19 @@ public class ChangCart extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8"); 
 		request.setCharacterEncoding("utf-8");
         try {
-        	int ID_cart = Integer.valueOf(request.getParameter("id_cart"));
-        	String type = request.getParameter("type"); 
-        	if (type.equals("tang") || type.equals("giam")) {
-        		CartDAO.Tang_GiamCart(ID_cart, type, CartDAO.getSoluong(ID_cart, null, null));
-        	} else if (type.equals("xoa")){
-				CartDAO.XoaCart(ID_cart);
-			}
+        	HttpSession session = request.getSession();
+        	if (session.getAttribute("ID_khachhang") != null) {
+        		int ID_khachhang =(int)session.getAttribute("ID_khachhang");
+        		int ID_cart = Integer.valueOf(request.getParameter("id_cart"));
+        		if (CartDAO.checkCart(ID_cart, ID_khachhang)) {
+        			String type = request.getParameter("type"); 
+                	if (type.equals("tang") || type.equals("giam")) {
+                		CartDAO.Tang_GiamCart(ID_cart, type, CartDAO.getSoluong(ID_cart, null, null));
+                	} else if (type.equals("xoa")){
+        				CartDAO.XoaCart(ID_cart);
+        			}
+				}
+        	}
         } catch (Exception e) {
             log("error at login servlet: " + e.toString());
         } 

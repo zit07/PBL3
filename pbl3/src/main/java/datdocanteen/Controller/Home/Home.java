@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.AccountDAO;
 import datdocantin.Dao.BankDAO;
 import datdocantin.Dao.CanteenDAO;
 import datdocantin.Dao.CartDAO;
@@ -20,7 +19,6 @@ import datdocantin.Dao.HistorySearchDAO;
 import datdocantin.Dao.KhachhangDAO;
 import datdocantin.Dao.LoaithucanDAO;
 import datdocantin.Dao.MonAnDAO;
-import datdocantin.Model.AccountModel;
 import datdocantin.Model.CanteenModel;
 import datdocantin.Model.CartModel;
 import datdocantin.Model.KhachHangModel;
@@ -53,7 +51,7 @@ public class Home extends HttpServlet {
                	session.removeAttribute("giaketthuc");
 				session.removeAttribute("txtSearch");
 				session.setAttribute("tag", "moinhat");
-				session.setAttribute("listMonan", MonAnDAO.SortMonanByTag(khachhang.getID_canteen(), null, "moinhat",null));
+				session.setAttribute("listMonan", MonAnDAO.SortMonanByTag(khachhang, null, "moinhat",null));
 				session.setAttribute("khachhang", khachhang);
 				session.setAttribute("TenCanteen", CanteenDAO.getNameCanteen(khachhang.getID_canteen()));
 				session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID_khachhang));
@@ -78,29 +76,8 @@ public class Home extends HttpServlet {
 			} 
 			//admin
 			else if (session.getAttribute("admin") != null) {
-				//Trả về sanh sách tất cả các tài khoản 
-				List<AccountModel> listAccount = AccountDAO.getListAccount();
-				//Trả về danh sách tất cả các thông tin canteen
-				List<CanteenModel> listCanteen=CanteenDAO.getAllCanteen();
-				//Trả về danh sách tất cả các tài khoản khách hàng
-				List<KhachHangModel> listKhachHang=KhachhangDAO.getAllKhachHang();
-				
-				
-				//trả về danh sách các canteen còn hoạt động dựa vao danh sách listAccount va listCanteen
-				session.setAttribute("listCanteen", CanteenDAO.getListCanteenByTag(listCanteen,listAccount,"active"));
-				
-				//trả về danh sách khách hàng của canteen 
-				//hàm getListKhachHangOfCanteen trả về kiêu List<List<KhachHangModel>>
-				session.setAttribute("listKhachHangOfCanteen", KhachhangDAO.getListKhachHangOfCanteen(listKhachHang,listCanteen));
-				//trả về sánh sách khách hàng đang hoạt động
-				session.setAttribute("listKhachHang", KhachhangDAO.getListKhachhangByTag(listKhachHang,listAccount,"active"));
-				
-				//trả về danh sách các canteen bị khóa dựa vao danh sách listAccount va listCanteen
-				session.setAttribute("listCanteen", CanteenDAO.getListCanteenByTag(listCanteen,listAccount,"locked"));
-				//trả về sánh sách khách hàng bị khóa
-				session.setAttribute("listKhachHang", KhachhangDAO.getListKhachhangByTag(listKhachHang,listAccount,"locked"));
-				
-				request.getRequestDispatcher("view/admin-homepage.jsp").forward(request, response);
+				session.setAttribute("tag", "quanlycanteen");
+				response.sendRedirect(request.getContextPath() + "/quanlycanteen");
 				
 			}
 			//trang chu

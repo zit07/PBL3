@@ -13,6 +13,7 @@ import java.util.Optional;
 import datdocantin.Model.AccountModel;
 import datdocantin.Model.CanteenModel;
 import datdocantin.Model.DiachiModel;
+import datdocantin.Model.KhachHangModel;
 import datdocantin.Util.connectDB;
 
 public class CanteenDAO {
@@ -33,45 +34,38 @@ public class CanteenDAO {
        	}
        	return result;
       }
-      
-      public static List<CanteenModel> getAllCanteen() throws Exception{
-      	List<CanteenModel> ketQua=new ArrayList<>();
-      	 try { 
-               conn = connectDB.getConnection();
-                  if (conn != null) {
-                   	String sql = "Select ID_canteen, ten, sodienthoai, email, ID_diachi, pin, avatar from canteen ";
-                   	stm = conn.prepareStatement(sql);
-                   	rs = stm.executeQuery();
-                   	while(rs.next()) { 
-                   		ketQua.add(new CanteenModel(rs.getInt(1),
-                       			rs.getString(2), rs.getString(3),
-                       			rs.getString(4), rs.getInt(5), 
-                       			rs.getInt(6), null));
-                   		
-                       }
-                   }
-               }
-      	  catch (Exception e) {
-      		  e.printStackTrace();
-               } finally {
-               	connectDB.closeConnection(conn, stm, rs);
-               }
-          return ketQua;
-      } 
-       
-       public static List<CanteenModel> getAllCanteenActive() throws Exception{
+    
+       public static List<CanteenModel> getAllCanteen(int status_lock, Integer tinh, Integer huyen, Integer xa) throws Exception{
        	List<CanteenModel> ketQua=new ArrayList<>();
        	 try { 
                 conn = connectDB.getConnection();
                    if (conn != null) {
-                    	String sql = "Select ID_canteen,ten,sodienthoai,email,ID_diachi from canteen left join account on canteen.ID_canteen=account.ID_account where account.status_lock=0";
+                    	String sql = "SELECT c.ID_canteen, c.ten, c.sodienthoai, c.email, d.ID_diachi FROM canteen c "
+                    			+ "LEFT JOIN account a ON c.ID_canteen = a.ID_account "
+                    			+ "LEFT JOIN diachi d ON c.ID_diachi = d.ID_diachi "
+                    			+ "WHERE a.status_lock = ?";
+                    	if (xa != -1) {
+							sql += " AND d.tinh = ? AND d.huyen = ? AND d.xa = ?;";
+						} else if (huyen != -1) {
+							sql += " AND d.tinh = ? AND d.huyen = ? ;";
+						} else if (tinh != -1) {
+							sql += " AND d.tinh = ? ;";
+						}
                     	stm = conn.prepareStatement(sql);
+                    	stm.setInt(1, status_lock); 
+                    	if (xa != -1) {
+                    		stm.setInt(2, tinh);
+                    		stm.setInt(3, huyen);
+                    		stm.setInt(4, xa);
+						} else if (huyen != -1) { 
+							stm.setInt(2, tinh);
+							stm.setInt(3, huyen);
+						} else if (tinh != -1) {
+							stm.setInt(2, tinh);
+						}
                     	rs = stm.executeQuery();
                     	while(rs.next()) {
-                           ketQua.add(new CanteenModel(rs.getInt(1),
-                        			rs.getString(2), rs.getString(3),
-                        			rs.getString(4), rs.getInt(5), 
-                        			null, null));
+                           ketQua.add(new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), null, null));
                         }
                     }
                 }
@@ -82,6 +76,10 @@ public class CanteenDAO {
                 }
            return ketQua;
        }
+       
+       
+       
+       
        
     public static CanteenModel getInfoCanteen(int ID_canteen) throws SQLException, Exception {
     	CanteenModel result = null;
@@ -106,7 +104,19 @@ public class CanteenDAO {
         }
         return result;
     }
-
+ 
+    public static List<String> getListNameCanteen(List<KhachHangModel> khachhangs) throws SQLException, Exception {
+    	List<String> result = new ArrayList<String>();
+    	for (KhachHangModel khachhang : khachhangs) {
+    		if (khachhang.getID_canteen() != null) {
+        		result.add(getNameCanteen(khachhang.getID_canteen()));
+			} else {
+				result.add(null);
+			}
+		}
+    	return result;
+    }
+    
     public static String getNameCanteen(int ID_canteen) throws SQLException, Exception {
         try {
             conn = connectDB.getConnection();
@@ -186,54 +196,60 @@ public class CanteenDAO {
     	try {
     		conn = connectDB.getConnection();
     		if (conn != null) { 
-				if (!txtSearch.equals("") && txtSearch!=null) {
-					String sql = "SELECT ID_canteen, ten, sodienthoai, email, ID_diachi, avatar FROM canteen;";
+				if (!txtSearch.equals("") && txtSearch != null) {
+					String sql = "SELECT ID_canteen, ten, sodienthoai, email, ID_diachi, avatar FROM canteen"
+							+ " JOIN account ON account.ID_account = canteen.ID_canteen WHERE account.status_lock = ?;";
 					stm = conn.prepareStatement(sql); 
+					stm.setInt(1, 0);
 	            	rs = stm.executeQuery();
 	                while (rs.next()) {
-	                	byte[] decodedAvatar = null;
-	                	if (rs.getBytes(6)!=null){
-		                	decodedAvatar = Base64.getDecoder().decode(rs.getBytes(6));
-	                	}
 	                	String t = Normalizer.normalize((rs.getString(1)+rs.getString(2)+rs.getString(3)).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
 	                	if (t.contains(txtSearch)) {
+	                		byte[] decodedAvatar = null;
+		                	if (rs.getBytes(6)!=null){System.out.println(rs.getBytes(6));
+			                	decodedAvatar = Base64.getDecoder().decode(rs.getBytes(6));
+		                	}
 	                		result.add(new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), null, decodedAvatar));
 	                	}
 	                }
 				}  
-				
-				if (diachi.getTinh() != -1) {
-					String sql = "SELECT canteen.ID_canteen, canteen.ten, canteen.sodienthoai, canteen.email, canteen.ID_diachi, canteen.avatar "
-							+ "FROM canteen JOIN diachi ON canteen.ID_diachi = diachi.ID_diachi WHERE diachi.tinh = ?"
-							+ (diachi.getHuyen() != -1 ? " AND huyen = ?" : "") 
-					        + (diachi.getXa() != -1  ? " AND xa = ?" : "")  + ";";;
-					stm = conn.prepareStatement(sql); 
-					stm.setInt(1, diachi.getTinh());
-					int index = 2;
-					if (diachi.getHuyen() != -1) {
-					    stm.setInt(index, diachi.getHuyen());
-					    index++;
-					}
-					if (diachi.getXa() != -1) {
-					    stm.setInt(index, diachi.getXa());
-					}
-	            	rs = stm.executeQuery(); 
-	                while (rs.next()) {
-	                	byte[] decodedAvatar = null;
-	                	if (rs.getBytes(6)!=null){
-		                	decodedAvatar = Base64.getDecoder().decode(rs.getBytes(6));
-	                	}
-	                	boolean check = true;
-	                	for (CanteenModel canteen : result) {
-	                		if (canteen.getID_canteen() == rs.getInt(1)) {
-	                			check = false;
-	                			break;
-	                		}
-	                    }
-	                	if (check) {
-		                	result.add(new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), null, decodedAvatar));
+				if (diachi != null) {
+					if (diachi.getTinh() != -1) {
+						String sql = "SELECT canteen.ID_canteen, canteen.ten, canteen.sodienthoai, canteen.email, canteen.ID_diachi, canteen.avatar FROM canteen "
+								+ " JOIN diachi ON canteen.ID_diachi = diachi.ID_diachi "
+								+ " JOIN account ON account.ID_account = canteen.ID_canteen"
+								+ " WHERE account.status_lock = ? AND diachi.tinh = ?"
+								+ (diachi.getHuyen() != -1 ? " AND huyen = ?" : "") 
+						        + (diachi.getXa() != -1  ? " AND xa = ?" : "")  + ";";;
+						stm = conn.prepareStatement(sql); 
+						stm.setInt(1, 0);
+						stm.setInt(2, diachi.getTinh());
+						int index = 3;
+						if (diachi.getHuyen() != -1) {
+						    stm.setInt(index, diachi.getHuyen());
+						    index++;
 						}
-	                }
+						if (diachi.getXa() != -1) {
+						    stm.setInt(index, diachi.getXa());
+						}
+		            	rs = stm.executeQuery(); 
+		                while (rs.next()) {
+		                	byte[] decodedAvatar = null;
+		                	if (rs.getBytes(6)!=null){
+			                	decodedAvatar = Base64.getDecoder().decode(rs.getBytes(6));
+		                	}
+		                	boolean check = true;
+		                	for (CanteenModel canteen : result) {
+		                		if (canteen.getID_canteen() == rs.getInt(1)) {
+		                			check = false;
+		                			break;
+		                		}
+		                    }
+		                	if (check) {
+			                	result.add(new CanteenModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), null, decodedAvatar));
+							}
+		                }
+					}
 				}
 			}
 			
@@ -251,8 +267,8 @@ public class CanteenDAO {
 			//List<CanteenModel> result = SearchCanteen("111", new DiachiModel(-1,49,-1,-1));
 			//System.out.println(result.size());		
 //			20197
-			addCanteen(new CanteenModel(5,"Be Da","098123987",null,2,null,null));
-			List<CanteenModel> list=getAllCanteen();
+//			addCanteen(new CanteenModel(5,"Be Da","098123987",null,2,null,null));
+			List<CanteenModel> list=getAllCanteen(0, 48, -1, -1);
 			for(CanteenModel i : list){
 				System.out.println(i);
 			}

@@ -602,7 +602,7 @@ border-color: red green blue yellow */
 .header__logo-img {
     width: 180px;
     height: 80px;
-    border-radius: 45px;
+    border-radius: 45px; 
 }
 
 .header__logo-link {
@@ -612,13 +612,18 @@ border-color: red green blue yellow */
     line-height: 0;
 }
 
-.header__search {
+.header__search,
+.body_search {
     width: 70%;
     height: 40px;
     background-color: var(--white-color);
     border-radius: 3px;
     display: flex;
     align-items: center;
+}
+
+.body_search {
+    margin: auto;
 }
 
 .header__search-input-wrap {
@@ -1174,6 +1179,10 @@ border-color: red green blue yellow */
 .home-filter-page {
     display: flex;
     align-items: center;
+}
+
+.ngay-loc {
+    font-size: 1.4rem;
 }
 
 .home-filter-title {

@@ -74,7 +74,7 @@ public class HistorySearchDAO {
                 String sql = "DELETE FROM lichsutimkiem WHERE ID_lichsutimkiem = ? AND ID_nguoidung = ?";
                 stm = conn.prepareStatement(sql);
                 stm.setInt(1, ID_lichsutimkiem);
-                stm.setInt(1, ID_nguoidung);
+                stm.setInt(2, ID_nguoidung);
                 stm.executeUpdate();   
             }
         } catch (Exception e) {

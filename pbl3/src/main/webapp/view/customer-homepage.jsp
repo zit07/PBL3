@@ -442,6 +442,7 @@
                             <div class="home-filter-control">
                                 <p class="home-filter-title">Sắp xếp theo:</p>
                                 <a class="btn home-filter-btn ${tag == 'moinhat' ? 'btn--primary':''} ${tag == null ? 'btn--primary':''}" href="./moinhat">Mới nhất</a>
+                                <a class="btn home-filter-btn ${tag == 'goiy' ? 'btn--primary':''}" href="./goiy">Gợi ý</a>
                                 <a class="btn home-filter-btn ${tag == 'banchay' ? 'btn--primary':''}" href="./banchay">Bán chạy</a>
                                 <div class="btn home-filter-sort ${tag == 'tangdan' ? 'btn--primary':''} ${tag == 'giamdan' ? 'btn--primary':''}">
                                     <p class="home-filter-sort-btn">Giá</p>

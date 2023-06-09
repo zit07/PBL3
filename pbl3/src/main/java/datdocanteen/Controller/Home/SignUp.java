@@ -42,28 +42,30 @@ public class SignUp extends HttpServlet {
         	String SDT = request.getParameter("txtSdt");
             String Password = PasswordEncoder.encode(request.getParameter("txtPassword"));
             String TypeUser = request.getParameter("typeUser");
-            if (AccountDAO.CheckAccountNotExist(SDT)) {
-            	Integer ID = getNewIDforTable.getNewID("account");
-            	AccountDAO.addAccount(new AccountModel(ID, SDT, Password, TypeUser, 0));
-            	if (TypeUser.equals("customer")) {
-                	KhachhangDAO.addKhachhang(new KhachHangModel(ID,Ten,null,null,null,null,SDT,null,null,null,null,null));
-            	} 
-            	else {
-            		int ID_diachi = getNewIDforTable.getNewID("diachi");
-            		int ID_bank = getNewIDforTable.getNewID("bank_info");
-            		DiachiDAO.AddDiachi(ID_diachi);
-            		CanteenDAO.addCanteen(new CanteenModel(ID,Ten,SDT,null,ID_diachi,null,null));
-            		BankDAO.AddBank(ID_bank,ID);
-            		GiohoatdongDAO.Addgiohoatdong(Integer.valueOf(getNewIDforTable.getNewID("giohoatdong")), ID);
-				}
-            	response.sendRedirect(request.getContextPath());
-            }
-            else {
-            	request.setAttribute("display_form__signup", "flex");
-            	request.setAttribute("display_noti__signup", "flex");
-            	request.setAttribute("sdt", SDT);
-            	request.getRequestDispatcher("view/homepage.jsp").forward(request, response);
-            }
+            if (TypeUser.equals("canteen") || TypeUser.equals("custommer")) {
+            	if (AccountDAO.CheckAccountNotExist(SDT)) {
+                	Integer ID = getNewIDforTable.getNewID("account");
+                	AccountDAO.addAccount(new AccountModel(ID, SDT, Password, TypeUser, 0));
+                	if (TypeUser.equals("customer")) {
+                    	KhachhangDAO.addKhachhang(new KhachHangModel(ID,Ten,null,null,null,null,SDT,null,null,null,null,null));
+                	} 
+                	else {
+                		int ID_diachi = getNewIDforTable.getNewID("diachi");
+                		int ID_bank = getNewIDforTable.getNewID("bank_info");
+                		DiachiDAO.AddDiachi(ID_diachi);
+                		CanteenDAO.addCanteen(new CanteenModel(ID,Ten,SDT,null,ID_diachi,null,null));
+                		BankDAO.AddBank(ID_bank,ID);
+                		GiohoatdongDAO.Addgiohoatdong(Integer.valueOf(getNewIDforTable.getNewID("giohoatdong")), ID);
+    				}
+                	response.sendRedirect(request.getContextPath());
+                }
+                else {
+                	request.setAttribute("display_form__signup", "flex");
+                	request.setAttribute("display_noti__signup", "flex");
+                	request.setAttribute("sdt", SDT);
+                	request.getRequestDispatcher("view/homepage.jsp").forward(request, response);
+                }
+			}
         } catch (Exception e) {
             log("error at login servlet: " + e.toString());
         } 

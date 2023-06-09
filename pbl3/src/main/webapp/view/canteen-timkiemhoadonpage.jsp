@@ -154,7 +154,7 @@
 									<a class="navbar-link" href="./" >Quản lý món ăn</a> 
 									<a class="navbar-link" href="./qlyloaithucan">Quản lý loại thức ăn</a>
 									<a class="navbar-link choose" href="./quanlydonhang">Quản lý đơn hàng</a>
-									<a class="navbar-link" id="link-">Xem doanh thu</a> 
+									<a class="navbar-link" href="./doanhthungay">Xem doanh thu</a> 
 								</div>
 							</nav>
 						</div>
@@ -385,7 +385,7 @@
 									<span>Mã QR:</span>
 								</div>
 								<div class="auth-form__group">
-									<c:if test="${canteen.getAvatar()!=null}">
+									<c:if test="${bank.getMaQR()!=null}">
 										<img src="data:image/jpeg;base64,<%=Base64.getEncoder().encodeToString(bank.getMaQR())%>" class="avatar-form__img qrcode" />
 									</c:if>
 	                    			<input class="avatar-form__input" type="file" name="maQR">

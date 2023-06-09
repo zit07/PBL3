@@ -28,12 +28,14 @@ public class AddProducttoCart extends HttpServlet {
 		request.setCharacterEncoding("utf-8"); 
         try { 
         	HttpSession session = request.getSession();
-    		KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
-    		int ID_khachhang = khachhang.getID_khachhang();
-        	int ID_cart = getNewIDforTable.getNewID("cart");
-        	int ID_monan =  Integer.valueOf(request.getParameter("id_monan")); 
-        	if (MonAnDAO.CheckProduct(ID_monan, khachhang.getID_canteen())) { System.out.println(CartDAO.getSoluong(null, ID_monan, ID_khachhang));
-        		CartDAO.AddtoCart(new CartModel(ID_cart, ID_khachhang, ID_monan, null, null, CartDAO.getSoluong(null, ID_monan, ID_khachhang) + 1, null));
+        	if (session.getAttribute("khachhang") != null) {
+        		KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
+        		int ID_khachhang = khachhang.getID_khachhang();
+            	int ID_cart = getNewIDforTable.getNewID("cart");
+            	int ID_monan =  Integer.valueOf(request.getParameter("id_monan")); 
+            	if (MonAnDAO.CheckProduct(ID_monan, khachhang.getID_canteen())) { 
+            		CartDAO.AddtoCart(new CartModel(ID_cart, ID_khachhang, ID_monan, null, null, CartDAO.getSoluong(null, ID_monan, ID_khachhang) + 1, null));
+    			}
 			}
         } catch (Exception e) {
             e.printStackTrace();

@@ -192,49 +192,11 @@
                     </div>
                     <div class="col l-10">
                         <!-- home filter -->
-                        <div class="home-filter">
-                            <div class="home-filter-control">
-                                <p class="home-filter-title">Sắp xếp theo:</p>
-                                <button class="btn btn--primary home-filter-btn">Mới nhất</button>
-                                <button class="btn home-filter-btn">Bán chạy</button>
-                                <div class="btn home-filter-sort">
-                                    <p class="home-filter-sort-btn">Giá</p>
-                                    <i class="fas fa-sort-amount-down-alt"></i>
-                                    <ul class="home-filter-sort-list">
-                                        <li>
-                                            <a href="#" class="home-filter-sort-item-link">
-                                                Giảm dần
-                                                <i class="fas fa-sort-amount-down-alt"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="home-filter-sort-item-link">
-                                                Tăng dần
-                                                <i class="fas fa-sort-amount-up-alt"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="home-filter-page">
-                                <div class="home-filter-page-number">
-                                    <p class="home-filter-page-now">1</p>
-                                    /14
-                                </div>
-                                <div class="home-filter-page-control">
-                                    <a href="#" class="home-filter-page-btn home-filter-page-btn--disable">
-                                        <i class="fas fa-angle-left"></i>
-                                    </a>
-                                    <a href="#" class="home-filter-page-btn">
-                                        <i class="fas fa-angle-right"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        
                       
                         <!-- home product -->
                         <div class="home-product">    
-                        	<%if (MonanList!=null){ %>    
+                        	<%if (Canteen!=null){ %>    
                        			<h3 class="title-list-product">Danh sách các món ăn của canteen: <%=Canteen.getTen() %></h3>
                        		<%} %>
                             <!-- <div id="list-product" class="row sm-gutter"> -->

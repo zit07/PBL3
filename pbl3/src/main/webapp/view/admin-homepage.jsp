@@ -1,9 +1,21 @@
+<%@page import="java.time.YearMonth"%>
+<%@page import="datdocantin.Model.DiachiModel"%>
+<%@page import="datdocantin.Model.KhachHangModel"%>
+<%@page import="datdocantin.Model.CanteenModel"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-<%@ page import="javax.servlet.http.HttpSession" %>
-<%@ page import="java.util.List" %>
-<!DOCTYPE html> 
+<%@ page import="javax.servlet.http.HttpSession" %>  
+<%@ page import="java.util.List" %> 
+<%	
+	List<CanteenModel> danhsachcanteen = (List<CanteenModel>) session.getAttribute("listCanteen");
+    List<List<KhachHangModel>> khachhangcuacanteen = (List<List<KhachHangModel>>) session.getAttribute("listKhachHangOfCanteen");
+    List<KhachHangModel> listKhachHang = (List<KhachHangModel>) session.getAttribute("listKhachHang");
+    List<String> listnamecanteen = (List<String>) session.getAttribute("listnamecanteen");
+	String tag = (String) session.getAttribute("tag");
+	List<DiachiModel> listDiachi = (List<DiachiModel>) session.getAttribute("listDiachi");
+%>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -47,7 +59,7 @@
 	                       
 								<li class="header__nav-item header__nav-user">
 			                    	<img src="./assets/img/avatarDefault.jpg" class="header__nav-user-avt"> 
-			                    	<a href="#" class="header__nav-item-link header__nav-item--bold">${khachhang.getHoten()}</a>
+			                    	<a href="#" class="header__nav-item-link header__nav-item--bold">ADMIN</a>
 									<ul class="header__nav-user-menu">
 										<li class="header__nav-user-item" id="changepass-link">
 											<a href="./Changepassword">Đổi mật khẩu</a>
@@ -74,25 +86,40 @@
 									<i class="category-heading-icon fas fa-list-ul"></i> HOME
 								</h3>
 								<div class="navbar">
-									<a class="navbar-link" href="./listCanteen" target="list">Xem thông tin Canteen</a> 
-									<a class="navbar-link" href="">Xem thông tin khách hàng</a> 
-									<a class="navbar-link" href="">Tìm kiếm người dùng</a> 
-									<a class="navbar-link" href="">Tài khoản đã bị khoá</a> 
-									<a class="navbar-link" href="">Xem khiếu nại</a> 
+									<a class="navbar-link ${tag == 'quanlycanteen' ? 'choose':''}${tag == 'quanlykhachhang' ? 'choose':''}" href="./quanlycanteen">Xem thông tin người dùng</a> 
+									<a class="navbar-link ${tag == 'timkiem' ? 'choose':''}" href="./timkiem">Tìm kiếm người dùng</a> 
+									<a class="navbar-link ${tag == 'canteenlock' ? 'choose':''} ${tag == 'khachhanglock' ? 'choose':''}" href="./canteenlock">Tài khoản đã bị khoá</a> 
+									<a class="navbar-link ${tag == 'report' ? 'choose':''}" href="./report">Xem khiếu nại</a> 
 								</div>
 							</nav>
 						</div>
-						<div class="col l-10 m-12 c-12">
+						<div class="col l-10">
+							<% if (tag.equals("quanlycanteen") || tag.equals("quanlykhachhang")) { %>
+								<div class="home-filter">
+									<div class="home-filter-control"> 
+										<a class="btn home-filter-btn ${tag == 'quanlycanteen' ? 'btn--primary':''}" href="./quanlycanteen">Canteen</a>
+										<a class="btn home-filter-btn ${tag == 'quanlykhachhang' ? 'btn--primary':''}" href="./quanlykhachhang">Khách hàng</a>
+									</div>
+								</div>
+							<% } else if (tag.equals("canteenlock") || tag.equals("khachhanglock")) { %>
+								<div class="home-filter">
+									<div class="home-filter-control">
+										<a class="btn home-filter-btn ${tag == 'canteenlock' ? 'btn--primary':''}" href="./canteenlock">Canteen</a>
+										<a class="btn home-filter-btn ${tag == 'khachhanglock' ? 'btn--primary':''}" href="./khachhanglock">Khách hàng</a>
+									</div>
+								</div>
+							<% } %>
 	                        <div class="home-product">
-								<form action="">
+							<% if (tag.equals("quanlycanteen")) { %>
+								<form action="./quanlycanteen" method="POST">
 									<div class="search-group-title">Lọc theo địa chỉ</div>
-									<select name="" class="search-group-item" id="province">
+									<select name="tinh" class="search-group-item" id="province">
 										<option value="-1">Chọn tỉnh thành</option>
 									</select>
-									<select name="" class="search-group-item" id="district">
+									<select name="huyen" class="search-group-item" id="district">
 										<option value="-1">Chọn quận/huyện</option>
 									</select>
-									<select name="" class="search-group-item" id="town">
+									<select name="xa" class="search-group-item" id="town">
 										<option value="-1">Chọn phường/xã</option>
 									</select>
 									<button class="btn btn--primary" type="submit">Lọc</button>
@@ -109,111 +136,28 @@
 											<th>Danh sách khách hàng</th>
 											<th>Tuỳ chọn</th>
 										</tr>
-										<!-- Chỗ này để vòng for lặp lại các Catneen -->
+										<% for (int i=0; i<danhsachcanteen.size(); i++) { %>
+											<c:set var="canteen" value="<%=danhsachcanteen.get(i)%>"/>
 											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
+												<td>${canteen.getID_canteen()}</td>
+												<td>${canteen.getTen()}</td>
+												<td>${canteen.getSodienthoai()}</td> 
+												<td>${canteen.getEmail()}</td>
+												<td id="address_canteen<%=i%>"></td>
+												<c:set var="diachi" value="<%=listDiachi.get(i)%>"/> 
+					                           	<div style="display: none" name="address_input">
+					                           		<span id="tinh<%=i%>">${diachi.getTinh()}</span>
+					                           		<span id="huyen<%=i%>">${diachi.getHuyen()}</span>
+					                           		<span id="xa<%=i%>">${diachi.getXa()}</span>
+					                           	</div>
+												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" name="link-list-user" id="${canteen.getID_canteen()}">Xem</a> </td>
+												<td> <a href="./khoa?ID_account=${canteen.getID_canteen()}" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
 											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
+										<% } %>
 									</table>
 								</div> 
-
-
-								<!-- <h3 class="auth-form__heading table-list-user">Danh sách khách hàng khu vực toàn quốc</h3>
+							<% } else if (tag.equals("quanlykhachhang")) {%>
+								<h3 class="auth-form__heading table-list-user">Danh sách khách hàng khu vực toàn quốc</h3>
 								<div class="list-user">
 									<table border ="1" width ="100%">
 										<tr>
@@ -225,114 +169,24 @@
 											<th>Canteen</th>
 											<th>Tuỳ chọn</th>
 										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										
-
+										<% for (int i=0; i<listKhachHang.size(); i++) { %>
+											<c:set var="khachhang" value="<%=listKhachHang.get(i)%>"/>
+											<tr>
+												<td>${khachhang.getID_khachhang()}</td>
+												<td>${khachhang.getHoten()}</td>
+												<td>${khachhang.getGioitinh() == 'nam' ? "Nam":"Nữ" }</td>
+												<td>${khachhang.getSodienthoai()}</td>
+												<td>${khachhang.getEmail()}</td>
+												<td><%=listnamecanteen.get(i) %></td>
+												<td> <a href="./khoa?ID_account=${khachhang.getID_khachhang()}" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
+											</tr>
+										<% } %>
 									</table>
-								</div> -->
-
-
-								<!-- <form class="body_search" method="POST" action="./search">
+								</div> 
+							<% } else if (tag.equals("timkiem")) {%>
+								<form class="body_search" method="POST" action="./timkiem">
 									<div class="header__search-input-wrap">
-										<input type="text" class="header__search-input" placeholder="Tìm kiếm người dùng" name="txtSearch" value="Nguyen Van A">
+										<input type="text" class="header__search-input" placeholder="Tìm kiếm người dùng" name="txtSearch" value="${txtSearch}">
 										<div class="header__search-history">
 			
 										</div>
@@ -353,34 +207,21 @@
 											<th>Email</th>
 											<th>Canteen</th>
 											<th>Tuỳ chọn</th>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
+										</tr> 
+										<% if (listKhachHang != null) { %>
+											<% for (int i=0; i<listKhachHang.size(); i++) { %>
+												<c:set var="khachhang" value="<%=listKhachHang.get(i)%>"/>
+												<tr>
+													<td>${khachhang.getID_khachhang()}</td>
+													<td>${khachhang.getHoten()}</td>
+													<td>${khachhang.getGioitinh() == 'nam' ? "Nam":"Nữ" }</td>
+													<td>${khachhang.getSodienthoai()}</td>
+													<td>${khachhang.getEmail()}</td>
+													<td><%=listnamecanteen.get(i) %></td>
+													<td> <a href="./khoa?ID_account=${khachhang.getID_khachhang()}" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
+												</tr>
+											<% } %>
+										<% } %>
 									</table>
 								</div>
 
@@ -396,110 +237,58 @@
 											<th>Danh sách khách hàng</th>
 											<th>Tuỳ chọn</th>
 										</tr> 
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-											</tr>
+										<% if (danhsachcanteen != null) { %>
+											<% for (int i=0; i<danhsachcanteen.size(); i++) { %>
+												<c:set var="canteen" value="<%=danhsachcanteen.get(i)%>"/>
+												<tr>
+													<td>${canteen.getID_canteen()}</td>
+													<td>${canteen.getTen()}</td>
+													<td>${canteen.getSodienthoai()}</td> 
+													<td>${canteen.getEmail()}</td>
+													<td id="address_canteen<%=i%>"></td>
+													<c:set var="diachi" value="<%=listDiachi.get(i)%>"/> 
+						                           	<div style="display: none" name="address_input">
+						                           		<span id="tinh<%=i%>">${diachi.getTinh()}</span>
+						                           		<span id="huyen<%=i%>">${diachi.getHuyen()}</span>
+						                           		<span id="xa<%=i%>">${diachi.getXa()}</span>
+						                           	</div>
+													<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" name="link-list-user" id="${canteen.getID_canteen()}">Xem</a> </td>
+													<td> <a href="./khoa?ID_account=${canteen.getID_canteen()}" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
+												</tr>
+											<% } %>
+										<% } %>
 									</table>
-								</div> -->
-
-								<!-- <h3 class="auth-form__heading table-list-user">Khách hàng</h3>
-								<div class="result-search-user">
+								</div> 
+							<% } else if (tag.equals("canteenlock")) { %>
+								<h3 class="auth-form__heading table-list-user">Canteen</h3>
+								<div class="list-user">
+									<table border ="1" width ="100%">
+										<tr>
+											<th>Mã Canteen</th>
+											<th>Tên Canteen</th>
+											<th>Số điện thoại</th>
+											<th>Email</th>
+											<th>Địa chỉ</th>
+											<th>Danh sách khách hàng</th>
+											<th>Tuỳ chọn</th>
+										</tr> 
+										<c:set var="canteens" value="<%=danhsachcanteen%>"/>
+										<c:forEach items="${canteens}" var="canteen"> 
+											<tr>
+												<td>${canteen.getID_canteen()}</td>
+												<td>${canteen.getTen()}</td>
+												<td>${canteen.getSodienthoai()}</td>
+												<td>${canteen.getEmail()}</td>
+												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
+												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" name="link-list-user" id="${canteen.getID_canteen()}">Xem</a> </td>
+												<td> <a href="./mokhoa?ID_account=${canteen.getID_canteen()}" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
+											</tr>
+										</c:forEach>
+									</table>
+								</div> 
+							<% } else if (tag.equals("khachhanglock")) {%>
+								<h3 class="auth-form__heading table-list-user">Khách hàng</h3>
+								<div class="list-user">
 									<table border ="1" width ="100%">
 										<tr>
 											<th>ID</th>
@@ -510,134 +299,21 @@
 											<th>Canteen</th>
 											<th>Tuỳ chọn</th>
 										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td>Canteen trường ĐH Bách Khoa ĐN</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
-										</tr>
-										
+										<% for (int i=0; i<listKhachHang.size(); i++) { %>
+											<c:set var="khachhang" value="<%=listKhachHang.get(i)%>"/>
+											<tr>
+												<td>${khachhang.getID_khachhang()}</td>
+												<td>${khachhang.getHoten()}</td>
+												<td>${khachhang.getGioitinh() == 'nam' ? "Nam":"Nữ" }</td>
+												<td>${khachhang.getSodienthoai()}</td>
+												<td>${khachhang.getEmail()}</td>
+												<td><%=listnamecanteen.get(i) %></td>
+												<td> <a href="./mokhoa?ID_account=${khachhang.getID_khachhang()}" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
+											</tr>
+										<% } %>
 									</table>
 								</div>
-
-								<h3 class="auth-form__heading table-list-user">Canteen</h3>
-								<div class="result-search-user">
-									<table border ="1" width ="100%">
-										<tr>
-											<th>Mã Canteen</th>
-											<th>Tên Canteen</th>
-											<th>Số điện thoại</th>
-											<th>Email</th>
-											<th>Địa chỉ</th>
-											<th>Danh sách khách hàng</th>
-											<th>Tuỳ chọn</th>
-										</tr> 
-										<!-- Chỗ này để vòng for lặp lại các Catneen -->
-											<!--<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
-											</tr>
-											<tr>
-												<td>10002</td>
-												<td>Canteen Dai hoc bach khoa DN</td>
-												<td>0777555264</td>
-												<td>abc@gmail.com</td>
-												<td>Hoa Khanh Bac, Lien Chieu, Da Nang</td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user" id="list-cus-link">Xem</a> </td>
-												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user">Mở khoá</a></td>
-											</tr>
-											
-									</table>
-								</div> -->
+							<% } %>
 	                        </div>   
 	                    </div>
 	                </div>
@@ -683,124 +359,47 @@
                 </form>
             </div> 
         </div>
-
-		<div class="modal" id="form-list__custumer">
-			<div class="modal__body">
-                <div class="auth-form list__custumer">
-                    <div class="auth-form__container">
-                        <div class="auth-form__form">
-							<h3 class="auth-form__heading table-list-user">Danh sách khách hàng của canteen ABC</h3>
-							<div class="list-user">
-								<table border ="1" width ="100%">
-									<tr>
-										<th>ID</th>
-										<th>Họ và tên</th>
-										<th>Giới tính</th>
-										<th>Số điện thoại</th>
-										<th>Email</th>
-										<th>Tuỳ chọn</th>
-									</tr>
-									<!-- Chỗ này để vòng for lặp lại các khách hàng -->
+	<% if (danhsachcanteen != null) { %>
+		<% for (int i=0; i<danhsachcanteen.size(); i++) { %>
+			<div class="modal" name="form-list-user" id="<%=danhsachcanteen.get(i).getID_canteen()%>">
+				<div class="modal__body"> 
+	                <div class="auth-form list__custumer">
+	                    <div class="auth-form__container">
+	                        <div class="auth-form__form">
+								<h3 class="auth-form__heading table-list-user">Danh sách khách hàng của canteen <%=danhsachcanteen.get(i).getTen()%> </h3>
+								<div class="list-user">
+									<table border ="1" width ="100%">
 										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
+											<th>ID</th>
+											<th>Họ và tên</th>
+											<th>Giới tính</th>
+											<th>Số điện thoại</th>
+											<th>Email</th>
+											<th>Tuỳ chọn</th>
 										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										<tr>
-											<td>10002</td>
-											<td>Nguyễn Văn A</td>
-											<td>Nam</td>
-											<td>0777555264</td>
-											<td>abc@gmail.com</td>
-											<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
-										</tr>
-										
-								</table>
-							</div>
-                        </div>
-                        <div class="auth-form__control btn-back">
-                            <a class="btn auth-form__back " href="./">TRANG CHỦ</a>
-                        </div>
-                    </div>
-                </div>
-            </div> 
-		</div>
-
+										<c:set var="danhsachkhachhang" value="<%=khachhangcuacanteen.get(i)%>"/>
+										<c:forEach items="${danhsachkhachhang}" var="khachhang"> 
+											<tr>
+												<td>${khachhang.getID_khachhang()}</td>
+												<td>${khachhang.getHoten()}</td>
+												<td>${khachhang.getGioitinh() == 'nam' ? "Nam":"Nữ" }</td>
+												<td>${khachhang.getSodienthoai()}</td>
+												<td>${khachhang.getEmail()}</td>
+												<td> <a href="" class="btn btn--primary home-product-btn btn-list-user delete-product">Khoá</a></td>
+											</tr>
+										</c:forEach>	
+									</table>
+								</div>
+	                        </div>
+	                        <div class="auth-form__control btn-back">
+	                            <a class="btn auth-form__back " href="./">TRANG CHỦ</a>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div> 
+			</div>
+		<% } %>
+	<% } %>
 	
     <!-- script js -->
     <!-- <script src="./assets/js/product.js"></script> -->

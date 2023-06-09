@@ -23,10 +23,9 @@ public class ChangeCanteenChoose extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
 		HttpSession session = request.getSession(true);
-		Integer ID_khachhang = (int)session.getAttribute("ID_khachhang");
-		Integer ID_canteen = null; 
-		if (request.getParameter("id_canteen") != null) {
-			ID_canteen = Integer.valueOf(request.getParameter("id_canteen"));
+		if (session.getAttribute("ID_khachhang") != null) {
+			Integer ID_khachhang = (int)session.getAttribute("ID_khachhang");
+			Integer ID_canteen = request.getParameter("id_canteen") != null ? Integer.valueOf(request.getParameter("id_canteen")) : null; 
 			try { 
 				KhachhangDAO.ChangeCanteen(ID_khachhang, ID_canteen);
 			} catch (Exception e) { 

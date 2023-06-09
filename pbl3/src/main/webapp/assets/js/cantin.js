@@ -226,7 +226,7 @@ linkcartdetails.forEach((link) => {
 });
 
 const HideFormCart = (event) => {
-	event.preventDefault();
+	event.preventDefault(); 
 	formscartdetails.forEach((form) => {
       form.style.display = "none";
   });
@@ -235,4 +235,3 @@ goback = document.querySelectorAll('.auth-form__back');
 for(var i = 0; i < goback.length; i++) {
     goback[i].addEventListener("click", (event) => HideFormCart(event));
 }
-

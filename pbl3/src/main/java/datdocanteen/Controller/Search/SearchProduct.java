@@ -52,9 +52,10 @@ public class SearchProduct extends HttpServlet {
     	        if (!txtSearch.equals(HistorySearchDAO.getLastNoidung(khachhang.getID_khachhang()))) {
     	            HistorySearchDAO.addSearchHistory(new LichsutimkiemModel(getNewIDforTable.getNewID("lichsutimkiem"), khachhang.getID_khachhang(), txtSearch));
     	        }
-    	        session.setAttribute("listMonan", MonAnDAO.SortMonanByTag(khachhang.getID_canteen(),txtSearch,"moinhat",null));
+    	        session.setAttribute("listMonan", MonAnDAO.SortMonanByTag(khachhang,txtSearch,"moinhat",null));
     	        session.setAttribute("txtSearch", txtSearch);
     	        session.setAttribute("tag", "moinhat");
+    	        session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(khachhang.getID_khachhang()));
     			session.removeAttribute("LoaithucanSelect");
             	session.removeAttribute("ThanhphanSelect");
             	session.removeAttribute("HuongviSelect");
@@ -65,9 +66,14 @@ public class SearchProduct extends HttpServlet {
     	} else if (session.getAttribute("ID_canteen") != null) {
     		int ID_canteen = (int)session.getAttribute("ID_canteen"); 
     		session.setAttribute("listMonan", MonAnDAO.CanteenGetMenu(ID_canteen,(String)session.getAttribute("txtSearch")));
-			request.setAttribute("Search", (String)session.getAttribute("txtSearch"));
-			session.removeAttribute("txtSearch");
+    		session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID_canteen));
+			request.setAttribute("Search", txtSearch);
+			request.getRequestDispatcher("view/canteen-quanlymonanpage.jsp").forward(request, response);
 		} else {
+			if (txtSearch != null && !txtSearch.isEmpty()) {
+				session.setAttribute("txtSearch", txtSearch);
+				session.setAttribute("menu", MonAnDAO.SearchMonan(txtSearch));
+			}
 		    response.sendRedirect(request.getContextPath());
 		}
 	}

@@ -8,11 +8,15 @@ import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import datdocantin.Model.HoadonchitietModel;
+import datdocantin.Model.KhachHangModel;
+import datdocantin.Model.LichsutimkiemModel;
 import datdocantin.Model.MonAnModel;
 import datdocantin.Util.connectDB;
 
@@ -91,7 +95,7 @@ public class MonAnDAO {
                     	result.add(new MonAnModel(rs.getInt(1), ID_canteen, rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDouble(6),
                     			rs.getDouble(7), null, Base64.getDecoder().decode(rs.getBytes(8)), -1, rs.getInt(9), -1));
                 	} else {
-                		String t = Normalizer.normalize((rs.getString(2)+rs.getString(4)+rs.getString(6)).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", ""); 
+                		String t = Normalizer.normalize((rs.getString(2)+rs.getString(4)+rs.getString(5)).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", ""); 
                 		if (t.contains(tukhoa)) {
                 			result.add(new MonAnModel(rs.getInt(1), ID_canteen, rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDouble(6),
                         			rs.getDouble(7), null, Base64.getDecoder().decode(rs.getBytes(8)), -1, rs.getInt(9), -1));                        }
@@ -106,11 +110,98 @@ public class MonAnDAO {
         return result;
     }
     
-    public static List<List<MonAnModel>> SortMonanByTag(Integer ID_canteen, String tukhoa, String tag, List<MonAnModel> monans) throws SQLException, Exception {
+    public static List<MonAnModel> SearchMonan(String txtSearch) throws SQLException, Exception {
+    	List<MonAnModel> result = new ArrayList<MonAnModel>(); 
+    	if (txtSearch != null && !txtSearch.equals("")) {
+    		txtSearch = Normalizer.normalize(txtSearch.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+	        try {
+	            conn = connectDB.getConnection();
+	            if (conn != null) {
+	            	String sql = "SELECT ID_monan, ID_canteen, tenmon, mota, thanhphan, huongvi, giacu, giahientai, hinhanhchinh, daban FROM monan WHERE trangthai = 1 AND xoa = 0 ORDER BY ID_monan DESC;";            	
+	            	stm = conn.prepareStatement(sql);
+	            	rs = stm.executeQuery();
+	                while (rs.next()) {
+	                		String t = Normalizer.normalize((rs.getString(1)+rs.getString(3)+rs.getString(4)+rs.getString(5)).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", ""); 
+	                		if (t.contains(txtSearch)) {
+	                			result.add(new MonAnModel(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDouble(7),
+	                        			rs.getDouble(8), null, Base64.getDecoder().decode(rs.getBytes(9)), -1, rs.getInt(10), -1));                        
+	                		}
+	                }
+	            }
+	        } catch (Exception e) {
+	        	e.printStackTrace(); 
+	        } finally {
+	        	connectDB.closeConnection(conn, stm, rs);
+	        }
+    	}
+        return result;
+    }
+    
+    public static List<MonAnModel> GetMonanGoiy(KhachHangModel khachang) throws SQLException, Exception {
+    	List<MonAnModel> result = new ArrayList<MonAnModel>(); 
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) { 
+            	String sql = "";
+            	//lay mon an chay
+            	if (isLunarFirstOrFifteenth()) {
+            		sql = "SELECT monan.ID_monan, monan.tenmon, monan.mota, monan.thanhphan, monan.huongvi, monan.giacu, monan.giahientai, monan.hinhanhchinh, monan.daban"
+                			+ " FROM monan INNER JOIN monan_loaithucan ON monan.ID_monan = monan_loaithucan.ID_monan "
+                			+ "INNER JOIN loaithucan ON monan_loaithucan.ID_loaithucan = loaithucan.ID_loaithucan "
+                			+ "WHERE loaithucan.loaithucan = 'chay' AND monan.ID_canteen = ? AND monan.trangthai = 1 AND monan.xoa = 0 ORDER BY monan.ID_monan DESC;";
+            		stm = conn.prepareStatement(sql);
+                	stm.setInt(1, khachang.getID_canteen());
+                	rs = stm.executeQuery();
+            		while (rs.next()) {
+                		result.add(new MonAnModel(rs.getInt(1), khachang.getID_canteen(), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDouble(6),
+	                    		rs.getDouble(7), null, Base64.getDecoder().decode(rs.getBytes(8)), -1, rs.getInt(9), -1));
+                	}
+				}
+            	//lay mon an yeu thich
+            	if (khachang.getYeuthich() != null) {
+            		String[] yeuthichs = khachang.getYeuthich().split(",\\s*");
+                	for (String yeuthich : yeuthichs) {
+                		System.out.println(yeuthich);
+                	}
+                	sql = "SELECT ID_monan, tenmon, mota, thanhphan, huongvi, giacu, giahientai, hinhanhchinh, daban FROM monan WHERE ID_canteen = ? AND trangthai = 1 AND xoa = 0 ORDER BY ID_monan DESC;";            	
+                	stm = conn.prepareStatement(sql);
+                	stm.setInt(1, khachang.getID_canteen());
+                	rs = stm.executeQuery();
+                    while (rs.next()) {
+                		String t = Normalizer.normalize((rs.getString(2)+rs.getString(4)+rs.getString(5)).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{M}", ""); 
+                    	for (String yeuthich : yeuthichs) {
+    						if (t.contains(yeuthich)) {
+    							result.add(new MonAnModel(rs.getInt(1), khachang.getID_canteen(), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDouble(6),
+    		                    		rs.getDouble(7), null, Base64.getDecoder().decode(rs.getBytes(8)), -1, rs.getInt(9), -1));
+    							break;
+    						}
+    					}
+                    }
+				}
+            }
+        } catch (Exception e) {
+        	e.printStackTrace(); 
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+        
+        //lay mon an tu lich su tim kiem
+        List<LichsutimkiemModel> lstk = HistorySearchDAO.getSearchHistory(khachang.getID_khachhang());
+        for (LichsutimkiemModel ls : lstk) {
+			List<MonAnModel> listmonan = KhachhangGetMenu(khachang.getID_canteen(), ls.getNoidung());
+			for (MonAnModel monan : listmonan) {
+				result.add(monan);
+			}
+		}
+        return result;
+    }
+    
+    public static List<List<MonAnModel>> SortMonanByTag(KhachHangModel khachhang, String tukhoa, String tag, List<MonAnModel> monans) throws SQLException, Exception {
     	List<MonAnModel> ListMonan = monans;
     	if (monans == null) {
-        	ListMonan = KhachhangGetMenu(ID_canteen, tukhoa); 
+        	ListMonan = KhachhangGetMenu(khachhang.getID_canteen(), tukhoa); 
 		}
+    	
     	List<List<MonAnModel>> result = new ArrayList<List<MonAnModel>>();
     	int batchSize = 15;
 		if (tag.equals("banchay")) {
@@ -119,7 +210,9 @@ public class MonAnDAO {
    	        Collections.sort(ListMonan, Comparator.comparingDouble(MonAnModel::getGiahientai).reversed());
    		} else if (tag.equals("tangdan")) {
             Collections.sort(ListMonan, Comparator.comparingDouble(MonAnModel::getGiahientai));
-   		} 
+   		} else if (tag.equals("goiy")) {
+   			ListMonan = GetMonanGoiy(khachhang);
+		}
 		for (int i = 0; i < ListMonan.size(); i += batchSize) {
             int endIndex = Math.min(i + batchSize, ListMonan.size());
             List<MonAnModel> sublist = ListMonan.subList(i, endIndex);
@@ -366,13 +459,20 @@ public class MonAnDAO {
         return result;
     }
     
+    public static boolean isLunarFirstOrFifteenth() {
+        Calendar calendar = new GregorianCalendar();
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        return dayOfMonth == 1 || dayOfMonth == 15 || dayOfMonth == 30 || dayOfMonth == 14;
+    }
+
+    
     public static void main(String[] args) throws SQLException, Exception {
-    	List<List<MonAnModel>> listMonAn = SortMonanByTag(10002, null, "moinhat", null);
-    	for (MonAnModel monAn : listMonAn.get(0)) {
-    	    System.out.println("ID món ăn: " + monAn.getID_monan());
+    	KhachHangModel khachHang = new KhachHangModel(128,null,null,null,null,null,null,null,127,"tôm, cá ,mực", null, null);
+    	List<MonAnModel> listMonAn = GetMonanGoiy(khachHang);
+    	for (MonAnModel monAn : listMonAn) {
     	    System.out.println("Tên món ăn: " + monAn.getTenmon());
-    	    System.out.println("ngay tao món ăn: " + monAn.getGiahientai());
     	    // và các thuộc tính khác của MonAnModel tương ứng
     	}
+
 	}
 }

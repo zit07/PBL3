@@ -44,7 +44,7 @@ public class Login extends HttpServlet {
                 if (role.equals("admin")) {
                 	session.setAttribute("admin", "admin");
                 }
-                else if (role.equals("cantin")) {
+                else if (role.equals("canteen")) {
                 	session.setAttribute("ID_canteen", ID_account); 
                 	session.setAttribute("canteen", CanteenDAO.getInfoCanteen(ID_account)); 
                 }

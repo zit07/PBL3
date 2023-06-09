@@ -14,7 +14,7 @@ import datdocantin.Dao.MonAnDAO;
 import datdocantin.Model.KhachHangModel;
 import datdocantin.Model.MonAnModel;
 
-@WebServlet({"/moinhat", "/banchay", "/giamdan", "/tangdan"})
+@WebServlet({"/moinhat", "/banchay", "/giamdan", "/tangdan", "/goiy"})
 public class DanhMucPhanLoai extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -28,12 +28,14 @@ public class DanhMucPhanLoai extends HttpServlet {
 		if (khachhang != null) { 
 			String tag = request.getRequestURI().split("/")[request.getRequestURI().split("/").length - 1];
 			try {		
-				if (session.getAttribute("ListMonanLoc")!=null) { 
+				if (tag.equals("goiy")) {
+					session.setAttribute("listMonan", MonAnDAO.SortMonanByTag(khachhang, (String)session.getAttribute("txtSearch"), tag, null));
+				} else if (session.getAttribute("ListMonanLoc")!=null) { 
 					List<MonAnModel> monans = (List<MonAnModel>)session.getAttribute("ListMonanLoc");
-					List<List<MonAnModel>> monanss = MonAnDAO.SortMonanByTag(khachhang.getID_canteen(), (String)session.getAttribute("txtSearch"), tag, monans);
+					List<List<MonAnModel>> monanss = MonAnDAO.SortMonanByTag(khachhang, (String)session.getAttribute("txtSearch"), tag, monans);
 					session.setAttribute("listMonan", monanss);
 				} else {
-					session.setAttribute("listMonan", MonAnDAO.SortMonanByTag(khachhang.getID_canteen(), (String)session.getAttribute("txtSearch"), tag, null));
+					session.setAttribute("listMonan", MonAnDAO.SortMonanByTag(khachhang, (String)session.getAttribute("txtSearch"), tag, null));
 				}
 				session.setAttribute("tag", tag);
 				request.getRequestDispatcher("view/customer-homepage.jsp").forward(request, response);

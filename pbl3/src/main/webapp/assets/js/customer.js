@@ -87,9 +87,9 @@ pageNext.addEventListener("click", (event) => {
 
 pageBack.addEventListener("click", (event) => {
     event.preventDefault();
-    pageNext.classList.remove("home-filter-page-btn--disable");
     var content = document.querySelector("div.home-product:not(.hide-block)");
     if (content.id !== "1") {
+		pageNext.classList.remove("home-filter-page-btn--disable");
         const pageNow = document.getElementById(content.id);
         pageNow.classList.add("hide-block"); 
         const NumberNow = document.getElementById("page"+content.id);

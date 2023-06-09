@@ -38,7 +38,7 @@ public class KhachHangModel {
 		ID_khachhang = iD_khachhang;
 	}
 
-	public int getID_canteen() {
+	public Integer getID_canteen() {
 		return ID_canteen;
 	}
 
@@ -46,7 +46,7 @@ public class KhachHangModel {
 		ID_canteen = iD_canteen;
 	}
 
-	public int getPIN() {
+	public Integer getPIN() {
 		return PIN;
 	}
 
