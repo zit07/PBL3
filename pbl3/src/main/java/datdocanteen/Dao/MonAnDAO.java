@@ -110,6 +110,46 @@ public class MonAnDAO {
         return result;
     }
     
+    public static String getTenmon(Integer ID_monan) throws SQLException, Exception {
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+            	String sql = "SELECT tenmon FROM monan WHERE ID_monan = ? AND trangthai = 1 AND xoa = 0;";            	
+            	stm = conn.prepareStatement(sql);
+            	stm.setInt(1, ID_monan);
+            	rs = stm.executeQuery();
+                while (rs.next()) {
+                	return rs.getString(1);
+                }
+            }
+        } catch (Exception e) {
+        	e.printStackTrace(); 
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+        return null;
+    }
+    
+    public static Double getGia(Integer ID_monan) throws SQLException, Exception {
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+            	String sql = "SELECT giahientai FROM monan WHERE ID_monan = ? AND trangthai = 1 AND xoa = 0;";            	
+            	stm = conn.prepareStatement(sql);
+            	stm.setInt(1, ID_monan);
+            	rs = stm.executeQuery();
+                while (rs.next()) {
+                	return rs.getDouble(1);
+                }
+            }
+        } catch (Exception e) {
+        	e.printStackTrace(); 
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+        return null;
+    }
+    
     public static List<MonAnModel> SearchMonan(String txtSearch) throws SQLException, Exception {
     	List<MonAnModel> result = new ArrayList<MonAnModel>(); 
     	if (txtSearch != null && !txtSearch.equals("")) {

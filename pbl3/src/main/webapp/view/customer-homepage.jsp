@@ -23,7 +23,7 @@
 %>
 <!DOCTYPE html>
 <html>
-<head>
+<head> 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -529,13 +529,16 @@
 															</c:if>
 			                                            </div>
 			                                        </a>
-			                                       <a class="home-product-item-footer" href="./addtocart?id_monan=${monan.getID_monan()}">Thêm vào giỏ hàng </a>
+			                                       <div class="home-product-item-footer">
+														<a class="add-to-cart" href="./addtocart?id_monan=${monan.getID_monan()}">Thêm vào giỏ hàng </a>
+														<a class="buy" href="./taohoadon?id_monan=${monan.getID_monan()}">Mua </a>
+													</div>
 			                                    </div>
 		                            	</c:forEach>
 		                            </div>
 		                        </div>  
-		                <% } %>
-                        <% for (int i=1; i<MonanListList.size(); i++) { %>
+		                <% } %> 
+                        <% for (int i=0; i<MonanListList.size(); i++) { %>
 		                        <div class="home-product hide-block" id="<%=i+1%>">        
 		                            <div class="row sm-gutter">
 		                            	<c:set var="MonanList" value="<%=MonanListList.get(i)%>"/>
@@ -574,7 +577,10 @@
 															</c:if>
 			                                            </div>
 			                                        </a>
-			                                       <a class="home-product-item-footer" href="./addtocart?id_monan=${monan.getID_monan()}">Thêm vào giỏ hàng </a>
+			                                       <div class="home-product-item-footer">
+														<a class="add-to-cart" href="./addtocart?id_monan=${monan.getID_monan()}">Thêm vào giỏ hàng </a>
+														<a class="buy" href="./taohoadon?id_monan=${monan.getID_monan()}">Mua </a>
+													</div>
 			                                    </div>
 		                            	</c:forEach>
 		                            </div>

@@ -19,7 +19,7 @@
 	Double tongtiencart = (Double) session.getAttribute("tongtiencart");
 	List<List<HoadonchitietModel>> hoadonchitiets = (List<List<HoadonchitietModel>>) session.getAttribute("hoadonchitiets"); 
 	BankModel bank = (BankModel) session.getAttribute("bank");
-	String tag = (String) session.getAttribute("tag"); 
+	String tag = (String) session.getAttribute("tag");  
 %>
 <!DOCTYPE html>
 <html>

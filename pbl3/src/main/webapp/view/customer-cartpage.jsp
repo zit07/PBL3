@@ -14,7 +14,7 @@
 	List<LichsutimkiemModel> searchHistory = (List<LichsutimkiemModel>)session.getAttribute("searchHistory"); 
 	List<CartModel> carts = (List<CartModel>)session.getAttribute("carts");
 	Double tongtiencart = (Double) session.getAttribute("tongtiencart");
-%>
+%> 
 <!DOCTYPE html>
 <html>
 <head> 

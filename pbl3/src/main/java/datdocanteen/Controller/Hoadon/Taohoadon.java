@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import datdocanteen.Dao.CartDAO;
 import datdocanteen.Dao.HoadonDAO;
 import datdocanteen.Dao.HoadonchitietDAO;
+import datdocanteen.Dao.MonAnDAO;
 import datdocanteen.Model.CartModel;
 import datdocanteen.Model.HoadonModel;
 import datdocanteen.Model.HoadonchitietModel;
@@ -31,25 +32,60 @@ public class Taohoadon extends HttpServlet {
         super();
     }
     
-    protected void addHoadonchitiet(String[] selectedID_carts, int ID_khachhang, int ID_hoadon) throws SQLException, Exception {
+    protected void addHoadonchitiet(String[] selectedID_carts, KhachHangModel khachhang, int ID_hoadon) throws SQLException, Exception {
     	for (String selectedID_cart : selectedID_carts) {
 	    	int ID_cart = Integer.parseInt(selectedID_cart);
-	    	if (CartDAO.checkCart(ID_cart, ID_khachhang)) {
+	    	if (CartDAO.checkCart(ID_cart, khachhang.getID_khachhang())) {
 	    		CartModel cart = CartDAO.getID_Ten_soluong_gia(ID_cart);
-	    		Integer ID_hoadonchitiet = HoadonchitietDAO.GetID(ID_hoadon, cart.getID_monan()); 
-	    		if ( ID_hoadonchitiet == null) {
-		    		HoadonchitietDAO.addHoadonchitiet(new HoadonchitietModel(getNewIDforTable.getNewID("hoadonchitiet"), ID_hoadon, cart.getID_monan(), cart.getTenmon(), cart.getSoluong(), cart.getGia()));
+	    		if (MonAnDAO.CheckProduct(cart.getID_monan(), khachhang.getID_canteen())) {
+	    			Integer ID_hoadonchitiet = HoadonchitietDAO.GetID(ID_hoadon, cart.getID_monan()); 
+		    		if ( ID_hoadonchitiet == null) {
+			    		HoadonchitietDAO.addHoadonchitiet(new HoadonchitietModel(getNewIDforTable.getNewID("hoadonchitiet"), ID_hoadon, cart.getID_monan(), cart.getTenmon(), cart.getSoluong(), cart.getGia()));
+					}
+		    		else {
+		    			HoadonchitietDAO.ChangeSoluong(ID_hoadonchitiet, cart.getSoluong());
+					}
+		    		CartDAO.XoaCart(ID_cart);
 				}
-	    		else {
-	    			HoadonchitietDAO.ChangeSoluong(ID_hoadonchitiet, cart.getSoluong());
-				}
-	    		CartDAO.XoaCart(ID_cart);
-	    	} else {
-			}
+	    	} 
 	    }
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("utf-8");
+		try { 
+			HttpSession session = request.getSession();
+			KhachHangModel khachhang = (KhachHangModel) session.getAttribute("khachhang");
+			Integer ID_monan = Integer.valueOf(request.getParameter("id_monan"));
+			if (khachhang != null && ID_monan != null) {
+				int ID_khachhang = khachhang.getID_khachhang();
+				Integer ID_hoadon = HoadonDAO.getID_Hoadon(ID_khachhang);
+				if (ID_hoadon == null) {
+					ID_hoadon = getNewIDforTable.getNewID("hoadon");
+					LocalDate today = LocalDate.now();
+					HoadonDAO.addHoadon(new HoadonModel(ID_hoadon, khachhang.getID_canteen(), ID_khachhang, today, 0, "chưa thanh toán", Taomadonhang.Creat(), 1));
+				} 
+				if (MonAnDAO.CheckProduct(ID_monan, khachhang.getID_canteen())) {
+	    			Integer ID_hoadonchitiet = HoadonchitietDAO.GetID(ID_hoadon, ID_monan); 
+		    		if ( ID_hoadonchitiet == null) {
+			    		HoadonchitietDAO.addHoadonchitiet(new HoadonchitietModel(getNewIDforTable.getNewID("hoadonchitiet"), ID_hoadon, ID_monan, MonAnDAO.getTenmon(ID_monan), 1, MonAnDAO.getGia(ID_monan)));
+					}
+		    		else {
+		    			HoadonchitietDAO.ChangeSoluong(ID_hoadonchitiet, 1);
+					}
+		    		HoadonDAO.changeTongtien(ID_hoadon, HoadonchitietDAO.getTongtien(ID_hoadon));
+				}
+				response.sendRedirect(request.getContextPath()+"/hoadonchothanhtoan");
+			} else {
+				response.sendRedirect(request.getContextPath());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("utf-8");
 		try { 
@@ -65,18 +101,16 @@ public class Taohoadon extends HttpServlet {
 						LocalDate today = LocalDate.now();
 						HoadonDAO.addHoadon(new HoadonModel(ID_hoadon, khachhang.getID_canteen(), ID_khachhang, today, 0, "chưa thanh toán", Taomadonhang.Creat(), 1));
 					} 
-					addHoadonchitiet(selectedID_carts, ID_khachhang, ID_hoadon);
+					addHoadonchitiet(selectedID_carts, khachhang, ID_hoadon);
 					HoadonDAO.changeTongtien(ID_hoadon, HoadonchitietDAO.getTongtien(ID_hoadon));
 				}
+				response.sendRedirect(request.getContextPath()+"/hoadonchothanhtoan");
+			} else {
+				response.sendRedirect(request.getContextPath());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		response.sendRedirect(request.getContextPath()+"/hoadonchothanhtoan");
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		
 	}
 }
