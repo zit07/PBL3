@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.MonAnDAO;
-import datdocantin.Dao.Monan_LoaithucanDAO;
-import datdocantin.Model.MonAnModel;
+import datdocanteen.Dao.MonAnDAO;
+import datdocanteen.Dao.Monan_LoaithucanDAO;
+import datdocanteen.Model.MonAnModel;
 
 @WebServlet({"/monandangban", "/monanngungban", "/monandaxoa"})
 public class Quanlymonan extends HttpServlet {

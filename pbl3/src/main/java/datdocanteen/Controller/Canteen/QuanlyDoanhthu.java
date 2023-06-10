@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.DoanhthuDAO;
-import datdocantin.Dao.DoanhthuchitietDAO;
-import datdocantin.Model.DoanhthuModel;
+import datdocanteen.Dao.DoanhthuDAO;
+import datdocanteen.Dao.DoanhthuchitietDAO;
+import datdocanteen.Model.DoanhthuModel;
 
 @WebServlet({"/doanhthungay", "/doanhthuthang"})
 public class QuanlyDoanhthu extends HttpServlet {

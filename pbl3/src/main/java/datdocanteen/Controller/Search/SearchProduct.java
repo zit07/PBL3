@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.HistorySearchDAO;
-import datdocantin.Dao.MonAnDAO;
-import datdocantin.Model.KhachHangModel;
-import datdocantin.Model.LichsutimkiemModel;
-import datdocantin.Service.getNewIDforTable;
+import datdocanteen.Dao.HistorySearchDAO;
+import datdocanteen.Dao.MonAnDAO;
+import datdocanteen.Model.KhachHangModel;
+import datdocanteen.Model.LichsutimkiemModel;
+import datdocanteen.Service.getNewIDforTable;
 
 @WebServlet("/search") 
 public class SearchProduct extends HttpServlet {

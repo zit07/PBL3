@@ -8,11 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.CartDAO;
-import datdocantin.Dao.MonAnDAO;
-import datdocantin.Model.CartModel;
-import datdocantin.Model.KhachHangModel;
-import datdocantin.Service.getNewIDforTable;
+import datdocanteen.Dao.CartDAO;
+import datdocanteen.Dao.MonAnDAO;
+import datdocanteen.Model.CartModel;
+import datdocanteen.Model.KhachHangModel;
+import datdocanteen.Service.getNewIDforTable;
 
 
 @WebServlet("/addtocart")

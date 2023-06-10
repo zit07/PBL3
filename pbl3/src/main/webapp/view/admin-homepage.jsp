@@ -1,12 +1,12 @@
 <%@page import="java.time.YearMonth"%>
-<%@page import="datdocantin.Model.DiachiModel"%>
-<%@page import="datdocantin.Model.KhachHangModel"%>
-<%@page import="datdocantin.Model.CanteenModel"%>
+<%@page import="datdocanteen.Model.DiachiModel"%>
+<%@page import="datdocanteen.Model.KhachHangModel"%>
+<%@page import="datdocanteen.Model.CanteenModel"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-<%@ page import="javax.servlet.http.HttpSession" %>  
-<%@ page import="java.util.List" %> 
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%@ page import="java.util.List" %>
 <%	
 	List<CanteenModel> danhsachcanteen = (List<CanteenModel>) session.getAttribute("listCanteen");
     List<List<KhachHangModel>> khachhangcuacanteen = (List<List<KhachHangModel>>) session.getAttribute("listKhachHangOfCanteen");
@@ -122,9 +122,19 @@
 									<select name="xa" class="search-group-item" id="town">
 										<option value="-1">Chọn phường/xã</option>
 									</select>
+									<div style="display: none">`
+		                           		<span id="tinh">${tinh}</span>
+		                           		<span id="huyen">${huyen}</span>
+		                           		<span id="xa">${xa}</span>
+		                           	</div>
 									<button class="btn btn--primary" type="submit">Lọc</button>
 								</form>
-								<h3 class="auth-form__heading table-list-user">Danh sách Canteen trên toàn quốc</h3>
+								<c:if test="${tinh != null}">
+									<h3 class="auth-form__heading table-list-user">Danh sách Canteen đã lọc</h3>
+								</c:if>
+								<c:if test="${tinh == null}">
+									<h3 class="auth-form__heading table-list-user">Danh sách Canteen trên toàn quốc</h3>
+								</c:if>
 								<div class="list-user">     
 									<table border ="1" width ="100%">
 										<tr>

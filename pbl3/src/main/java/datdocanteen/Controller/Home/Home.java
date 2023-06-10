@@ -10,19 +10,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.BankDAO;
-import datdocantin.Dao.CanteenDAO;
-import datdocantin.Dao.CartDAO;
-import datdocantin.Dao.DiachiDAO;
-import datdocantin.Dao.GiohoatdongDAO;
-import datdocantin.Dao.HistorySearchDAO;
-import datdocantin.Dao.KhachhangDAO;
-import datdocantin.Dao.LoaithucanDAO;
-import datdocantin.Dao.MonAnDAO;
-import datdocantin.Model.CanteenModel;
-import datdocantin.Model.CartModel;
-import datdocantin.Model.KhachHangModel;
-import datdocantin.Model.MonAnModel;
+import datdocanteen.Dao.BankDAO;
+import datdocanteen.Dao.CanteenDAO;
+import datdocanteen.Dao.CartDAO;
+import datdocanteen.Dao.DiachiDAO;
+import datdocanteen.Dao.GiohoatdongDAO;
+import datdocanteen.Dao.HistorySearchDAO;
+import datdocanteen.Dao.KhachhangDAO;
+import datdocanteen.Dao.LoaithucanDAO;
+import datdocanteen.Dao.MonAnDAO;
+import datdocanteen.Model.CanteenModel;
+import datdocanteen.Model.CartModel;
+import datdocanteen.Model.KhachHangModel;
+import datdocanteen.Model.MonAnModel;
 
 
 @WebServlet("")

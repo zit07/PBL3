@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.AccountDAO;
-import datdocantin.Dao.CanteenDAO;
-import datdocantin.Dao.KhachhangDAO;
-import datdocantin.Model.AccountModel;
+import datdocanteen.Dao.AccountDAO;
+import datdocanteen.Dao.CanteenDAO;
+import datdocanteen.Dao.KhachhangDAO;
+import datdocanteen.Model.AccountModel;
 
 @WebServlet("/Login")
 public class Login extends HttpServlet {

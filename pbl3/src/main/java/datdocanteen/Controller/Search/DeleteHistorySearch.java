@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.HistorySearchDAO;
+import datdocanteen.Dao.HistorySearchDAO;
 
 @WebServlet("/delHistorySearch")
 public class DeleteHistorySearch extends HttpServlet {

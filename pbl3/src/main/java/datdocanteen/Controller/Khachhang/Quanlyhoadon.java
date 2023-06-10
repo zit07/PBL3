@@ -12,11 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.BankDAO;
-import datdocantin.Dao.HoadonDAO;
-import datdocantin.Dao.HoadonchitietDAO;
-import datdocantin.Model.HoadonModel;
-import datdocantin.Model.KhachHangModel;
+import datdocanteen.Dao.BankDAO;
+import datdocanteen.Dao.HoadonDAO;
+import datdocanteen.Dao.HoadonchitietDAO;
+import datdocanteen.Model.HoadonModel;
+import datdocanteen.Model.KhachHangModel;
 
 @WebServlet({"/hoadonchothanhtoan", "/hoadonchoxacnhan", "/Donhangdamua", "/Donhangdahuy"})
 public class Quanlyhoadon extends HttpServlet {

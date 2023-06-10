@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.CartDAO;
-import datdocantin.Model.CartModel;
+import datdocanteen.Dao.CartDAO;
+import datdocanteen.Model.CartModel;
 
 @WebServlet("/cart")
 public class Giohang extends HttpServlet {

@@ -1,15 +1,15 @@
-<%@page import="datdocantin.Model.LoaithucanModel"%>
-<%@page import="datdocantin.Model.CartModel"%>
-<%@page import="datdocantin.Model.LichsutimkiemModel"%>
+<%@page import="datdocanteen.Model.LoaithucanModel"%>
+<%@page import="datdocanteen.Model.CartModel"%>
+<%@page import="datdocanteen.Model.LichsutimkiemModel"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <%@ page import="javax.servlet.http.HttpSession" %>
-<%@ page import="datdocantin.Model.KhachHangModel" %>
+<%@ page import="datdocanteen.Model.KhachHangModel" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Base64" %>
-<%@ page import="datdocantin.Model.MonAnModel"%>
+<%@ page import="datdocanteen.Model.MonAnModel"%>
 <%@ page import="java.util.Enumeration" %>
-<%@page import="datdocantin.Model.CanteenModel"%>
+<%@page import="datdocanteen.Model.CanteenModel"%>
 <%	
 	KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
 	List<LichsutimkiemModel> searchHistory = (List<LichsutimkiemModel>)session.getAttribute("searchHistory"); 

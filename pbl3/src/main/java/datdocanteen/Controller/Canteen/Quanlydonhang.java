@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.HoadonDAO;
-import datdocantin.Dao.HoadonchitietDAO;
-import datdocantin.Model.HoadonModel;
+import datdocanteen.Dao.HoadonDAO;
+import datdocanteen.Dao.HoadonchitietDAO;
+import datdocanteen.Model.HoadonModel;
 
 @WebServlet({"/quanlydonhang", "/donchoxacnhan", "/dondangchuanbi", "/dondahoantat"})
 public class Quanlydonhang extends HttpServlet {

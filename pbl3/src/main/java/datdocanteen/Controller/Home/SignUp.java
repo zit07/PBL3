@@ -7,18 +7,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-import datdocantin.Dao.AccountDAO;
-import datdocantin.Dao.BankDAO;
-import datdocantin.Dao.CanteenDAO;
-import datdocantin.Dao.DiachiDAO;
-import datdocantin.Dao.GiohoatdongDAO;
-import datdocantin.Dao.KhachhangDAO;
-import datdocantin.Model.AccountModel;
-import datdocantin.Model.CanteenModel;
-import datdocantin.Model.KhachHangModel;
-import datdocantin.Service.getNewIDforTable;
-import datdocantin.Util.PasswordEncoder;
+import datdocanteen.Dao.AccountDAO;
+import datdocanteen.Dao.BankDAO;
+import datdocanteen.Dao.CanteenDAO;
+import datdocanteen.Dao.DiachiDAO;
+import datdocanteen.Dao.GiohoatdongDAO;
+import datdocanteen.Dao.KhachhangDAO;
+import datdocanteen.Model.AccountModel;
+import datdocanteen.Model.CanteenModel;
+import datdocanteen.Model.KhachHangModel;
+import datdocanteen.Service.getNewIDforTable;
+import datdocanteen.Util.PasswordEncoder;
 
 @WebServlet("/Signup")
 public class SignUp extends HttpServlet {
@@ -42,7 +41,7 @@ public class SignUp extends HttpServlet {
         	String SDT = request.getParameter("txtSdt");
             String Password = PasswordEncoder.encode(request.getParameter("txtPassword"));
             String TypeUser = request.getParameter("typeUser");
-            if (TypeUser.equals("canteen") || TypeUser.equals("custommer")) {
+            if (TypeUser.equals("canteen") || TypeUser.equals("customer")) {
             	if (AccountDAO.CheckAccountNotExist(SDT)) {
                 	Integer ID = getNewIDforTable.getNewID("account");
                 	AccountDAO.addAccount(new AccountModel(ID, SDT, Password, TypeUser, 0));
@@ -57,6 +56,7 @@ public class SignUp extends HttpServlet {
                 		BankDAO.AddBank(ID_bank,ID);
                 		GiohoatdongDAO.Addgiohoatdong(Integer.valueOf(getNewIDforTable.getNewID("giohoatdong")), ID);
     				}
+                	System.out.println("123123");
                 	response.sendRedirect(request.getContextPath());
                 }
                 else {
@@ -65,6 +65,8 @@ public class SignUp extends HttpServlet {
                 	request.setAttribute("sdt", SDT);
                 	request.getRequestDispatcher("view/homepage.jsp").forward(request, response);
                 }
+			} else {
+				response.sendRedirect(request.getContextPath());
 			}
         } catch (Exception e) {
             log("error at login servlet: " + e.toString());

@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.MonAnDAO;
-import datdocantin.Model.KhachHangModel;
-import datdocantin.Model.MonAnModel;
+import datdocanteen.Dao.MonAnDAO;
+import datdocanteen.Model.KhachHangModel;
+import datdocanteen.Model.MonAnModel;
 
 @WebServlet({"/moinhat", "/banchay", "/giamdan", "/tangdan", "/goiy"})
 public class DanhMucPhanLoai extends HttpServlet {

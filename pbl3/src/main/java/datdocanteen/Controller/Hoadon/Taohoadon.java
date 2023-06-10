@@ -11,15 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.CartDAO;
-import datdocantin.Dao.HoadonDAO;
-import datdocantin.Dao.HoadonchitietDAO;
-import datdocantin.Model.CartModel;
-import datdocantin.Model.HoadonModel;
-import datdocantin.Model.HoadonchitietModel;
-import datdocantin.Model.KhachHangModel;
-import datdocantin.Service.Taomadonhang;
-import datdocantin.Service.getNewIDforTable;
+import datdocanteen.Dao.CartDAO;
+import datdocanteen.Dao.HoadonDAO;
+import datdocanteen.Dao.HoadonchitietDAO;
+import datdocanteen.Model.CartModel;
+import datdocanteen.Model.HoadonModel;
+import datdocanteen.Model.HoadonchitietModel;
+import datdocanteen.Model.KhachHangModel;
+import datdocanteen.Service.Taomadonhang;
+import datdocanteen.Service.getNewIDforTable;
 
 
 @WebServlet("/taohoadon")

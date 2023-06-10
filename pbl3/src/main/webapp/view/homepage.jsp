@@ -4,8 +4,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Base64" %>
 <%@ page import="java.util.Enumeration" %>
-<%@page import="datdocantin.Model.CanteenModel"%>
-<%@ page import="datdocantin.Model.MonAnModel"%>
+<%@page import="datdocanteen.Model.CanteenModel"%>
+<%@ page import="datdocanteen.Model.MonAnModel"%>
 <%	
 	List<CanteenModel> canteenList = (List<CanteenModel>)session.getAttribute("canteenList");
 	List<MonAnModel> MonanList = (List<MonAnModel>)request.getAttribute("menu");
@@ -319,7 +319,7 @@
 		                            <div class="auth-form__radio-group">
 		                                <input type="radio" name="typeUser" checked="checked" id="customer" value="customer">
 		                                <label class="auth-form__label" for="customer">Khách hàng</label>
-		                                <input type="radio" name="typeUser" id="cantin" value="cantin">
+		                                <input type="radio" name="typeUser" id="cantin" value="canteen">
 		                                <label class="auth-form__label" for="cantin">Cantin</label>
 		                            </div>
 		                        </div>

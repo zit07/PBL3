@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.CartDAO;
+import datdocanteen.Dao.CartDAO;
 
 @WebServlet("/ChangCart")
 public class ChangCart extends HttpServlet {

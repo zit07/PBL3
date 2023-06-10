@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.HoadonDAO;
+import datdocanteen.Dao.HoadonDAO;
 
 @WebServlet("/Xoahoadon")
 public class Xoahoadon extends HttpServlet {

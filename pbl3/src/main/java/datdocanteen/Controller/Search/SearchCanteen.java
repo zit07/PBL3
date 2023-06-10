@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.CanteenDAO;
-import datdocantin.Model.CanteenModel;
-import datdocantin.Model.DiachiModel;
+import datdocanteen.Dao.CanteenDAO;
+import datdocanteen.Model.CanteenModel;
+import datdocanteen.Model.DiachiModel;
 
 @WebServlet("/SearchCanteen")
 public class SearchCanteen extends HttpServlet {

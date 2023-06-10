@@ -11,15 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datdocantin.Dao.DoanhthuDAO;
-import datdocantin.Dao.DoanhthuchitietDAO;
-import datdocantin.Dao.HoadonDAO;
-import datdocantin.Dao.HoadonchitietDAO;
-import datdocantin.Dao.MonAnDAO;
-import datdocantin.Model.DoanhthuModel;
-import datdocantin.Model.DoanhthuchitietModel;
-import datdocantin.Model.HoadonchitietModel;
-import datdocantin.Service.getNewIDforTable;
+import datdocanteen.Dao.DoanhthuDAO;
+import datdocanteen.Dao.DoanhthuchitietDAO;
+import datdocanteen.Dao.HoadonDAO;
+import datdocanteen.Dao.HoadonchitietDAO;
+import datdocanteen.Dao.MonAnDAO;
+import datdocanteen.Model.DoanhthuModel;
+import datdocanteen.Model.DoanhthuchitietModel;
+import datdocanteen.Model.HoadonchitietModel;
+import datdocanteen.Service.getNewIDforTable;
 
 @WebServlet("/Xulyhoadon")
 public class Xulyhoadon extends HttpServlet {
