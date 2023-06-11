@@ -468,7 +468,10 @@
 													
 												</div>
 												<div class="time">
-													<i class="far fa-clock"> </i> ${giohoatdong.getGiomocua()} - ${giohoatdong.getGiodongcua()}
+													<i class="far fa-clock"> </i> 
+													<c:if test="${!giohoatdong.getGiomocua().equals('-1') && !giohoatdong.getGiodongcua().equals('-1')}">     
+														${giohoatdong.getGiomocua()} - ${giohoatdong.getGiodongcua()}
+													</c:if>
 												</div>
 											</div>
 											<div class="cost-restaurant">

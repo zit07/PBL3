@@ -36,7 +36,10 @@ public class DetailProduct extends HttpServlet {
 				KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
 				MonAnModel monAnModel = MonAnDAO.getMonan(ID_monan, khachhang.getID_canteen());
 				GiohoatdongModel giohoatdong = GiohoatdongDAO.getGiohoatdongDate(khachhang.getID_canteen(),LocalDate.now().getDayOfWeek().getValue()+1);
-				boolean check = LocalTime.now().isAfter(LocalTime.parse(giohoatdong.getGiomocua())) && LocalTime.now().isBefore(LocalTime.parse(giohoatdong.getGiodongcua()));
+				boolean check = false;
+				if (giohoatdong.getGiomocua() != "-1" && giohoatdong.getGiodongcua() != "-1") {
+					check = LocalTime.now().isAfter(LocalTime.parse(giohoatdong.getGiomocua())) && LocalTime.now().isBefore(LocalTime.parse(giohoatdong.getGiodongcua()));
+				}
 				session.setAttribute("check", check); 
 				session.setAttribute("giohoatdong", giohoatdong); 
 				session.setAttribute("monan", monAnModel); 

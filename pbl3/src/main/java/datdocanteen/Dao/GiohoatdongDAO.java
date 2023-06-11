@@ -3,6 +3,7 @@ package datdocanteen.Dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,8 +114,8 @@ public class GiohoatdongDAO {
 			// Lấy thứ trong ngày hiện tại
 			
 //			Addgiohoatdong(Integer.valueOf(getNewIDforTable.getNewID("giohoatdong")), "10003");
-			GiohoatdongModel gio = getGiohoatdongDate(127, 2);
-			System.out.println(gio.getGiodongcua());
+//			GiohoatdongModel gio = getGiohoatdongDate(127, 2);
+			System.out.println(LocalTime.now());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
