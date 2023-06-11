@@ -7,9 +7,7 @@
 <%@page import="datdocanteen.Model.CanteenModel"%>
 <%@ page import="datdocanteen.Model.MonAnModel"%>
 <%	
-	List<CanteenModel> canteenList = (List<CanteenModel>)session.getAttribute("canteenList");
-	List<MonAnModel> MonanList = (List<MonAnModel>)request.getAttribute("menu");
-	CanteenModel Canteen = (CanteenModel)session.getAttribute("Canteen");
+	MonAnModel monan = (MonAnModel)request.getAttribute("monan");
 %>
 <!DOCTYPE html>
 <html>
@@ -23,6 +21,7 @@
     <link rel="stylesheet" href="./assets/css/base.css">
     <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="./assets/css/grid.css">
+    <link rel="stylesheet" href="./assets/css/detailproduct.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>	
@@ -191,90 +190,54 @@
 							</nav>
                     </div>
                     <div class="col l-10">
-                        <!-- home filter -->
-                        
-                      
                         <!-- home product -->
                         <div class="home-product">    
-                        	<%if (Canteen!=null){ %>    
-                       			<h3 class="title-list-product">Danh sách các món ăn của canteen: <%=Canteen.getTen() %></h3>
-                       		<%} %>
-                            <!-- <div id="list-product" class="row sm-gutter"> -->
-                            <div class="row sm-gutter">
-                            <%if (MonanList!=null){ %> 
-                            	<c:set var="monanList" value="<%=MonanList%>"/>
-                            	<c:forEach items="${monanList}" var="monan">
-                            		<div class="col l-2-4">
-	                                        <a class="home-product-item-link" href="#">
-  	                                            <div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())});"></div>
- 	                                            <div class="home-product-item__info">
-	                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
-	                                                <div class="home-product-item__price"> 
-		                                                <c:if test="${monan.getGiacu() > monan.getGiahientai()}">
-		                                                    <p class="home-product-item__price-old">${monan.getGiacu()}VNĐ</p>
-		                                                </c:if>
-	                                                    <p class="home-product-item__price-new">${monan.getGiahientai()}VNĐ</p>
-	                                                </div>
-	                                                <div class="home-product-item__footer">
-	                                                	<div class="home-product-item__save">
-		                                                    <input type="checkbox" id="heart-save-1">
-		                                                    <label for="heart-save-1" class="far fa-heart"></label>
-		                                                </div>
-	                                                    <div class="home-product-item__rating-star">
-	                                                        <i class="star-checked far fa-star"></i>
-	                                                        <i class="star-checked far fa-star"></i>
-	                                                        <i class="star-checked far fa-star"></i>
-	                                                        <i class="star-checked far fa-star"></i>
-	                                                        <i class="star-uncheck far fa-star"></i>
-	                                                    </div>
-	                                                    <div class="home-product-item__saled">Đã bán ${monan.getDaban()}</div>
-	                                                </div>
-	                                                <c:if test="${monan.getGiacu() > monan.getGiahientai()}">
-														<c:set var="giamgia" value="${Math.round((monan.giacu - monan.giahientai) / monan.giacu * 100)}" />
-		                                               	<div class="home-product-item__sale-off">
-													    	<div class="home-product-item__sale-off-value">${giamgia} %</div>
-															<div class="home-product-item__sale-off-label">GIẢM</div>
-														</div>	 
-													</c:if>
-	                                            </div>
-	                                          
-	                                        </a>
-	                                    </div>
-                            	</c:forEach>
-                            <%} else if (canteenList!=null){ %> 
-                            	<c:set var="canteenList" value="<%=canteenList%>"/>
-                            	<c:forEach items="${canteenList}" var="Canteen">
-                            		<div class="col l-2-4">
-		                                    <a class="home-product-item-link" href="./Menu?id_canteen=${Canteen.getID_canteen()}">
-		                                    	<c:if test="${Canteen.getAvatar()==null}">
-					                            	<div class="home-product-item__img" style="background-image: url(./assets/img/avatarDefault.jpg);"></div>
-					                            </c:if>
-					                            <c:if test="${Canteen.getAvatar()!=null}">
-					                            	<div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,${Base64.getEncoder().encodeToString(Canteen.getAvatar())});"></div>
-					                            </c:if>
-		                                        <div class="home-product-item__info">
-		                                            <h4 class="home-product-item__name">${Canteen.getTen()}</h4>
-		                                            
-		                                            <div class="home-product-item__footer">
-		                                                <div class="home-product-item__save">
-		                                                    <input type="checkbox" id="heart-save-1">
-		                                                    <label for="heart-save-1" class="far fa-heart"></label>
-		                                                </div>
-		                                                <div class="home-product-item__rating-star">
-		                                                    <i class="star-checked far fa-star"></i>
-		                                                    <i class="star-checked far fa-star"></i>
-		                                                    <i class="star-checked far fa-star"></i>
-		                                                    <i class="star-checked far fa-star"></i>
-		                                                    <i class="star-uncheck far fa-star"></i>
-		                                                </div>
-		                                            </div>
-		                                        </div>
-		                                    </a>
-		                                </div>
-                            	</c:forEach>
-                            <%}%>
-                            </div>
-                        </div>   
+							<div class="now-detail-restaurant clearfix">
+								<div class="container">
+									<div class="">
+										<div class="detail-restaurant-img">
+											<img src="https://images.foody.vn/res/g2/13831/prof/s640x400/foody-upload-api-foody-mobile-bmi-huynh-hoa-190924151516.jpg" alt="Bánh Mì Huynh Hoa - Bánh Mì Pate" class="">
+										</div>
+										<div class="detail-restaurant-info">
+											<h1 class="name-restaurant"> Bánh Mì Huynh Hoa - Bánh Mì Pate</h1>
+											<div class="address-restaurant"> 26 Lê Thị Riêng, P. Bến Thành, Quận 1, TP. HCM</div>
+											<div class="status-restaurant">
+												<div class="opentime-status">
+													<span class="stt online" title="Mở cửa"> </span>
+												</div>
+												<div class="time">
+													<i class="far fa-clock"> </i> 06:00 - 23:00
+												</div>
+											</div>
+											<div class="cost-restaurant">
+												<i class="fas fa-dollar-sign"> </i> 38,000 - 38,000
+											</div>
+											<div class="share-social clearfix">
+												<div class="share-social-box">
+													<div class="fb-like" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="true" data-colorscheme="light" data-kid-directed-site="false"> </div>
+												</div>
+											</div>
+											<div class="utility-restaurant clearfix">
+												<div class="utility-item">
+													<div class="utility-title"> Dịch vụ bởi</div>
+													<div class="utility-content">   
+														<span class="txt-bold txt-red"> ShopeeFood</span>
+													</div>
+												</div>
+											</div>
+											<div class="">
+												<a class="btn btn--primary" href="">MUA</a>
+												<a class="btn btn--primary continue-sold-product" href="">THÊM VÀO GIỎ HÀNG</a>
+											</div>
+										</div>
+									</div>
+									<div class="motamonan">
+										<h3 class="category-heading">Mô tả</h3>
+										<span class="motachitiet"></span>
+									</div>
+								</div>
+							</div>
+						</div> 
                     </div>
                 </div>
             </div>

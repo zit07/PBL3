@@ -110,6 +110,28 @@ public class MonAnDAO {
         return result;
     }
     
+    public static MonAnModel getMonan(int ID_monan,int ID_canteen) throws SQLException, Exception {
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+            	String sql = "SELECT tenmon, mota, thanhphan, huongvi, giacu, giahientai, hinhanhchinh, daban FROM monan WHERE ID_monan = ? AND ID_canteen = ? AND trangthai = 1 AND xoa = 0;";            	
+            	stm = conn.prepareStatement(sql);
+            	stm.setInt(1, ID_monan);
+            	stm.setInt(2, ID_canteen);
+            	rs = stm.executeQuery();
+                if (rs.next()) {
+                	return new MonAnModel(ID_monan, ID_canteen, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5),
+                			rs.getDouble(6), null, Base64.getDecoder().decode(rs.getBytes(7)), -1, rs.getInt(8), -1);
+                }
+            }
+        } catch (Exception e) {
+        	e.printStackTrace(); 
+        } finally {
+        	connectDB.closeConnection(conn, stm, rs);
+        }
+        return null;
+    }
+    
     public static String getTenmon(Integer ID_monan) throws SQLException, Exception {
         try {
             conn = connectDB.getConnection();
@@ -523,12 +545,7 @@ public class MonAnDAO {
 
     
     public static void main(String[] args) throws SQLException, Exception {
-    	KhachHangModel khachHang = new KhachHangModel(128,null,null,null,null,null,null,null,127,"tôm, cá ,mực", null, null);
-    	List<MonAnModel> listMonAn = GetMonanGoiy(khachHang);
-    	for (MonAnModel monAn : listMonAn) {
-    	    System.out.println("Tên món ăn: " + monAn.getTenmon());
-    	    // và các thuộc tính khác của MonAnModel tương ứng
-    	}
-
+    	MonAnModel monAnModel = MonAnDAO.getMonan(20,127);
+		System.out.println(monAnModel.getHinhanhchinh().toString());
 	}
 }

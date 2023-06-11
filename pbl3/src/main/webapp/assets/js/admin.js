@@ -35,7 +35,7 @@ $(function () {
   var huyenValue = $('#huyen').text();
   var xaValue = $('#xa').text();
 
-	const listAddress = document.querySelectorAll('div[name="address_input"]'); 
+  const listAddress = document.querySelectorAll('div[name="address_input"]'); 
   for(var i = 0; i < listAddress.length; i++) {
     // Lấy giá trị từ các thẻ span
     var tinhValuei = document.getElementById("tinh" + i).innerHTML;

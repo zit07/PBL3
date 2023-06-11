@@ -1,7 +1,6 @@
-<%@page import="datdocanteen.Model.BankModel"%>
-<%@page import="javax.servlet.jsp.tagext.Tag"%>
-<%@page import="datdocanteen.Model.HoadonchitietModel"%>
-<%@page import="datdocanteen.Model.HoadonModel"%>
+<%@page import="datdocanteen.Model.GiohoatdongModel"%>
+<%@page import="datdocanteen.Model.DiachiModel"%>
+<%@page import="datdocanteen.Model.LoaithucanModel"%>
 <%@page import="datdocanteen.Model.CartModel"%>
 <%@page import="datdocanteen.Model.LichsutimkiemModel"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -10,20 +9,26 @@
 <%@ page import="datdocanteen.Model.KhachHangModel" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Base64" %>
-<%@ page import="java.util.Enumeration" %> 
+<%@ page import="datdocanteen.Model.MonAnModel"%>
+<%@ page import="java.util.Enumeration" %>
+<%@page import="datdocanteen.Model.CanteenModel"%>
 <%	
 	KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
 	List<LichsutimkiemModel> searchHistory = (List<LichsutimkiemModel>)session.getAttribute("searchHistory"); 
+	List<CanteenModel> canteenList = (List<CanteenModel>)session.getAttribute("canteenList");
 	List<CartModel> carts = (List<CartModel>)session.getAttribute("carts");
-	List<HoadonModel> hoadons = (List<HoadonModel>) session.getAttribute("hoadons");
-	Double tongtiencart = (Double) session.getAttribute("tongtiencart");
-	List<List<HoadonchitietModel>> hoadonchitiets = (List<List<HoadonchitietModel>>) session.getAttribute("hoadonchitiets"); 
-	BankModel bank = (BankModel) session.getAttribute("bank");
-	String tag = (String) session.getAttribute("tag");  
+	List<LoaithucanModel> loaithucans = (List<LoaithucanModel>) session.getAttribute("loaithucan");
+	String[] loaithucanSelected = (String[]) session.getAttribute("LoaithucanSelect");
+	String[] thanhphanSelected = (String[]) session.getAttribute("ThanhphanSelect");
+	String[] huongviSelected = (String[]) session.getAttribute("HuongviSelect");
+	MonAnModel monan = (MonAnModel)session.getAttribute("monan");
+	DiachiModel diachi = (DiachiModel)session.getAttribute("diachicanteen");
+	GiohoatdongModel giohoatdong = (GiohoatdongModel)session.getAttribute("giohoatdong");
+	boolean check = (boolean)session.getAttribute("check");
 %>
 <!DOCTYPE html>
 <html>
-<head>
+<head> 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,6 +38,7 @@
     <link rel="stylesheet" href="./assets/css/base.css">
     <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="./assets/css/grid.css">
+    <link rel="stylesheet" href="./assets/css/detailproduct.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>	
@@ -169,7 +175,7 @@
                         </a>
                     </div>
                     
-                    <form class="header__search" method="POST" action="./search?id_user=${khachhang.getID_khachhang()}">
+                    <form class="header__search" method="POST" action="./search">
                         <div class="header__search-input-wrap">
                             <input type="text" class="header__search-input" placeholder="Tìm kiếm món ăn" name="txtSearch" value="${txtSearch}">
                             <div class="header__search-history">
@@ -179,7 +185,7 @@
                             	<c:set var="lichsutimkiem" value="<%=searchHistory%>"/>
 	                            	<c:forEach items="${lichsutimkiem}" var="lichsu">
 								    	<li class="header__search-history-item">
-	                                    	<a class="header__search-history-item-link" href="./search?id_user=${khachhang.getID_khachhang()}&txtSearch=${lichsu.getNoidung()}" >${lichsu.getNoidung()}</a>
+	                                    	<a class="header__search-history-item-link" href="./search?txtSearch=${lichsu.getNoidung()}" >${lichsu.getNoidung()}</a>
 	                                    	<a class="btn-del-history" href="./delHistorySearch?id=${lichsu.getID_lichsutimkiem()}">
                                             	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                                                 	<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
@@ -211,7 +217,6 @@
 		                    <c:if test="${carts.size() > 0}">
 		                            <h4 class="header__cart-heading">Sản phẩm đã chọn</h4>
 		                            <ul class="header__cart-list-item">
-		                            <c:set var="carts" value="<%=carts%>"/>
 			                        <c:forEach items="${carts}" var="cart">
 			                        	<li class="header__cart-item">
 		                                    <img class="header__cart-item-img" src="data:image/jpeg;base64, ${Base64.getEncoder().encodeToString(cart.getHinhanhchinh())}">
@@ -254,181 +259,248 @@
             <div class="grid wide">
                 <div class="row sm-gutter">
                     <div class="col l-2">
-                      <!-- category -->
-                      <nav class="category" id="category">
-                        <h3 class="category-heading">
-                          <i class="category-heading-icon fas fa-list-ul"></i> Giỏ hàng
-                        </h3>
-                        <div class="navbar">
-                          <a class="navbar-link" href="./cart">Xem giỏ hàng</a> 
-	                      <a class="navbar-link ${tag == 'chuathanhtoan' ? 'choose':''}" href="./hoadonchothanhtoan">Đơn hàng chờ thanh toán</a> 
-	                      <a class="navbar-link ${tag == 'dangkiemtra' ? 'choose':''}" href="./hoadonchoxacnhan">Đơn hàng chờ xác nhận</a> 
-                          <a class="navbar-link ${tag == 'damua' ? 'choose':''}" href="./Donhangdamua">Xem đơn hàng đã mua</a> 
-                          <a class="navbar-link ${tag == 'dahuy' ? 'choose':''}" href="./Donhangdahuy">Xem đơn hàng đã huỷ</a> 
-                        </div>
-                      </nav>
+                            <!-- category -->
+                        <form action="./Locmonan" method="POST">
+                            <nav class="category" id="category">
+                                <h3 class="category-heading">
+                                    <i class="category-heading-icon fas fa-list-ul"></i> Bộ lọc tìm kiếm
+                                </h3>
+                                <div class="category-group"> 
+                                    <div class="category-group-title">Loại thức ăn</div>
+                                    <ul class="category-group-list">
+                                    	<c:set var="loaithucans" value="<%=loaithucans%>"/> 
+						                <c:forEach items="${loaithucans}" var="loaithucan"> 
+						                	<li class="category-group-item">
+						                		<c:set var="check" value="${false}"/>
+												<c:set var="IDselected" value="<%=loaithucanSelected%>"/>
+												<c:forEach items="${IDselected}" var="ID">
+											        <c:if test="${loaithucan.getID_loaithucan() == ID}">
+											            <c:set var="check" value="${true}"/>
+											        </c:if>
+											    </c:forEach>
+	                                            <input type="checkbox" class="category-group-item-check" name="txtloaimonan" value="${loaithucan.getID_loaithucan()}" <c:if test="${check}">checked="checked"</c:if>> ${loaithucan.getLoaithucan()}
+	                                        </li>
+						                </c:forEach>
+                                    </ul>
+                                </div>
+                                <div class="category-group">
+                                    <div class="category-group-title">Thành phần chính</div>
+                                    <ul class="category-group-list">
+                                        <li class="category-group-item">
+                                        	<c:set var="check" value="${false}"/>
+											<c:set var="thanhphans" value="<%=thanhphanSelected%>"/>
+											<c:forEach items="${thanhphans}" var="thanhphan">
+										        <c:if test="${thanhphan == 'ga'}">
+										            <c:set var="check" value="${true}"/>
+										        </c:if>
+										    </c:forEach>
+                                            <input type="checkbox" class="category-group-item-check" name="txtThanhphan" value="ga" <c:if test="${check}">checked="checked"</c:if>> Thịt gà
+                                        </li>
+                                        <li class="category-group-item">
+                                        	<c:set var="check" value="${false}"/>
+											<c:set var="thanhphans" value="<%=thanhphanSelected%>"/>
+											<c:forEach items="${thanhphans}" var="thanhphan">
+										        <c:if test="${thanhphan == 'heo'}">
+										            <c:set var="check" value="${true}"/>
+										        </c:if>
+										    </c:forEach>
+                                            <input type="checkbox" class="category-group-item-check" name="txtThanhphan" value="heo"<c:if test="${check}">checked="checked"</c:if>> Thịt heo
+                                        </li>
+                                        <li class="category-group-item">
+                                        	<c:set var="check" value="${false}"/>
+											<c:set var="thanhphans" value="<%=thanhphanSelected%>"/>
+											<c:forEach items="${thanhphans}" var="thanhphan">
+										        <c:if test="${thanhphan == 'bo'}">
+										            <c:set var="check" value="${true}"/>
+										        </c:if>
+										    </c:forEach>
+                                            <input type="checkbox" class="category-group-item-check" name="txtThanhphan" value="bo"<c:if test="${check}">checked="checked"</c:if>> Thịt bò 
+                                        </li>
+                                        <li class="category-group-item">
+                                        	<c:set var="check" value="${false}"/>
+											<c:set var="thanhphans" value="<%=thanhphanSelected%>"/>
+											<c:forEach items="${thanhphans}" var="thanhphan">
+										        <c:if test="${thanhphan == 'hai san'}">
+										            <c:set var="check" value="${true}"/>
+										        </c:if>
+										    </c:forEach>
+                                            <input type="checkbox" class="category-group-item-check" name="txtThanhphan" value="hai san"<c:if test="${check}">checked="checked"</c:if>> Hải sản
+                                        </li>
+                                        <li class="category-group-item">
+                                        	<c:set var="check" value="${false}"/>
+											<c:set var="thanhphans" value="<%=thanhphanSelected%>"/>
+											<c:forEach items="${thanhphans}" var="thanhphan">
+										        <c:if test="${thanhphan == 'rau cu'}">
+										            <c:set var="check" value="${true}"/>
+										        </c:if>
+										    </c:forEach>
+                                            <input type="checkbox" class="category-group-item-check" name="txtThanhphan" value="rau cu"<c:if test="${check}">checked="checked"</c:if>> Rau củ
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="category-group">
+                                    <div class="category-group-title">Hương vị</div>
+                                    <ul class="category-group-list">
+                                        <li class="category-group-item">
+                                        	<c:set var="check" value="${false}"/>
+											<c:set var="huongvis" value="<%=huongviSelected%>"/>
+											<c:forEach items="${huongvis}" var="huongvi">
+										        <c:if test="${huongvi == 'chua'}">
+										            <c:set var="check" value="${true}"/>
+										        </c:if>
+										    </c:forEach>
+                                            <input type="checkbox" class="category-group-item-check" name="txtHuongvi" value="chua"<c:if test="${check}">checked="checked"</c:if>> Chua          
+                                        </li>
+                                        <li class="category-group-item">
+                                        	<c:set var="check" value="${false}"/>
+											<c:set var="huongvis" value="<%=huongviSelected%>"/>
+											<c:forEach items="${huongvis}" var="huongvi">
+										        <c:if test="${huongvi == 'cay'}">
+										            <c:set var="check" value="${true}"/>
+										        </c:if>
+										    </c:forEach>
+                                            <input type="checkbox" class="category-group-item-check" name="txtHuongvi" value="cay"<c:if test="${check}">checked="checked"</c:if>> Cay
+                                        </li>
+                                        <li class="category-group-item">
+                                        	<c:set var="check" value="${false}"/>
+											<c:set var="huongvis" value="<%=huongviSelected%>"/>
+											<c:forEach items="${huongvis}" var="huongvi">
+										        <c:if test="${huongvi == 'man'}">
+										            <c:set var="check" value="${true}"/>
+										        </c:if>
+										    </c:forEach>
+                                            <input type="checkbox" class="category-group-item-check" name="txtHuongvi" value="man"<c:if test="${check}">checked="checked"</c:if>> Mặn
+                                        </li>
+                                        <li class="category-group-item">
+                                        	<c:set var="check" value="${false}"/>
+											<c:set var="huongvis" value="<%=huongviSelected%>"/>
+											<c:forEach items="${huongvis}" var="huongvi">
+										        <c:if test="${huongvi == 'ngot'}">
+										            <c:set var="check" value="${true}"/>
+										        </c:if>
+										    </c:forEach>
+                                            <input type="checkbox" class="category-group-item-check" name="txtHuongvi" value="ngot"<c:if test="${check}">checked="checked"</c:if>> Ngọt
+                                        </li>
+                                    </ul>
+                                </div>
+                            
+                                <div class="category-group">
+                                    <div class="category-group-title">Khoảng Giá</div>
+                                    <div class="category-group-filter">
+                                        <input type="number" placeholder="VNĐ TỪ" class="category-group-filter-input" name="GiaStart" value='${String.format("%.3f", giabatdau).replace(",", ".")}'> 
+                                        <i class="fas fa-arrow-right"></i>
+                                        <input type="number" placeholder="VNĐ ĐẾN" class="category-group-filter-input" name="GiaEnd" value='${String.format("%.3f", giaketthuc).replace(",", ".")}'>                           
+                                    </div>
+                                </div>
+                            
+                                <div class="category-group">
+                                    <div class="category-group-title">Đánh Giá</div>
+                                    <div class="rating-star">
+                                        <input type="checkbox" class="category-group-item-check">
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                    </div>
+                                    <div class="rating-star">
+                                        <input type="checkbox" class="category-group-item-check">
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                    </div>
+                                    <div class="rating-star">
+                                        <input type="checkbox" class="category-group-item-check">
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                    </div>
+                                    <div class="rating-star">
+                                        <input type="checkbox" class="category-group-item-check">
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                    </div>
+                                    <div class="rating-star">
+                                        <input type="checkbox" class="category-group-item-check">
+                                        <i class="star-checked far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                        <i class="star-uncheck far fa-star"></i>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn--primary category-group-filter-btn category-group--margin">LÀM MỚI</button>
+                            </nav>
+                    	</form>
                     </div>
-                    <div class="col l-10">
-                    <% if (tag.equals("chuathanhtoan")) { %>
-                    	<div class="home-product">
-                      		<h3 class="auth-form__heading table-list-user">ĐƠN HÀNG</h3>
-                      		<% if (hoadons.size() > 0) { %>
-	                      		<c:set var="hoadon" value="<%=hoadons%>"/>
-		                       	<div class="result-search-user">
-				                	<table border ="1" width ="100%">
-					                	<tr>
-					                    	<th>Mã đơn hàng</th>
-					                        	<th>Ngày tạo</th>
-					                            <th>Trạng thái</th>
-					                           	<th>Tổng tiền</th>
-					                           	<th>Thao tác</th>
-					                        </tr>
-						                    <c:if test="${hoadon != null}">
-						                    <c:forEach items="${hoadons}" var="hoadon">
-						                        <tr>
-						                          <td>${hoadon.getMadon()}</td>
-						                          <td>${hoadon.getNgaytao()}</td>
-						                          <td>${hoadon.getTrangthai()}</td>
-						                          <td>${String.format("%.3f", hoadon.getTongtien())} VNĐ</td>
-						                          <td> <a href="./Xoahoadon" class="btn btn--primary home-product-btn delete-product">Huỷ đơn</a></td>
-						                        </tr>
-						                    </c:forEach>
-						                  	</c:if>
-				                      </table>
-			                    </div>
-								<h3 class="auth-form__heading table-list-user">CHI TIẾT ĐƠN HÀNG</h3>
-			                    <div class="result-search-user">
-			                    	<table border ="1" width ="100%">
-				                        <tr>
-				                          	<th>Tên món ăn</th>
-				                          	<th>Số lượng</th>
-				                          	<th>Đơn giá</th>
-				                          	<th>Thành tiền</th>
-			                              	<th>Thao tác</th>
-			                            </tr>                            
-			                            <c:set var="hdchitiet" value="<%=hoadonchitiets.get(0)%>"/>
-					                    <c:if test="${hdchitiet != null}">
-					                       	<c:forEach items="${hdchitiet}" var="hdchitiet">
-						                       	<tr>
-						                           	<td>${hdchitiet.getTenmon()}</td>
-						                          	<td>
-									                  	<a href="./Hoadonchitiet?id_hdchitiet=${hdchitiet.getID_hoadonchitiet()}&type=giam"><i class="fa-solid fa-minus btn-tang-giam"></i></a> 
-									                    ${hdchitiet.getSoluong()}
-									                    <a href="./Hoadonchitiet?id_hdchitiet=${hdchitiet.getID_hoadonchitiet()}&type=tang"><i class="fa-solid fa-plus btn-tang-giam"></i></a>
-								                	</td>
-						                            <td>${String.format("%.3f", hdchitiet.getGia())} VNĐ</td>
-						                            <td>${String.format("%.3f", hdchitiet.getSoluong()*hdchitiet.getGia())} VNĐ</td>
-										            <td> <a href="./Hoadonchitiet?id_hdchitiet=${hdchitiet.getID_hoadonchitiet()}&type=xoa" class="btn btn--primary home-product-btn delete-product">Xoá</a></td>
-										        </tr>
-								            </c:forEach>
-				                        </c:if>
-			                      	</table>
-			                    </div>
-				 				<c:set var="bank" value="<%=bank%>"/>
-			                    <div class="bank">
-			                        <div class="info-bank">
-			                            <span class="info-bank_title">Vui lòng chuyển khoản vào số tài khoản bên dưới với nội dung "${hoadons.get(0).getMadon()}" với số tiền: ${String.format("%.3f", hoadons.get(0).getTongtien())} VNĐ</span>    
-			                            <span class="info-bank_title">Ngân hàng: ${bank.getTennganhang()}</span>   
-			                            <span class="info-bank_title">Số tài khoản: ${bank.getStk()}</span>      
-			                            <span class="info-bank_title">Họ và tên chủ tài khoản: ${bank.getHovaten()}</span>
-			                        </div>        
-			                        <c:if test="${bank.getMaQR() != null}">
-		                           	<div class="qrcode-bank">
-				                        <span class="info-bank_title">Quét mã QR Code để thanh toán:</span>     
-				                            <div class="qrcode-img">
-				                              <img class="img-qrcode-bank" src="data:image/jpeg;base64, ${Base64.getEncoder().encodeToString(bank.getMaQR())}">
-				                            </div>
-				                        </div>
-			                        </c:if>
-			                    </div>
-			                    <div class="btn-container">
-			                    	<a class="btn btn--primary" href="./Xulyhoadon?tag=xacnhanthanhtoan">XÁC NHẬN ĐÃ THANH TOÁN</a>
-			                    </div>
-		                    <% } %>
-                      </div>  
-                      <% } else if (tag.equals("dangkiemtra")) { %>
-                      <div class="home-product">
-                      		<h3 class="auth-form__heading table-list-user">ĐƠN HÀNG</h3>
-                      		<c:set var="hoadons" value="<%=hoadons%>"/>
-	                      	<div class="result-search-user">
-		                          <table border ="1" width ="100%">
-			                            <tr>
-			                            	<th>Mã đơn hàng</th>
-			                              	<th>Ngày tạo</th>
-			                             	<th>Trạng thái</th>
-			                            	<th>Tổng tiền</th>
-			                            	<th>Chi tiết</th>
-			                            </tr>
-				                        <c:forEach items="${hoadons}" var="hoadon">
-				                            <tr>
-				                              <td>${hoadon.getMadon()}</td>
-				                              <td>${hoadon.getNgaytao()}</td>
-				                              <td>${hoadon.getTrangthai()}</td>
-				                              <td>${String.format("%.3f", hoadon.getTongtien())} VNĐ</td>
-				                              <td><a class="btn btn--primary home-product-btn" name="link-cart-detail" id="${hoadon.getMadon()}">Xem</a></td>
-				                            </tr>
-										</c:forEach>
-		                          </table>
-	                        </div>
-                      </div> 
-                      <% } else if (tag.equals("damua")) { %>
-                      <div class="home-product">
-	                      <form action="./Donhangdamua">
-								<input type="date" class="input_date" id="date_input" name="ngay" value="${ngayloc}">
-								<button type="submit" class="btn btn--primary">Lọc</button>
-						  </form>
-				      	  <h3 class="auth-form__heading table-list-user">ĐƠN HÀNG ĐÃ MUA</h3>
-				      	  <div class="list-user">
-					      	<table border ="1" width ="100%">
-						      <tr>
-						          <th>Mã đơn hàng</th>
-				                  <th>Ngày tạo</th>
-					              <th>Trạng thái</th>
-				                  <th>Tổng tiền</th>
-					              <th>Chi tiết</th>
-				              </tr>
-				              <c:forEach items="${hoadons}" var="hoadon"> 
-								  <tr>
-									  <td>${hoadon.getMadon()}</td>
-							          <td>${hoadon.getNgaytao()}</td>
-							          <td>${hoadon.getTrangthai()}</td>
-									  <td>${String.format("%.3f", hoadon.getTongtien())} VNĐ</td>
-									  <td><a class="btn btn--primary home-product-btn" name="link-cart-detail" id="${hoadon.getMadon()}">Xem</a></td>
-								  </tr>
-							   </c:forEach>
-					        </table>
-				         </div>
-			         </div>
-			          <% } else if (tag.equals("dahuy")) { %>
-                      <div class="home-product">
-	                      <form action="./Donhangdamua">
-								<input type="date" class="input_date" id="date_input" name="ngay" value="${ngayloc}">
-								<button type="submit" class="btn btn--primary">Lọc</button>
-						  </form>
-				      	  <h3 class="auth-form__heading table-list-user">ĐƠN HÀNG ĐÃ HUỶ</h3>
-				      	  <div class="list-user">
-					      	<table border ="1" width ="100%">
-						      <tr>
-						          <th>Mã đơn hàng</th>
-				                  <th>Ngày tạo</th>
-					              <th>Trạng thái</th>
-				                  <th>Tổng tiền</th>
-					              <th>Chi tiết</th>
-				              </tr>
-				              <c:forEach items="${hoadons}" var="hoadon"> 
-								  <tr>
-									  <td>${hoadon.getMadon()}</td>
-							          <td>${hoadon.getNgaytao()}</td>
-							          <td>${hoadon.getTrangthai()}</td>
-									  <td>${String.format("%.3f", hoadon.getTongtien())} VNĐ</td>
-									  <td><a class="btn btn--primary home-product-btn" name="link-cart-detail" id="${hoadon.getMadon()}">Xem</a></td>
-								  </tr>
-							   </c:forEach>
-					        </table>
-				         </div>
-			         </div>
-			         <% } %>
-                  </div>
+                    <div class="col l-10 ">
+                        <!-- home product -->
+                       <div class="home-product">    
+							<div class="now-detail-restaurant clearfix">
+								<div class="container">
+									<div class="">
+										<div class="detail-restaurant-img">
+											<img src="data:image/jpeg;base64, ${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())}">
+										</div>
+										<div class="detail-restaurant-info">
+											<h1 class="name-restaurant"> ${monan.getTenmon()}</h1>
+											<div class="address-restaurant" id="address_canteen"> </div>
+					                        <div style="display: none" name="address_input">
+					                       		<span id="tinh"><%=diachi.getTinh()%></span>
+					                       		<span id="huyen"><%=diachi.getHuyen()%></span>
+					                       		<span id="xa"><%=diachi.getXa()%></span>
+					                       	</div>
+											<div class="status-restaurant">
+												<div class="opentime-status">
+													<% if (check) { %>
+														<span class="stt online" title="Mở cửa"> </span>
+													<% } else { %>
+														<span class="stt offline" title="Đóng cửa"> </span>
+													<% } %>
+													
+												</div>
+												<div class="time">
+													<i class="far fa-clock"> </i> ${giohoatdong.getGiomocua()} - ${giohoatdong.getGiodongcua()}
+												</div>
+											</div>
+											<div class="cost-restaurant">
+												<i class="fas fa-dollar-sign"> </i> ${String.format("%.3f", monan.getGiahientai())} VNĐ
+											</div>
+											<div class="share-social clearfix">
+												<span class="text-content">Đã bán ${monan.getDaban()}</span>
+											</div>
+											<div class="utility-restaurant clearfix">
+												<div class="utility-item">
+													<div class="utility-title"> Dịch vụ bởi</div>
+													<div class="utility-content">   
+														<span class="txt-bold txt-red"> ShopeeFood</span>
+													</div>
+												</div>
+											</div>
+											<div class="">
+												<% if (check) { %>
+													<a class="btn btn--primary" href="./taohoadon?id_monan=${monan.getID_monan()}">MUA</a>
+												<% } %>
+												<a class="btn btn--primary continue-sold-product" href="./addtocart?id_monan=${monan.getID_monan()}&tag=productdetail">THÊM VÀO GIỎ HÀNG</a>
+											</div>
+										</div>
+									</div>
+									<div class="motamonan">
+										<h3 class="category-heading">Mô tả</h3>
+										<span class="motachitiet">${monan.getMota()}</span>
+									</div>
+								</div>
+							</div>
+						</div> 
+                    </div>
                 </div>
             </div>
         </div>
@@ -497,7 +569,7 @@
     
 		<div class="modal" id="form-changepassword" style="display: ${display_form__changepass}" >
 	        <div class="modal__body">
-	            <form action="./ChangePassword?id_user=${khachhang.getID_khachhang()}" method="post" class="formChangePass">
+	            <form action="./ChangePassword" method="post" class="formChangePass">
 	                <div class="auth-form">
 	                    <div class="auth-form__container">
 	                        <div class="auth-form__header">
@@ -538,7 +610,7 @@
 		<!-- Change PIN form -->
 	    <div class="modal" id="form-changepin" style="display: ${display_form__changepin}">
 	        <div class="modal__body">
-	            <form action="./ChangePin?id_user=${khachhang.getID_khachhang()}" method="post" class="auth-form">
+	            <form action="./ChangePin" method="post" class="auth-form">
 	                <div class="auth-form">
 	                    <div class="auth-form__container">
 	                        <div class="auth-form__header">
@@ -574,7 +646,7 @@
 	    <div class="modal" id="form-info">
 	        <div class="modal__body" >
             <!-- authen change info-->
-				<form action="./ChangeInfo?id_user=${khachhang.getID_khachhang()}" method="post" class="form-info" enctype="multipart/form-data">
+				<form action="./ChangeInfo" method="post" class="form-info" enctype="multipart/form-data">
 					<div class="avatar">
 						<c:if test="${khachhang.getAvatar()==null}">
 							<img src="./assets/img/avatarDefault.jpg" class="avatar-form__img" id="img-form"/>
@@ -668,54 +740,82 @@
 				</form>
 			</div> 
 	    </div>
-		<div class="modal" id="form-chosseCantin">
-		</div>
-		<% if (hoadons.size() > 0) { %>
-			<% for (int i=0; i<hoadons.size(); i++) {%>
-		    	<div class="modal" name="form-cart-detail" id="<%=hoadons.get(i).getMadon()%>">
-					<div class="modal__body">
-						<div class="auth-form list__custumer">
-							<div class="auth-form__container">
-								<div class="auth-form__form">
-									<h3 class="auth-form__heading table-list-user">CHI TIẾT ĐƠN HÀNG <%=hoadons.get(i).getMadon()%></h3>
-				                        <div class="result-search-user">
-				                          	<table border ="1" width ="100%">
-					                            <tr>
-					                            	<th>Mã món ăn</th>
-					                              	<th>Tên món ăn</th>
-					                              	<th>Số lượng</th>
-					                              	<th>Đơn giá</th>
-					                              	<th>Thành tiền</th>
-					                            </tr>      
-					                            <c:set var="HDchitiets" value="<%=hoadonchitiets.get(i)%>"/>
-		   										<c:forEach items="${HDchitiets}" var="HDchitiet">	
-			   										<tr>
-			   											<td>${HDchitiet.getID_monan()}</td>
-								                    	<td>${HDchitiet.getTenmon()}</td>
-								                        <td>${HDchitiet.getSoluong()}</td>
-									                    <td>${String.format("%.3f", HDchitiet.getGia())} VNĐ</td>
-									                    <td>${String.format("%.3f", HDchitiet.getGia() * HDchitiet.getSoluong())} VNĐ</td>
-										            </tr> 
-		   										</c:forEach>
-		   										<tr>
-			   										<td></td>
-								                    <td></td>
-								                    <td></td>
-									                <td><h3>Tổng tiền: </h3></td>
-									                <td><h3><%=String.format("%.3f", hoadons.get(i).getTongtien())%> VNĐ</h3></td>
-										        </tr> 
-				                          	</table>
-				                        </div>
-								</div>
-								<div class="auth-form__control btn-back">
-									<a class="btn auth-form__back " href="./">QUAY LẠI</a>
-								</div>
+		
+		<div class="modal  ${showcanteen == 'flex' ? 'display-flex' : ''}" id="form-chosseCantin">
+			<div class="modal__body">
+				<form class="auth-form list__custumer" method="POST" action="./SearchCanteen">
+					<div class="auth-form__container">
+						<div class="auth-form__header">
+							<h3 class="auth-form__heading">Tìm kiếm Cantin </h3>
+						</div>
+						<div class="search-group form-choose-canteen">
+							<div class="">
+								<div class="search-group-title">Nhập tên hoặc mã Cantin</div>
+								<input class="search-group-input" type="search" name="txtSearchCanteen" value="${txtSearchCanteen}">
+							</div>
+							
+							<div class="">
+								<div class="search-group-title">Chọn địa chỉ để tìm kiếm</div>
+								<select name="txtTinh" class="search-group-item" id="province">
+									<option value="-1">Chọn tỉnh thành</option>
+								</select>
+								<select name="txtHuyen" class="search-group-item" id="district">
+									<option value="-1">Chọn quận/huyện</option>
+								</select>
+								<select name="txtXa" class="search-group-item" id="town">
+									<option value="-1">Chọn phường/xã</option>
+								</select>
+								<div style="display: none">
+		                        	<span id="tinh">${tinh}</span>
+		                           	<span id="huyen">${huyen}</span>
+		                           	<span id="xa">${xa}</span>
+		                        </div>
 							</div>
 						</div>
-					</div> 
-				</div>
-			<% } %>
-		<% } %> 
+						<div class="search-group">
+							<div class="row sm-gutter">
+							<%if (canteenList!=null){ %> 
+                            	<c:set var="canteenList" value="<%=canteenList%>"/>
+                            	<c:forEach items="${canteenList}" var="Canteen">
+                            		<div class="col l-2-4">
+		                                    <a class="home-product-item-link" href="./ChangeCanteen?id_canteen=${Canteen.getID_canteen()}">
+		                                    	<c:if test="${Canteen.getAvatar()==null}">
+					                            	<div class="home-product-item__img" style="background-image: url(./assets/img/avatarDefault.jpg);"></div>
+					                            </c:if>
+					                            <c:if test="${Canteen.getAvatar()!=null}">
+					                            	<div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,${Base64.getEncoder().encodeToString(Canteen.getAvatar())});"></div>
+					                            </c:if>
+		                                        <div class="home-product-item__info">
+		                                            <h4 class="home-product-item__name">${Canteen.getTen()}</h4>
+		                                            
+		                                            <div class="home-product-item__footer">
+		                                                <div class="home-product-item__save">
+		                                                    <input type="checkbox" id="heart-save-1">
+		                                                    <label for="heart-save-1" class="far fa-heart"></label>
+		                                                </div>
+		                                                <div class="home-product-item__rating-star">
+		                                                    <i class="star-checked far fa-star"></i>
+		                                                    <i class="star-checked far fa-star"></i>
+		                                                    <i class="star-checked far fa-star"></i>
+		                                                    <i class="star-checked far fa-star"></i>
+		                                                    <i class="star-uncheck far fa-star"></i>
+		                                                </div>
+		                                            </div>
+		                                        </div>
+		                                    </a>
+		                                </div>
+                            	</c:forEach>
+                            <%}%>
+                            </div>
+						</div>
+						<div class="auth-form__control">
+							<a class="btn auth-form__back" href="./">QUAY LẠI</a>
+							<button class="btn btn--primary" type="submit">TÌM KIẾM</button>
+						</div>
+					</div>
+				</form>
+			</div> 
+		</div>
     <!-- script js -->
     <!-- <script src="./assets/js/product.js"></script> -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -728,6 +828,6 @@
         crossorigin="anonymous">
     </script>
     <script src="./assets/data/address.json"></script>
-    <script src="./assets/js/cart.js"></script>
+    <script src="./assets/js/customer.js"></script>
 </body>
 </html>

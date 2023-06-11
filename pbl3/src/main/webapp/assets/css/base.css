@@ -208,3 +208,6 @@ td{
 	color: var(--light-btn-primary-color) !important;
 }
 
+.text-content{
+    font-size: 1.4rem;
+}

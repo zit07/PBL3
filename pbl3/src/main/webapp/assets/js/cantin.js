@@ -121,7 +121,6 @@ $(function () {
   var huyenValue = $('#huyen').text();
   var xaValue = $('#xa').text();
 
-
   $('#province').html('<option value="-1">Chọn tỉnh/thành phố</option>');
   $('#district').html('<option value="-1">Chọn quận/huyện</option>');
   $('#town').html('<option value="-1">Chọn phường/xã</option>');

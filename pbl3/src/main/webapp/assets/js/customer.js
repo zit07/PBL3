@@ -62,51 +62,54 @@ for(var i = 0; i < goback.length; i++) {
 const pageNext = document.getElementById("page-next"); 
 const pageBack = document.getElementById("page-back"); 
 
-pageNext.addEventListener("click", (event) => {
-    event.preventDefault();
-    var content = document.querySelector("div.home-product:not(.hide-block)");
-    if (document.getElementById(parseInt(content.id, 10) + 1) !== null) {
-        pageBack.classList.remove("home-filter-page-btn--disable");
-        const pageNow = document.getElementById(content.id);
-        pageNow.classList.add("hide-block");  
-        const NumberNow = document.getElementById("page"+content.id);
-        NumberNow.classList.add("hide-block"); 
-        const pageNextto = document.getElementById(parseInt(content.id, 10) + 1); 
-        if (pageNextto) {
-            pageNextto.classList.remove("hide-block");
-        }
-        const NumberNext = document.getElementById("page"+(parseInt(content.id, 10) + 1));
-        if (NumberNext) {
-            NumberNext.classList.remove("hide-block");
-        }
-        if (document.getElementById(parseInt(content.id, 10) + 2) === null) {
-            pageNext.classList.add("home-filter-page-btn--disable"); 
-        }
-    }
-});
+if (pageNext !== null) {
+	pageNext.addEventListener("click", (event) => {
+	    event.preventDefault();
+	    var content = document.querySelector("div.home-product:not(.hide-block)");
+	    if (document.getElementById(parseInt(content.id, 10) + 1) !== null) {
+	        pageBack.classList.remove("home-filter-page-btn--disable");
+	        const pageNow = document.getElementById(content.id);
+	        pageNow.classList.add("hide-block");  
+	        const NumberNow = document.getElementById("page"+content.id);
+	        NumberNow.classList.add("hide-block"); 
+	        const pageNextto = document.getElementById(parseInt(content.id, 10) + 1); 
+	        if (pageNextto) {
+	            pageNextto.classList.remove("hide-block");
+	        }
+	        const NumberNext = document.getElementById("page"+(parseInt(content.id, 10) + 1));
+	        if (NumberNext) {
+	            NumberNext.classList.remove("hide-block");
+	        }
+	        if (document.getElementById(parseInt(content.id, 10) + 2) === null) {
+	            pageNext.classList.add("home-filter-page-btn--disable"); 
+	        }
+	    }
+	});
+	
+	pageBack.addEventListener("click", (event) => {
+	    event.preventDefault();
+	    var content = document.querySelector("div.home-product:not(.hide-block)");
+	    if (content.id !== "1") {
+			pageNext.classList.remove("home-filter-page-btn--disable");
+	        const pageNow = document.getElementById(content.id);
+	        pageNow.classList.add("hide-block"); 
+	        const NumberNow = document.getElementById("page"+content.id);
+	        NumberNow.classList.add("hide-block"); 
+	        const pageBackto = document.getElementById(parseInt(content.id, 10) - 1); 
+	        if (pageBackto) {
+	            pageBackto.classList.remove("hide-block");
+	        }
+	        const NumberNext = document.getElementById("page"+(parseInt(content.id, 10) - 1)); 
+	        if (NumberNext) {
+	            NumberNext.classList.remove("hide-block");
+	        }
+	        if (document.getElementById(parseInt(content.id, 10) - 2) === null) {
+	            pageBack.classList.add("home-filter-page-btn--disable"); 
+	        }
+	    }
+	});
+}
 
-pageBack.addEventListener("click", (event) => {
-    event.preventDefault();
-    var content = document.querySelector("div.home-product:not(.hide-block)");
-    if (content.id !== "1") {
-		pageNext.classList.remove("home-filter-page-btn--disable");
-        const pageNow = document.getElementById(content.id);
-        pageNow.classList.add("hide-block"); 
-        const NumberNow = document.getElementById("page"+content.id);
-        NumberNow.classList.add("hide-block"); 
-        const pageBackto = document.getElementById(parseInt(content.id, 10) - 1); 
-        if (pageBackto) {
-            pageBackto.classList.remove("hide-block");
-        }
-        const NumberNext = document.getElementById("page"+(parseInt(content.id, 10) - 1)); 
-        if (NumberNext) {
-            NumberNext.classList.remove("hide-block");
-        }
-        if (document.getElementById(parseInt(content.id, 10) - 2) === null) {
-            pageBack.classList.add("home-filter-page-btn--disable"); 
-        }
-    }
-});
 
 
 $(function () {
@@ -116,7 +119,41 @@ $(function () {
   var huyenValue = $('#huyen').text();
   var xaValue = $('#xa').text();
 	
+  var tinhName = ""; 
+    var huyenName = "";
+    var xaName = "";
+    $.each(province, function (index, element) {
+      if (element.code == tinhValue) {
+        tinhName = element.name
+        district = element.districts;
+        $.each(district, function (index1, element1) {
+          if (element1.code == huyenValue) {
+            huyenName = element1.name
+            $.each(element1.wards, function (index2, element2) {
+              if (element2.code == xaValue) {
+                xaName = element2.name
+              }
+              z++;
+            });
+          }
+          y++;
+        });
+      }
+      x++;
+    });
 
+    var addressCanteen = document.getElementById("address_canteen");
+    if (tinhValue !== "-1" && huyenValue !== "-1" && xaValue !== "-1") {
+      addressCanteen.innerHTML = tinhName + ", " + huyenName + ", " + xaName;
+    } else if (tinhValue !== "-1" && huyenValue !== "-1") {
+      addressCanteen.innerHTML = tinhName + ", " + huyenName;
+    } else if (tinhValue !== "-1") {
+      addressCanteen.innerHTML = tinhName;
+    } else {
+      addressCanteen.innerHTML = "Canteen chưa chọn địa chỉ";
+    }
+  
+  
   $('#province').html('<option value="-1">Chọn tỉnh/thành phố</option>');
   $('#district').html('<option value="-1">Chọn quận/huyện</option>');
   $('#town').html('<option value="-1">Chọn phường/xã</option>');

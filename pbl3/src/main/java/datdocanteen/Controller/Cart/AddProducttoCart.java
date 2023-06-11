@@ -1,6 +1,8 @@
 package datdocanteen.Controller.Cart;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,17 +32,28 @@ public class AddProducttoCart extends HttpServlet {
         	HttpSession session = request.getSession();
         	if (session.getAttribute("khachhang") != null) {
         		KhachHangModel khachhang = (KhachHangModel)session.getAttribute("khachhang");
+        		String tag = request.getParameter("tag");
+
         		int ID_khachhang = khachhang.getID_khachhang();
             	int ID_cart = getNewIDforTable.getNewID("cart");
             	int ID_monan =  Integer.valueOf(request.getParameter("id_monan")); 
             	if (MonAnDAO.CheckProduct(ID_monan, khachhang.getID_canteen())) { 
             		CartDAO.AddtoCart(new CartModel(ID_cart, ID_khachhang, ID_monan, null, null, CartDAO.getSoluong(null, ID_monan, ID_khachhang) + 1, null));
+            		List<CartModel> carts = CartDAO.getCarts(ID_khachhang);
+            		session.setAttribute("carts", carts);
+    				session.setAttribute("soluonggiohang", CartDAO.getSoluongmon(carts)); 
     			}
+            	if (tag.equals("productdetail")) {
+                	response.sendRedirect(request.getContextPath() + "/productdetail?id_monan=" + ID_monan);
+                } else {
+                	response.sendRedirect(request.getContextPath());
+        		}
+			} else {
+            	response.sendRedirect(request.getContextPath());
 			}
         } catch (Exception e) {
             e.printStackTrace();
         } 
-        response.sendRedirect(request.getContextPath());
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

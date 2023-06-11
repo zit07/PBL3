@@ -24,7 +24,7 @@ public class CartDAO {
             if (conn != null) {
             	String sql = "SELECT cart.ID_cart, monan.tenmon, monan.hinhanhchinh, cart.soluong, monan.giahientai  "
             			+ "FROM cart INNER JOIN monan ON cart.ID_monan = monan.ID_monan "
-            			+ "WHERE cart.ID_khachhang = ? AND monan.trangthai = 1;";
+            			+ "WHERE cart.ID_khachhang = ? AND monan.trangthai = 1 ORDER BY cart.ID_cart DESC;";
 				stm = conn.prepareStatement(sql);
 				stm.setInt(1, ID_khachhang);
 				rs = stm.executeQuery();

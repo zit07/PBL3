@@ -1,6 +1,8 @@
 package datdocanteen.Controller.ChangeInfo;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import datdocanteen.Dao.CartDAO;
 import datdocanteen.Dao.KhachhangDAO;
+import datdocanteen.Model.CartModel;
 
 
 @WebServlet("/ChangeCanteen")
@@ -28,6 +32,12 @@ public class ChangeCanteenChoose extends HttpServlet {
 			Integer ID_canteen = request.getParameter("id_canteen") != null ? Integer.valueOf(request.getParameter("id_canteen")) : null; 
 			try { 
 				KhachhangDAO.ChangeCanteen(ID_khachhang, ID_canteen);
+				if (ID_canteen == null) {
+					List<CartModel> carts = CartDAO.getCarts(ID_khachhang);
+					for (CartModel cart : carts) {
+						CartDAO.XoaCart(cart.getID_cart());
+					}
+				}
 			} catch (Exception e) { 
 				e.printStackTrace();
 			}

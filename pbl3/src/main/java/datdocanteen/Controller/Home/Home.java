@@ -67,7 +67,7 @@ public class Home extends HttpServlet {
 				session.setAttribute("tag", "tatca");
 				session.setAttribute("listMonan", MonAnDAO.getListMonanByTag(ID_canteen, "tatca"));
 				session.setAttribute("loaithucan", LoaithucanDAO.getListLoaithucan(ID_canteen));
-				session.setAttribute("diachi", DiachiDAO.getDiachi(canteen.getID_diachi()));
+				session.setAttribute("diachi", DiachiDAO.getDiachi(ID_canteen));
 				session.setAttribute("listGiohoatdong", GiohoatdongDAO.getGiohoatdong(ID_canteen)); 
 				session.setAttribute("canteen", CanteenDAO.getInfoCanteen(ID_canteen));
 				session.setAttribute("searchHistory", HistorySearchDAO.getSearchHistory(ID_canteen));

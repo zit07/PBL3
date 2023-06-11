@@ -37,6 +37,29 @@ public class GiohoatdongDAO {
         return giohoatdong_List;
     }
     
+    public static GiohoatdongModel getGiohoatdongDate(int ID_canteen, int thu) throws Exception {
+        try {
+            conn = connectDB.getConnection();
+            if (conn != null) {
+                String sql = "SELECT ID_giohoatdong, giomocua, giodongcua FROM giohoatdong WHERE ID_canteen = ? AND thu = ?;";
+                stm = conn.prepareStatement(sql);
+                stm.setInt(1, ID_canteen);
+                stm.setInt(2, thu);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                	String giomocua = rs.getString(2) != null ? rs.getString(2).substring(0, rs.getString(2).length()-3) : "-1";
+                	String giodongcua = rs.getString(3) != null ? rs.getString(3).substring(0, rs.getString(3).length()-3) : "-1";
+                	return new GiohoatdongModel(rs.getInt(1), ID_canteen, thu, giomocua, giodongcua);
+                }
+            }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        } finally {
+            connectDB.closeConnection(conn, stm, rs);
+        }
+        return null;
+    }
+    
     public static void Addgiohoatdong(int ID_giohoatdong, int ID_canteen) throws Exception {
 		try {
             conn = connectDB.getConnection();
@@ -81,13 +104,17 @@ public class GiohoatdongDAO {
     
     public static void main(String[] args) {
 		try {
-			List<GiohoatdongModel> giohoatdongList = new ArrayList<GiohoatdongModel>();
-			giohoatdongList = getGiohoatdong(10002);System.out.println(giohoatdongList.size());
-			for (int i = 0; i < giohoatdongList.size(); i++) {
-			    String num = giohoatdongList.get(i).getGiomocua();
-			    System.out.println(num+"-"+giohoatdongList.get(i).getGiodongcua());
-			}
+//			List<GiohoatdongModel> giohoatdongList = new ArrayList<GiohoatdongModel>();
+//			giohoatdongList = getGiohoatdong(10002);System.out.println(giohoatdongList.size());
+//			for (int i = 0; i < giohoatdongList.size(); i++) {
+//			    String num = giohoatdongList.get(i).getGiomocua();
+//			    System.out.println(num+"-"+giohoatdongList.get(i).getGiodongcua());
+//			}
+			// Lấy thứ trong ngày hiện tại
+			
 //			Addgiohoatdong(Integer.valueOf(getNewIDforTable.getNewID("giohoatdong")), "10003");
+			GiohoatdongModel gio = getGiohoatdongDate(127, 2);
+			System.out.println(gio.getGiodongcua());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

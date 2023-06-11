@@ -1496,10 +1496,6 @@ border-color: red green blue yellow */
     padding-left: 0;
 }
 
-.footer {
-    border-top: 4px solid var(--primary-color);
-    padding-top: 120px;
-}
 
 .main-footer {
     background-color: #f9f9f9;

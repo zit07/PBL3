@@ -1,0 +1,488 @@
+.container, .container-fluid {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.now-detail-restaurant {
+    background-color: #fff;
+    padding-top: 30px;
+}
+
+.now-detail-restaurant .detail-restaurant-img {
+    width: 480px;
+    height: 300px;
+    position: relative;
+    float: left
+}
+
+.now-detail-restaurant .detail-restaurant-img img {
+    width: 100%;
+    height: 100%
+}
+
+.now-detail-restaurant .detail-restaurant-info {
+    color: #252525;
+    float: right;
+    width: 560px;
+    padding-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.now-detail-restaurant .breadcrumb {
+    padding-left: 0;
+    margin-bottom: 18px;
+    list-style: none;
+    overflow: hidden;
+    margin-top: -2px
+}
+
+.now-detail-restaurant .breadcrumb .breadcrumb-item {
+    float: left;
+    position: relative;
+    padding-right: 4px
+}
+
+.now-detail-restaurant .breadcrumb .breadcrumb-item:after {
+    content: "\BB";
+    color: #0288d1;
+    display: inline-block;
+    padding-left: 4px
+}
+
+.now-detail-restaurant .breadcrumb .breadcrumb-item:last-child:after {
+    content: ""
+}
+
+.now-detail-restaurant .breadcrumb .breadcrumb-link {
+    font-size: 13px;
+    color: #187caa
+}
+
+.now-detail-restaurant .breadcrumb .breadcrumb-link:hover {
+    text-decoration: none
+}
+
+.now-detail-restaurant .tag-preferred {
+    background: #f13233;
+    color: #fff;
+    padding: 3px 5px;
+    margin-right: 10px;
+    cursor: pointer;
+    text-transform: none
+}
+
+.now-detail-restaurant .tag-preferred i {
+    padding-left: 2px;
+    padding-right: 5px
+}
+
+.now-detail-restaurant .kind-restaurant {
+    font-size: 11px;
+    color: #959595;
+    text-transform: uppercase;
+    display: -ms-flexbox;
+    display: flex
+}
+
+.now-detail-restaurant .kind-restaurant span {
+    margin: auto 0
+}
+
+.now-detail-restaurant .link-brand {
+    text-transform: none;
+    margin-left: 10px
+}
+
+.now-detail-restaurant .name-restaurant {
+    font-size: 22px;
+    color: #464646;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-bottom: 4px;
+    line-height: 33px
+}
+
+.now-detail-restaurant .name-restaurant .icon {
+    margin-right: 2px;
+    vertical-align: sub
+}
+
+.now-detail-restaurant .address-restaurant {
+    font-size: 13px;
+    margin-bottom: 10px
+}
+
+.now-detail-restaurant .status-restaurant {
+    margin-bottom: 6px
+}
+
+.now-detail-restaurant .status-restaurant .time {
+    font-size: 15px;
+    display: inline-block;
+    padding-left: 10px;
+    vertical-align: middle
+}
+
+.now-detail-restaurant .status-restaurant .fa-clock {
+    color: #959595;
+    margin-right: 3px
+}
+
+.now-detail-restaurant .opentime-status {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: inline-block
+}
+
+.now-detail-restaurant .opentime-status .stt {
+    width: inherit;
+    height: inherit;
+    vertical-align: middle;
+    display: inline-block;
+    background-color: transparent
+}
+
+.now-detail-restaurant .opentime-status .stt:after {
+    content: attr(title);
+    font-size: 15px;
+    display: inline-block;
+    white-space: nowrap;
+    color: inherit;
+    padding-left: 5px
+}
+
+.now-detail-restaurant .opentime-status .stt:before {
+    content: "";
+    border-radius: 50%;
+    cursor: pointer;
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    position: relative;
+    top: -1px;
+    z-index: 2
+}
+
+.now-detail-restaurant .opentime-status .online:before {
+    background-color: #6cc942
+}
+
+.now-detail-restaurant .opentime-status .offline:before {
+    background-color: #eb3737
+}
+
+.now-detail-restaurant .opentime-status .busy:before {
+    background-color: #cf2127
+}
+
+.now-detail-restaurant .cost-restaurant {
+    color: #959595;
+    font-size: 15px
+}
+
+.now-detail-restaurant .cost-restaurant .fas {
+    text-align: center;
+    font-size: 8px;
+    width: 16px;
+    height: 16px;
+    border: 1px solid;
+    border-radius: 50%;
+    line-height: 15px;
+    vertical-align: top;
+    margin-top: 3px;
+    margin-right: 3px
+}
+
+.now-detail-restaurant .restaurant-announcement-info {
+    min-height: 40px;
+    line-height: 38px;
+    width: 420px;
+    border-radius: 2px;
+    background-color: #fbf9d8;
+    position: relative;
+    bottom: 0;
+    margin-bottom: 8px;
+    float: left
+}
+
+.now-detail-restaurant .restaurant-announcement-info .icon-notice {
+    background-image: url(/app/assets/img/notice.svg?1ca4a0dd68db576551cc0f934942b09b);
+    background-size: contain;
+    height: 20px;
+    width: 20px;
+    vertical-align: middle
+}
+
+.now-detail-restaurant .restaurant-announcement-info span {
+    display: inline-block;
+    line-height: 30px;
+    vertical-align: middle;
+    font-size: 13px;
+    font-weight: 400;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: .26px;
+    color: #464646;
+    padding-left: 15px;
+    padding-right: 10px
+}
+
+.now-detail-restaurant .share-social {
+    width: 100%;
+    height: auto;
+    margin-top: 10px
+}
+
+.now-detail-restaurant .share-social .facebook {
+    float: left;
+    margin-right: 15px;
+    padding-top: 2px
+}
+
+.now-detail-restaurant .link-merchant {
+    color: #fff;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #525252;
+    border-radius: 3px;
+    padding: 9px 10px 9px 40px;
+    position: relative;
+    float: right
+}
+
+.now-detail-restaurant .link-merchant .icon-merchant {
+    position: absolute;
+    color: #669fab;
+    font-size: 24px!important;
+    vertical-align: middle;
+    content: "";
+    width: 30px;
+    height: 30px;
+    top: 4px;
+    left: 6px;
+    background-image: url(/app/assets/img/bg-icon.png?2404d5c158d1d09104c34443b2fd5f44);
+    background-position: -192px -15px;
+    background-repeat: no-repeat
+}
+
+.now-detail-restaurant .link-merchant:hover {
+    text-decoration: none
+}
+
+.now-detail-restaurant .utility-restaurant {
+    border-top: 1px solid #ebebeb
+}
+
+.now-detail-restaurant .utility-restaurant .utility-item {
+    float: left;
+    width: 140px;
+    position: relative;
+    padding: 10px;
+    margin-bottom: 30px
+}
+
+.now-detail-restaurant .utility-restaurant .utility-item:after {
+    content: "";
+    width: 1px;
+    height: 20px;
+    position: absolute;
+    top: 22px;
+    left: 0;
+    background-color: #ebebeb
+}
+
+.now-detail-restaurant .utility-restaurant .utility-item:first-child {
+    padding-left: 0
+}
+
+.now-detail-restaurant .utility-restaurant .utility-item:first-child:after {
+    width: 0;
+    height: 0
+}
+
+.now-detail-restaurant .utility-restaurant .utility-title {
+    color: #959595;
+    font-size: 13px;
+    text-transform: uppercase
+}
+
+.now-detail-restaurant .utility-restaurant .utility-content {
+    font-size: 14px
+}
+
+.now-detail-restaurant .utility-restaurant .note {
+    color: #0288d1;
+    cursor: pointer
+}
+
+.now-detail-restaurant .utility-restaurant .icon-verify-merchant {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    cursor: pointer
+}
+
+.now-detail-restaurant .utility-restaurant .time-confirm {
+    position: absolute;
+    bottom: 12px;
+    right: 5px;
+    z-index: 1
+}
+
+.now-detail-restaurant .utility-restaurant .content-confirm {
+    color: #fff;
+    white-space: nowrap;
+    background: #464646;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transform: translate(-50%);
+    margin-top: 14px;
+    position: absolute;
+    top: 100%;
+    left: 0
+}
+
+.now-detail-restaurant .utility-restaurant .content-confirm:after {
+    content: " ";
+    bottom: 100%;
+    left: 50%;
+    border: solid transparent;
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: transparent;
+    border-bottom-color: #464646;
+    border-width: 7px;
+    margin-left: 2px
+}
+
+.now-detail-restaurant .utility-restaurant .content-confirm .close {
+    font-size: 14px;
+    text-align: center;
+    position: absolute;
+    top: -10px;
+    right: -7px;
+    cursor: pointer;
+    background-color: #fff;
+    color: #252525;
+    width: 18px;
+    height: 18px;
+    line-height: 11px;
+    border-radius: 50%;
+    font-weight: 700;
+    border: 2px solid;
+    opacity: 1;
+    text-shadow: none
+}
+
+.now-detail-restaurant .utility-restaurant .more-utility {
+    cursor: pointer
+}
+
+.now-detail-restaurant .utility-restaurant .more-utility:after {
+    border: 0
+}
+
+.now-detail-restaurant .utility-restaurant .dropdown {
+    display: inline-block;
+    margin-top: 18px
+}
+
+.now-detail-restaurant .utility-restaurant .dropdown:hover .dropdown-menu {
+    display: block
+}
+
+.now-detail-restaurant .utility-restaurant .dropdown-menu {
+    margin-top: 0;
+    padding: 0
+}
+
+.now-detail-restaurant .utility-restaurant .dropdown-item {
+    padding: 4px 10px;
+    border-bottom: 1px solid #ebebeb
+}
+
+.now-detail-restaurant .utility-restaurant .dropdown-item:active {
+    background-color: #fff
+}
+
+.now-detail-restaurant .utility-restaurant .dropdown-item:active .utility-content {
+    color: #252525
+}
+
+.now-detail-restaurant .utility-restaurant .btn-more-utility {
+    font-size: 5px;
+    cursor: pointer;
+    color: #959595;
+    vertical-align: middle;
+    padding: 10px 0
+}
+
+.now-detail-restaurant .utility-restaurant .btn-more-utility .fas {
+    padding: 0 1px;
+    outline: none
+}
+
+.now-detail-restaurant .utility-restaurant .btn-more-utility .fas:focus {
+    outline: none
+}
+
+.now-detail-restaurant .number-review {
+    font-size: 14px
+}
+
+.now-detail-restaurant .number-review:hover {
+    text-decoration: none
+}
+
+.now-detail-restaurant .rating {
+    margin-bottom: 4px;
+    font-size: 14px
+}
+
+.now-detail-restaurant .rating .number-rating {
+    background-color: #ffc107;
+    padding: 0 5px;
+    border-radius: 4px;
+    color: #fff;
+    margin: 0 5px
+}
+
+.now-detail-restaurant .view-more-rating {
+    margin-bottom: 4px
+}
+
+.now-detail-restaurant .detail-restaurant-note {
+    font-size: 15px;
+    padding: 12px 0;
+    clear: both
+}
+
+.rating .stars {
+    font-size: 14px;
+    color: #ffc107;
+    display: inline-block
+}
+
+.rating .stars>span {
+    padding-right: 2px
+}
+
+.motamonan {
+    margin-top: 50px;
+}
+
+.motachitiet {
+    font-size: 1.4rem;
+    word-wrap: break-word;
+}

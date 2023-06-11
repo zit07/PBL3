@@ -253,7 +253,6 @@
             <div class="grid wide">
                 <div class="row sm-gutter">
                     <div class="col l-2">
-                        <!-- Search Cantin -->
                             <!-- category -->
                         <form action="./Locmonan" method="POST">
                             <nav class="category" id="category">
@@ -496,7 +495,7 @@
 		                            	<c:set var="MonanList" value="<%=MonanListList.get(0)%>"/>
 		                            	<c:forEach items="${MonanList}" var="monan">
 		                            		<div class="col l-2-4 product-link">
-			                                        <a class="home-product-item-link" href="#">
+			                                        <a class="home-product-item-link" href="./productdetail?id_monan=${monan.getID_monan()}">
 		  	                                            <div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())});"></div>
 		 	                                            <div class="home-product-item__info">
 			                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
@@ -544,7 +543,7 @@
 		                            	<c:set var="MonanList" value="<%=MonanListList.get(i)%>"/>
 		                            	<c:forEach items="${MonanList}" var="monan">
 		                            		<div class="col l-2-4 product-link">
-			                                        <a class="home-product-item-link" href="#">
+			                                        <a class="home-product-item-link" href="./productdetail">
 		  	                                            <div class="home-product-item__img" style="background-image: url(data:image/jpeg;base64,${Base64.getEncoder().encodeToString(monan.getHinhanhchinh())});"></div>
 		 	                                            <div class="home-product-item__info">
 			                                                <h4 class="home-product-item__name">${monan.getTenmon()}</h4>
@@ -590,7 +589,64 @@
                 </div>
             </div>
         </div>
-
+		<footer class="footer">
+            <!-- main footer -->
+            <div class="main-footer">
+                <div class="grid wide">
+                    <!-- copyright -->
+                    <div class="row">
+                        <div class="grid">
+                            <p class="copyright-title">
+                                © 2023 CanteenFood copyright - Công ty TNHH TST - Product by TST
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- other footer -->
+            <div class="other-footer">
+                <div class="grid wide">
+                    <div class="row other-footer-heading">
+                        <div class="col l-2">
+                            <a href="#" class="other-footer-link">
+                                CHÍNH SÁCH BẢO MẬT
+                            </a>
+                        </div>
+                        <div class="col l-2">
+                            <a href="#" class="other-footer-link">
+                                QUY CHẾ HOẠT ĐỘNG
+                            </a>
+                        </div>
+                        <div class="col l-2">
+                            <a href="#" class="other-footer-link">
+                                TRẢ HÀNG VÀ HOÀN TIỀN
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="grid other-footer-info">
+                            <p class="other-footer-title">Thông tin về CanteenFood</p>
+                            <p class="other-footer-more">
+                                Địa chỉ: 64 Nguyễn Lương Bằng, phường Hoà Khánh Bắc, quân Liên Chiểu, Thành phố Đà Nẵng, Việt Nam.
+                                Tổng đài hỗ trợ: 19001234 - Email: cskh@hotro.canteenfood.vn
+                            </p>
+                            <p class="other-footer-more">
+                                Chịu Trách Nhiệm Quản Lý Nội Dung: Ngô Đỗ Nguyễn Hải Sơn - Trần Thị Kim Tiến - Lê bá Thuận -
+                                Điện thoại liên hệ: 024 73081221 (ext 4678)
+                            </p>
+                            <p class="other-footer-more">
+                                Mã số doanh nghiệp: 0106773786 do Sở Kế hoạch & Đầu tư
+                                TP Đà Nẵng cấp lần đầu ngày 10/06/2023
+                            </p>
+                            <p class="other-footer-more">
+                                Ngày sản xuất 2023 -
+                                Bản quyền gốc thuộc về Công ty TNHH CanteenFood
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
     <!-- modal -->
     

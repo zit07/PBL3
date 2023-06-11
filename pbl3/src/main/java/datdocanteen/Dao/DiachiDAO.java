@@ -16,23 +16,27 @@ public class DiachiDAO {
     private static PreparedStatement stm = null;
     private static ResultSet rs = null;
     
-    public static DiachiModel getDiachi(Integer ID_diachi) throws Exception {
+    public static DiachiModel getDiachi(int ID_canteen) throws Exception {
+    	DiachiModel diachi = null;
     	try {
             conn = connectDB.getConnection();
             if (conn != null) {
-            	String sql = "SELECT ID_diachi, tinh, huyen, xa FROM diachi WHERE ID_diachi = ?;";
+            	String sql = "SELECT d.tinh, d.huyen, d.xa "
+            			+ "FROM canteen c "
+            			+ "JOIN diachi d ON c.ID_diachi = d.ID_diachi "
+            			+ "WHERE c.ID_canteen = ?;";
                 stm = conn.prepareStatement(sql);
-            	stm.setInt(1, ID_diachi); 
+            	stm.setInt(1, ID_canteen); 
             	rs = stm.executeQuery();
                 if (rs.next()) {
-                	return new DiachiModel(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4));
+                	diachi = new DiachiModel(0, rs.getInt(1), rs.getInt(2), rs.getInt(3));
                 }
             }
         } catch (Exception e) {
         } finally {
         	connectDB.closeConnection(conn, stm, rs);
         }
-    	return null;
+    	return diachi;
     }
     
     public static List<DiachiModel> getListDiachi(List<CanteenModel> canteens) throws Exception {
@@ -95,9 +99,9 @@ public class DiachiDAO {
 		try {
 			
 //			ChangeAddress(new DiachiModel(null, 10002, 48, 490, 20197));
-			DiachiModel dc = getDiachi(1);
+			DiachiModel dc = getDiachi(127);
 			System.out.println(dc.getHuyen());
-			DiachiDAO.ChangeAddress(new DiachiModel(10002, 48, 1, 1));
+//			DiachiDAO.ChangeAddress(new DiachiModel(10002, 48, 1, 1));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
